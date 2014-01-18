@@ -157,7 +157,7 @@ public class GameLogicScript : MonoBehaviour {
 
             Transform newBox;
             newBox = (Transform)Instantiate(MovableBoxesPrefab, new Vector3(X, 1, Z), Quaternion.identity);
-            newBox.name = "x" + X.ToString() + "z" + Z.ToString();
+            newBox.name = "MovableBox_x" + X.ToString() + "z" + Z.ToString();
             newBox.parent = MovableBoxes.transform;
         }
 

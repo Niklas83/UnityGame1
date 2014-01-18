@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//DENNA KLASS ANVÄNDS FÖR STUNDEN INTE DÅ JAG BYGGER AI PÅ PLAYER
 public class PlayerGridMove : MonoBehaviour
 {
     private float moveSpeed = 3f;
@@ -50,11 +49,9 @@ public class PlayerGridMove : MonoBehaviour
 
     private bool PortalPlaced = false;  //Variabel för hurvida portalen blivit placerad eller ej
 
-    //test för att få boxar att själv flytta
-    public GameObject MovableBox;       //För att komma åt metoder i boxen
-    public BoxMove BoxMoveScript;       //The script object
-
-
+    //Håller objektet och scriptet för det objekt som flyttas
+    private GameObject MovableBox;
+    private BoxMove BoxMoveScript;
 
 
     public void Update()
@@ -285,66 +282,24 @@ public class PlayerGridMove : MonoBehaviour
 
                     //JOBBAR HÄR
 
-//                    public BoxMove other;
-                    //public GameObject BoxWithScriptToCall;
- 
-//void Awake ()
-//    {
-//       // Setting up the reference.
-//       GameObject SpawnZone = GameObject.Find("NameoftheGameObject");    
-//       BoxMoveScript = SpawnZone.GetComponent<BoxMove>();           
- 
-//    }
- 
-////just use the below where ever to activate
-//other.NameoftheFunction();
-
-
-
-
-
-
-                    //Move scriptet som finns i boxen
-
-                     this.MovableBox = GameObject.Find(MovingBox.name);
-
-                    this.MovableBox.AddComponent<BoxMove>();
-
-                     this.BoxMoveScript = this.MovableBox.GetComponent<BoxMove>();
-
-                     this.BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+                    if (this.MovableBox == null || this.BoxMoveScript==null)
+                    {
+                        this.MovableBox = GameObject.Find(MovingBox.name);
+                        this.BoxMoveScript = MovableBox.GetComponent<BoxMove>();
+                        BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+                        LocatedAllMovableBoxes = false;
+                        AllMovableBoxPositions = new List<Vector3>();
+                    }
+                    
 
                      //this.BoxMoveScript = this.MovableBox.GetComponent(BoxMove);
 
-                 //   gameObject.FindWithTag("myOtherObjectTag").GetComponent(scriptName) as scriptName;
-
-
-                  
-                    //BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
-
-                    //BoxWithScriptToCall.GetComponent<BoxMove>().MoveBox(moveBoxX, moveBoxZ);
-
-                    //BoxMove scriptFromBox = (BoxMove)BoxWithScriptToCall.GetComponent(typeof(BoxMove));
-                    //scriptFromBox.MoveBox(moveBoxX, moveBoxZ);
-
-                   
-
-                    //GameObject BoxWithScriptToCall = GameObject.Find(MovingBox.name);
-
-                   // var thaScript = BoxMove.Instantiate(BoxWithScriptToCall, new Vector3(0, 0, 0), Quaternion.identity);
-
-
-                    //thaScriptMoveBox(moveBoxX, moveBoxZ);
-
-                //    thaScript.MoveBox(moveBoxX, moveBoxZ);
-
-                     //someScript.MoveBox(moveBoxX, moveBoxZ);
 
 
                   // MovingBox.position = new Vector3(endPosition.x + moveBoxX, 1, endPosition.z+moveBoxZ);
 
 
-                    LocatedAllMovableBoxes = false;
+                 //   LocatedAllMovableBoxes = false;
                 }
 
                 t += Time.deltaTime * (moveSpeed / gridSize) * factor;
@@ -361,7 +316,11 @@ public class PlayerGridMove : MonoBehaviour
 
         }
 
-        
+        if (this.MovableBox != null || this.BoxMoveScript != null)
+        {
+            this.MovableBox = null;
+            this.BoxMoveScript = null;
+        }
 
         isMoving = false;
         yield return 0;

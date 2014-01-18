@@ -32,11 +32,11 @@ public class BoxMove : MonoBehaviour
     private GameObject AllTheWalls;                 //Hierarchy-list objektet som har alla yttre väggboxar som childs
     private List<Vector3> AllWallPositions = new List<Vector3>();    //Listan som håller alla coordinater på yttre väggar
 
-    /*
+    
     //candles
     private GameObject AllTheCandles;               //Hierarchy-list objektet som har alla ljus som child
     public List<Vector3> AllCandlePositions = new List<Vector3>(); //Listan som håller alla coordinater på ljus
-*/
+
 
     public void MoveBox(float moveX, float moveY)
     {
@@ -132,7 +132,10 @@ public class BoxMove : MonoBehaviour
     public IEnumerator move(Transform transform)
     {
         isMoving = true;
-        startPosition = transform.position;
+        if (startPosition.Equals(new Vector3()))
+        {
+            startPosition = transform.position;
+        }
         t = 0;
 
         if (gridOrientation == Orientation.Horizontal)
@@ -186,7 +189,7 @@ public class BoxMove : MonoBehaviour
             AllWallPositions.Add(wall.position);
         }
 
-        /*
+        
         //Kontrollerar sedan om vart alla ljus finns på banan (Detta gör jag efter för att minska onödigt loopande)
         AllTheCandles = GameObject.Find("AllTheCandles");
 
@@ -197,16 +200,17 @@ public class BoxMove : MonoBehaviour
             Transform candle = AllTheCandles.transform.GetChild(i);
             AllCandlePositions.Add(candle.position);
         }
-        */
 
 
+        if (!AllBoxPositions.Contains(endPosition) && !AllWallPositions.Contains(endPosition) && !AllCandlePositions.Contains(endPosition))
+        {
+            
         while (t < 1f)
         {
             
 
             //Kontrollerar om det finns någon vägg eller box ivägen, och om inte, så genomförs förflyttningen mot den rutan
-            if (!AllBoxPositions.Contains(endPosition) && !AllWallPositions.Contains(endPosition))
-            {
+            
                 /*
                 //Kontrollerar om det finns ljus på rutan 
                 if (AllCandlePositions.Contains(endPosition) && candleHasBeenRemoved == false)
@@ -271,14 +275,14 @@ public class BoxMove : MonoBehaviour
                 yield return null;
             }
 
-            else{
-                t = 1f;
-                yield return null;
-            }
+            startPosition = new Vector3();          //Nollställer startposition
 
         }
 
-        
+        else{
+                t = 1f;
+                yield return null;
+            }
 
         isMoving = false;
         yield return 0;
