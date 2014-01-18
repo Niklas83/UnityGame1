@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 276b4129e4bc5e04784d2313349fa4db
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - AllMovableBoxes: {instanceID: 0}
+  - PortalPrefab: {instanceID: 0}
+  - Portal: {instanceID: 0}
+  - MovableBox: {fileID: 100000, guid: e66dea5fb2c2be643a881444043495aa, type: 2}
+  - BoxMoveScript: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
