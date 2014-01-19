@@ -53,6 +53,7 @@ public class PlayerGridMove : MonoBehaviour
     private GameObject MovableBox;
     private BoxMove BoxMoveScript;
 
+    private bool canMoveToPreviousObsticleLocation = true; //Sätts till false om ett obsictle returnerar att den inte kan gå till en viss ruta som spelaren önskat
 
     public void Update()
     {
@@ -280,31 +281,24 @@ public class PlayerGridMove : MonoBehaviour
                         }
                     }
 
-                    //JOBBAR HÄR
-
+                    //Flyttar på boxen
                     if (this.MovableBox == null || this.BoxMoveScript==null)
                     {
                         this.MovableBox = GameObject.Find(MovingBox.name);
                         this.BoxMoveScript = MovableBox.GetComponent<BoxMove>();
-                        BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+                        canMoveToPreviousObsticleLocation = BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
                         LocatedAllMovableBoxes = false;
                         AllMovableBoxPositions = new List<Vector3>();
                     }
                     
-
-                     //this.BoxMoveScript = this.MovableBox.GetComponent(BoxMove);
-
-
-
-                  // MovingBox.position = new Vector3(endPosition.x + moveBoxX, 1, endPosition.z+moveBoxZ);
-
-
-                 //   LocatedAllMovableBoxes = false;
                 }
 
                 t += Time.deltaTime * (moveSpeed / gridSize) * factor;
 
-                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                if (canMoveToPreviousObsticleLocation == true)
+                {
+                    transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                }
                 yield return null;
             }
 
@@ -323,6 +317,7 @@ public class PlayerGridMove : MonoBehaviour
         }
 
         isMoving = false;
+        canMoveToPreviousObsticleLocation = true;   //återställer så att spelaren kan gå igen, ifall en obsticle satt den false
         yield return 0;
     }
 }
