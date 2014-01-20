@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//DENNA KLASS ANVÄNDS FÖR STUNDEN INTE DÅ JAG BYGGER AI PÅ PLAYER
-public class PlayerControllerGridMove : MonoBehaviour
+public class PlayerGridMove : MonoBehaviour
 {
     private float moveSpeed = 3f;
     private float gridSize = 1f;
@@ -22,9 +21,9 @@ public class PlayerControllerGridMove : MonoBehaviour
     private float t;
     private float factor;
 
-
+    private ObjectLocator objectLocator;
     
-    //boxes
+    //Non-movable boxes
     private GameObject AllTheBoxes;                 //Hierarchy-list objektet som har alla boxar som childs
     private List<Vector3> AllBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som ej kan flyttas
     private bool LocatedAllStaticBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla statiska, ej flyttbara boxar är så den inte görs igen
@@ -39,6 +38,10 @@ public class PlayerControllerGridMove : MonoBehaviour
     public List<Vector3> AllCandlePositions = new List<Vector3>(); //Listan som håller alla coordinater på ljus
     private bool LocatedAllCandles = false;         //sätts till true då det gjorts en kontroll om vart alla ljus är så den inte görs igen
 
+    //MovableBoxs
+    public GameObject AllMovableBoxes;                 //Hierarchy-list objektet som har alla boxar som childs
+    public List<Vector3> AllMovableBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som KAN flyttas
+    public bool LocatedAllMovableBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla flyttbara boxar är, (denna kontroll ska göras då en flyttbar box flyttats)
 
     //portal till nästa bana
     public Transform PortalPrefab;          //Portal objektet för GameObject (klassen som instansieras)
@@ -46,6 +49,16 @@ public class PlayerControllerGridMove : MonoBehaviour
 
     private bool PortalPlaced = false;  //Variabel för hurvida portalen blivit placerad eller ej
 
+    //Håller objektet och scriptet för det objekt som flyttas
+    private GameObject MovableBox;
+    private BoxMove BoxMoveScript;
+
+    private bool canMoveToPreviousObsticleLocation = true; //Sätts till false om ett obsictle returnerar att den inte kan gå till en viss ruta som spelaren önskat
+
+    public void Start()
+    {
+        objectLocator = GameObject.FindObjectOfType<ObjectLocator>();         //Object som håller alla positioner på object
+    }
 
     public void Update()
     {
@@ -119,6 +132,22 @@ public class PlayerControllerGridMove : MonoBehaviour
             this.LocatedAllStaticBoxes = true;
         }
 
+        //Kollar om alla boxar tagits fram en gång
+        if (this.LocatedAllMovableBoxes == false)
+        {
+            //Tar fram alla coordinater på boxar
+            this.AllMovableBoxes = GameObject.Find("AllMovableBoxes");
+
+            int NumberOfBoxChilds = AllMovableBoxes.transform.childCount;
+
+            for (int i = 0; i < NumberOfBoxChilds; i++)
+            {
+                Transform box = AllMovableBoxes.transform.GetChild(i);
+                AllMovableBoxPositions.Add(box.position);
+            }
+            this.LocatedAllMovableBoxes = true;
+        }
+
         //Kollar om alla väggar tagits fram en gång
         if (this.LocatedAllWalls == false)
         {
@@ -152,13 +181,14 @@ public class PlayerControllerGridMove : MonoBehaviour
             LocatedAllCandles = true;
         }
 
+        
 
-        while (t < 1f)
+        //Jobbar här med att flytta över alla positions kontroller till ObjectLocator
+
+        //Kontrollerar om det finns någon vägg eller box ivägen, och om inte, så genomförs förflyttningsförsöket mot den rutan
+        if (!objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition))
         {
-            
-
-            //Kontrollerar om det finns någon vägg eller box ivägen, och om inte, så genomförs förflyttningen mot den rutan
-            if (!AllBoxPositions.Contains(endPosition) && !AllWallPositions.Contains(endPosition))
+            while (t < 1f)
             {
                 //Kontrollerar om det finns ljus på rutan 
                 if (AllCandlePositions.Contains(endPosition) && candleHasBeenRemoved == false)
@@ -217,23 +247,82 @@ public class PlayerControllerGridMove : MonoBehaviour
                     }
                 }
 
+                //Kontrollerar om det finns en movable box på rutan
+                if (AllMovableBoxPositions.Contains(endPosition))
+                {
+                    Transform MovingBox = PortalPrefab;     //Har portal här för att scriptet inte ska gnälla om att det kan vara null längre ner
+                    for (int i = 0; i < AllMovableBoxes.transform.childCount; i++)
+                    {
+                        Transform theBoxToMove = AllMovableBoxes.transform.GetChild(i);
+                        if (theBoxToMove.position == endPosition)
+                        {
+                            MovingBox = theBoxToMove;
+                        }
+                    }
+                    
+
+                    float moveBoxX = 0;
+                    float moveBoxZ = 0;
+
+                    if (input.x != 0)
+                    {
+                        if (input.x > 0)
+                        {
+                            moveBoxX = 1;
+                        }
+                        else
+                        {
+                            moveBoxX = -1;
+                        }
+                    }
+                    else
+                    {
+                        if (input.y > 0)
+                        {
+                            moveBoxZ = 1;
+                        }
+                        else
+                        {
+                            moveBoxZ = -1;
+                        }
+                    }
+
+                    //Flyttar på boxen
+                    if (this.MovableBox == null || this.BoxMoveScript==null)
+                    {
+                        this.MovableBox = GameObject.Find(MovingBox.name);
+                        this.BoxMoveScript = MovableBox.GetComponent<BoxMove>();
+                        canMoveToPreviousObsticleLocation = BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+                        LocatedAllMovableBoxes = false;
+                        AllMovableBoxPositions = new List<Vector3>();
+                    }
+                    
+                }
+
                 t += Time.deltaTime * (moveSpeed / gridSize) * factor;
 
-                transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                if (canMoveToPreviousObsticleLocation == true)
+                {
+                    transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                }
                 yield return null;
             }
-
-            else
-            {
-                t = 1f;
-                yield return null;
-            }
-
+        }
+        else
+        {
+            t = 1f;
+            yield return null;
         }
 
-        
+
+        if (this.MovableBox != null || this.BoxMoveScript != null)
+        {
+            this.MovableBox = null;
+            this.BoxMoveScript = null;
+        }
 
         isMoving = false;
+        canMoveToPreviousObsticleLocation = true;   //återställer så att spelaren kan gå igen, ifall en obsticle satt den false
         yield return 0;
     }
 }
