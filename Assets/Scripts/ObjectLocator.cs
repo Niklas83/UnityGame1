@@ -6,26 +6,34 @@ public class ObjectLocator : MonoBehaviour {
 
     //Non-movable boxes
     private GameObject AllStaticBoxes;                 //Hierarchy-list objektet som har alla boxar som childs
-    public List<Vector3> AllStaticBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som ej kan flyttas
+    private List<Vector3> AllStaticBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som ej kan flyttas
     private bool LocatedAllStaticBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla statiska, ej flyttbara boxar är så den inte görs igen
 
     //walls
     private GameObject AllWalls;                 //Hierarchy-list objektet som har alla yttre väggboxar som childs
-    public List<Vector3> AllWallPositions = new List<Vector3>();    //Listan som håller alla coordinater på yttre väggar
+    private List<Vector3> AllWallPositions = new List<Vector3>();    //Listan som håller alla coordinater på yttre väggar
     private bool LocatedAllWalls = false;           //sätts till true då det gjorts en kontroll om vart alla väggar är så den inte görs igen
 
     //candles
     private GameObject AllCandles;               //Hierarchy-list objektet som har alla ljus som child
-    public List<Vector3> AllCandlePositions = new List<Vector3>(); //Listan som håller alla coordinater på ljus
+    private List<Vector3> AllCandlePositions = new List<Vector3>(); //Listan som håller alla coordinater på ljus
     private bool LocatedAllCandles = false;         //sätts till true då det gjorts en kontroll om vart alla ljus är så den inte görs igen
 
     //MovableBoxs
-    public GameObject AllMovableBoxes;                 //Hierarchy-list objektet som har alla boxar som childs
-    public List<Vector3> AllMovableBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som KAN flyttas
-    public bool LocatedAllMovableBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla flyttbara boxar är, (denna kontroll ska göras då en flyttbar box flyttats)
-	
+    private GameObject AllMovableBoxes;                 //Hierarchy-list objektet som har alla boxar som childs
+    private List<Vector3> AllMovableBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som KAN flyttas
+    private bool LocatedAllMovableBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla flyttbara boxar är, (denna kontroll ska göras då en flyttbar box flyttats)
+
+    //portal till nästa bana
+    public Transform PortalPrefab;          //Portal objektet för GameObject (klassen som instansieras)
+    public Transform Portal;            //Det instantierade portal-objektet som skapas då alla ljus är tagna
+
+    private bool PortalPlaced = false;  //Variabel för hurvida portalen blivit placerad eller ej
+
+
+
 	// Update is called once per frame
-    void Update()
+    public void UpdateAllPositions()
     {
         //Kollar om alla boxar tagits fram en gång
         if (this.LocatedAllStaticBoxes == false)
@@ -91,8 +99,6 @@ public class ObjectLocator : MonoBehaviour {
 
             LocatedAllCandles = true;
         }
-
-
     }
 
 
@@ -144,13 +150,98 @@ public class ObjectLocator : MonoBehaviour {
 
 
 
+    //Remove Candle from coordinate your walking to
+    public bool RemoveCandleOnTileWalkingTo(Vector3 EndPositionOfPlayer)
+    {
+        bool candleHasBeenRemoved = false;      //Värdet som kommer returneras
+
+        //Ljus objekt att ta bort
+        Transform candleToRemove = AllCandles.transform.GetChild(0); // Detta värde kommer alltid att sättas i foreach loopen nedan
+
+        //Hitta ljus objekt
+        for (int x = 0; x < AllCandles.transform.childCount; x++)
+        {
+            Transform candle = AllCandles.transform.GetChild(x);
+            if (candle.position == EndPositionOfPlayer)
+            {
+                candleToRemove = candle;
+                continue;
+            }
+        }
+
+        //Ljus koordinat att ta bort
+        Vector3 postionToRemove = new Vector3();
+
+        //Hitta ljus koordinat
+        for (int j = 0; j < AllCandlePositions.Count; j++)
+        {
+            Vector3 position = AllCandlePositions[j];
+
+            if (position == candleToRemove.position)
+            {
+                postionToRemove = position;
+                continue;
+            }
+        }
+
+        AllCandlePositions.Remove(postionToRemove);     //Tar bort från listan med coordinater på ljus
+
+        GameObject candleToDestroy = GameObject.Find(candleToRemove.name);
+        if (candleToDestroy != null)
+        {
+            Destroy(candleToDestroy); //Tar bort det faktiska objektet
+            candleHasBeenRemoved = true;    //Sätter att ljuset har tagits bort och returnerar true
+        }
+
+        //skapa portal om candle antalet blir noll
+        if (AllCandlePositions.Count == 0 && PortalPlaced != true)
+        {
+            //Kontrollerar sedan om vart alla ljus finns på banan (Detta gör jag efter för att minska onödigt loopande)
+            var theFloor = GameObject.Find("AllTheFloorSquares");
+
+            int numberOfFloorTiles = theFloor.transform.childCount;
 
 
+            Transform randomFloorTile = theFloor.transform.GetChild(Random.Range(1, numberOfFloorTiles));
+            Transform pentagram;
+            float heightY = (float)0.5;
+            pentagram = (Transform)Instantiate(PortalPrefab, new Vector3(randomFloorTile.position.x, heightY, randomFloorTile.position.z), Quaternion.identity);
+            pentagram.name = "ThePortal";
+
+        }
+
+        return candleHasBeenRemoved;
+    }
 
 
+    //Find movable box
+    public Transform GetBoxToPushFromTileWalkingTo(Vector3 positionWalkingTo)
+    {
+        Transform MovingBox = transform;     //Har portal här för att scriptet inte ska gnälla om att det kan vara null längre ner
+        for (int i = 0; i < AllMovableBoxes.transform.childCount; i++)
+        {
+            Transform theBoxToMove = AllMovableBoxes.transform.GetChild(i);
+            if (theBoxToMove.position == positionWalkingTo)
+            {
+                MovingBox = theBoxToMove;
+            }
+        }
+        return MovingBox;
+    }
+
+    //Move movable box
+    public bool MoveMovableBox(Transform movingBox, float moveBoxX, float moveBoxZ)
+    {
+
+            GameObject MovableBox = GameObject.Find(movingBox.name);
+            BoxMove BoxMoveScript = MovableBox.GetComponent<BoxMove>();
+            bool canMoveToPreviousObsticleLocation = BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+            LocatedAllMovableBoxes = false;
+            AllMovableBoxPositions = new List<Vector3>();
+
+            return canMoveToPreviousObsticleLocation;
+    }
+                    
 
 
-
-
-   // Kör FindObjectOfType för att hitta objectLocator instansen
 }
