@@ -21,9 +21,18 @@ public class PlayerGridMove : MonoBehaviour
     private float t;
     private float factor;
 
+    //Har koll på alla objekt på banan
     private ObjectLocator objectLocator;            //Har koll på alla objekt i spelet, (GÖR TILL SINGLETON)
     
+    //Bool to check if you can move to the selected coordniat
     private bool canMoveToPreviousObsticleLocation = true; //Sätts till false om ett obsictle returnerar att den inte kan gå till en viss ruta som spelaren önskat
+
+    //Inputs to use on boxes etc
+    private float moveBoxX = 0;
+    private float moveBoxZ = 0;
+
+
+
 
     public void Start()
     {
@@ -97,23 +106,14 @@ public class PlayerGridMove : MonoBehaviour
                 //Kontrollerar om det finns en movable box på rutan
                 if (objectLocator.GetAllMovableBoxPositions().Contains(endPosition))
                 {
-                    Transform MovingBox = objectLocator.GetBoxToPushFromTileWalkingTo(endPosition);
+                   Transform MovingBox = objectLocator.GetBoxToPushFromTileWalkingTo(endPosition);
 
-                    float moveBoxX = 0;
-                    float moveBoxZ = 0;
+                    SetXandZInputValues();
 
-                    if (input.x != 0)
+                    if (this.moveBoxX != 0 || this.moveBoxZ != 0)
                     {
-                        if (input.x > 0){moveBoxX = 1;}
-                        else{moveBoxX = -1;}
+                        this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, this.moveBoxX, this.moveBoxZ);
                     }
-                    else
-                    {
-                        if (input.y > 0){moveBoxZ = 1;}
-                        else{moveBoxZ = -1;}
-                    }
-
-                   this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, moveBoxX, moveBoxZ);
                 }
 
                 t += Time.deltaTime * (moveSpeed / gridSize) * factor;
@@ -132,9 +132,40 @@ public class PlayerGridMove : MonoBehaviour
         }
 
 
-        objectLocator.UpdateAllPositions();
-        isMoving = false;
+        objectLocator.UpdateAllPositions();     //uppdaterar alla positioner i object locator
+        ResetXandZInputValues();                    //återställer x och z input
+        isMoving = false;                           //återställer att player kan göra ett move igen
         canMoveToPreviousObsticleLocation = true;   //återställer så att spelaren kan gå igen, ifall en obsticle satt den false
         yield return 0;
     }
+
+
+
+
+
+
+    //Internal methods
+
+    //Sets the x and z input
+    private void SetXandZInputValues()
+    {
+        if (input.x != 0)
+        {
+            if (input.x > 0) { this.moveBoxX = 1; }
+            else { this.moveBoxX = -1; }
+        }
+        else
+        {
+            if (input.y > 0) { this.moveBoxZ = 1; }
+            else { this.moveBoxZ = -1; }
+        }
+    }
+
+    //resets input
+    private void ResetXandZInputValues()
+    {
+        this.moveBoxX = 0;
+        this.moveBoxZ = 0;
+    }
+
 }
