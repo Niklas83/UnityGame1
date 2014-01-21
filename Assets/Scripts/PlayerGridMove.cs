@@ -95,34 +95,37 @@ public class PlayerGridMove : MonoBehaviour
         //Kontrollerar om det finns någon vägg eller box ivägen, och om inte, så genomförs förflyttningsförsöket mot den rutan
         if (!objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition))
         {
-            while (t < 1f)
+
+
+            //Kontrollerar om det finns en movable box på rutan
+            if (objectLocator.GetAllMovableBoxPositions().Contains(endPosition))
             {
-                //Kontrollerar om det finns ljus på rutan 
-                if (objectLocator.GetAllCandlePositions().Contains(endPosition) && candleHasBeenRemoved == false)
+                Transform MovingBox = objectLocator.GetBoxToPushFromTileWalkingTo(endPosition);
+
+                SetXandZInputValues();
+
+                if (this.moveBoxX != 0 || this.moveBoxZ != 0)
                 {
-                    candleHasBeenRemoved = objectLocator.RemoveCandleOnTileWalkingTo(endPosition);
+                    this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, this.moveBoxX, this.moveBoxZ);     //Sätter att du kan flytta boxen mot önskad riktning och att du kan ta dig dit
                 }
+            }
 
-                //Kontrollerar om det finns en movable box på rutan
-                if (objectLocator.GetAllMovableBoxPositions().Contains(endPosition))
+            if (this.canMoveToPreviousObsticleLocation == true)
+            {
+                while (t < 1f)
                 {
-                   Transform MovingBox = objectLocator.GetBoxToPushFromTileWalkingTo(endPosition);
-
-                    SetXandZInputValues();
-
-                    if (this.moveBoxX != 0 || this.moveBoxZ != 0)
+                    //Kontrollerar om det finns ljus på rutan 
+                    if (objectLocator.GetAllCandlePositions().Contains(endPosition) && candleHasBeenRemoved == false)
                     {
-                        this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, this.moveBoxX, this.moveBoxZ);
+                        candleHasBeenRemoved = objectLocator.RemoveCandleOnTileWalkingTo(endPosition);
                     }
-                }
 
-                t += Time.deltaTime * (moveSpeed / gridSize) * factor;
+                    t += Time.deltaTime*(moveSpeed/gridSize)*factor;
 
-                if (this.canMoveToPreviousObsticleLocation == true)
-                {
                     transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+                    yield return null;
                 }
-                yield return null;
             }
         }
         else

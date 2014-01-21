@@ -36,6 +36,12 @@ public class GameLogicScript : MonoBehaviour {
     private int numberOfCandles;     //Antalet ljus som finns på en bana
     public Transform Candles;       //Variabel för hierarchy-item AllTheCandles
 
+    //RotatableBeams som går att rotera runt en axel
+    public Transform RotatableBeamPrefab;   //(Klassen som instansieras)
+    private int numberOfRotatableBeams;              //Antalet AllRotatableBeams som finns på en bana
+    public Transform AllBeamsList;          //Variabel för hierarchy-item AllRotatableBeams
+
+
     public
 	// Use this for initialization
 	void Start ()
@@ -46,7 +52,7 @@ public class GameLogicScript : MonoBehaviour {
         CreateWalls();
         createMovableBoxes();
         CreatCandles();
-
+        CreatRotatableBeams();
 	}
 
     //Skapar gridden (golvet)
@@ -184,31 +190,55 @@ public class GameLogicScript : MonoBehaviour {
 
     }
 
-    void SetFloorType()     //Roterar alla golv-squares
+    //Skapar RotatableBeams
+    void CreatRotatableBeams()
     {
-        foreach (Transform floor in FloorSquares.transform)
+        this.numberOfRotatableBeams = 1;
+
+        int X = 0;
+        int Z = 0;
+
+        for (int i = 0; i < numberOfRotatableBeams; i++)
         {
-           floor.Rotate(new Vector3(45,45,45));
+            X = Random.Range(2, (int)Size.x - 1);
+            Z = Random.Range(2, (int)Size.z - 1);
+
+            Transform newRotatable;
+            newRotatable = (Transform)Instantiate(RotatableBeamPrefab, new Vector3(X, 1, Z), Quaternion.identity);
+            newRotatable.name = "rotatableBeam:" + "x" + X.ToString() + "z" + Z.ToString();
+            newRotatable.parent = AllBeamsList.transform;
         }
+
     }
 
 
 
+
+
+    //Lite random testgrejer nedan
+
+    //void SetFloorType()     //Roterar alla golv-squares
+    //{
+    //    foreach (Transform floor in FloorSquares.transform)
+    //    {
+    //       floor.Rotate(new Vector3(45,45,45));
+    //    }
+    //}
 
     // Update is called once per frame
-    void Update()
-    {
-        //test grejer bara
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SetFloorType();
-        }
+    //void Update()
+    //{
+    //    //test grejer bara
+    //    if (Input.GetKeyDown(KeyCode.T))
+    //    {
+    //        SetFloorType();
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-           Transform player = transform.GetChild(0);
-           player.Rotate(new Vector3(45, 45, 45));
-        }
+    //    if (Input.GetKeyDown(KeyCode.K))
+    //    {
+    //       Transform player = transform.GetChild(0);
+    //       player.Rotate(new Vector3(45, 45, 45));
+    //    }
 
-    }
+    //}
 }
