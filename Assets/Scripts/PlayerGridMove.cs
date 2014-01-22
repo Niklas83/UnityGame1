@@ -96,7 +96,6 @@ public class PlayerGridMove : MonoBehaviour
         if (!objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition))
         {
 
-
             //Kontrollerar om det finns en movable box på rutan
             if (objectLocator.GetAllMovableBoxPositions().Contains(endPosition))
             {
@@ -108,6 +107,21 @@ public class PlayerGridMove : MonoBehaviour
                 {
                     this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, this.moveBoxX, this.moveBoxZ);     //Sätter att du kan flytta boxen mot önskad riktning och att du kan ta dig dit
                 }
+            }
+
+            //Kontrollerar om det finns en rotatable beam på rutan spelaren försöker gå till
+            if (objectLocator.GetAllRotatableBeamsPositions().Contains(endPosition))
+            {
+                Transform RotatableBeam = objectLocator.GetRotatableBeamToTurnFromTileWalkingTo(endPosition);
+
+                SetXandZInputValues();
+
+                if (this.moveBoxX != 0 || this.moveBoxZ != 0)
+                {
+                    //fixa detta
+                 //   this.canMoveToPreviousObsticleLocation = objectLocator.MoveMovableBox(MovingBox, this.moveBoxX, this.moveBoxZ);     //Sätter att du kan flytta boxen mot önskad riktning och att du kan ta dig dit
+                }
+
             }
 
             if (this.canMoveToPreviousObsticleLocation == true)

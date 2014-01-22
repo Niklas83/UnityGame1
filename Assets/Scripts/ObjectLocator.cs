@@ -24,12 +24,22 @@ public class ObjectLocator : MonoBehaviour {
     private List<Vector3> AllMovableBoxPositions = new List<Vector3>();    //Listan som håller alla coordinater på boxar som KAN flyttas
     private bool LocatedAllMovableBoxes = false;     //sätts till true då det gjorts en kontroll om vart alla flyttbara boxar är, (denna kontroll ska göras då en flyttbar box flyttats)
 
+    //Rotatable Beams
+    private GameObject AllRotatableBeams;                 //Hierarchy-list objektet som har alla Rotatable Beams som childs
+    private List<Vector3> AllRotatableBeamsPositions = new List<Vector3>();    //Listan som håller alla coordinater på alla Rotatable Beams
+    private bool LocatedAllRotatableBeams = false;     //sätts till true då det gjorts en kontroll om vart alla Rotatable Beams är, (denna kontroll ska göras då en flyttbar box flyttats)
+
     //portal till nästa bana
     public Transform PortalPrefab;          //Portal objektet för GameObject (klassen som instansieras)
     public Transform Portal;            //Det instantierade portal-objektet som skapas då alla ljus är tagna
 
     private bool PortalPlaced = false;  //Variabel för hurvida portalen blivit placerad eller ej
 
+
+    void Start()
+    {
+        UpdateAllPositions();
+    }
 
 
 	// Update is called once per frame
@@ -99,7 +109,25 @@ public class ObjectLocator : MonoBehaviour {
 
             LocatedAllCandles = true;
         }
+
+        //Kollar om alla RotatableBeams tagits fram
+        if (this.LocatedAllRotatableBeams == false)
+        {
+            AllRotatableBeams = GameObject.Find("AllRotatableBeams");
+
+            int NumberOfRotatableBeamsChilds = AllRotatableBeams.transform.childCount;
+
+            for (int i = 0; i < NumberOfRotatableBeamsChilds; i++)
+            {
+                Transform RotatableBeams = AllRotatableBeams.transform.GetChild(i);
+                AllRotatableBeamsPositions.Add(RotatableBeams.position);
+            }
+
+            this.LocatedAllRotatableBeams = true;
+        }
     }
+
+    
 
 
     //Return object type methods
@@ -121,6 +149,11 @@ public class ObjectLocator : MonoBehaviour {
     public List<Vector3> GetAllMovableBoxPositions()
     {
         return this.AllMovableBoxPositions;
+    }
+
+    public List<Vector3> GetAllRotatableBeamsPositions()
+    {
+        return this.AllRotatableBeamsPositions;
     }
 
 
@@ -147,6 +180,10 @@ public class ObjectLocator : MonoBehaviour {
         this.LocatedAllMovableBoxes = false;
     }
 
+    public void SetLocatedAllRotatableBeamsFalse()
+    {
+        this.LocatedAllMovableBoxes = false;
+    }
 
 
 
@@ -214,6 +251,7 @@ public class ObjectLocator : MonoBehaviour {
     }
 
 
+    // MOVABLE BOX METHODS //
     //Find movable box
     public Transform GetBoxToPushFromTileWalkingTo(Vector3 positionWalkingTo)
     {
@@ -241,7 +279,34 @@ public class ObjectLocator : MonoBehaviour {
 
             return canMoveToPreviousObsticleLocation;
     }
-                    
 
 
+    // ROTATABLE BEAMS METHODS //
+    // find the rotatable beam
+    public Transform GetRotatableBeamToTurnFromTileWalkingTo(Vector3 positionWalkingTo)
+    {
+        Transform RotatingBeam = transform;     //Har portal här för att scriptet inte ska gnälla om att det kan vara null längre ner
+        for (int i = 0; i < AllRotatableBeams.transform.childCount; i++)
+        {
+            Transform theBeamToTurn = AllRotatableBeams.transform.GetChild(i);
+            if (theBeamToTurn.position == positionWalkingTo)
+            {
+                RotatingBeam = theBeamToTurn;
+            }
+        }
+        return RotatingBeam;
+    }
+
+    //Rotate the rotatable beam
+    public bool RotateRotatableBeam(Transform rotatableBeam, float moveBoxX, float moveBoxZ)
+    {
+        //FIXA DENNA METOD, BYT FRÅN BOXMOVE SCRIPT
+        GameObject RotatableBeam = GameObject.Find(rotatableBeam.name);
+        BoxMove BoxMoveScript = RotatableBeam.GetComponent<BoxMove>();
+        bool canMoveToPreviousObsticleLocation = BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
+        LocatedAllMovableBoxes = false;
+        AllMovableBoxPositions = new List<Vector3>();
+
+        return canMoveToPreviousObsticleLocation;
+    }
 }
