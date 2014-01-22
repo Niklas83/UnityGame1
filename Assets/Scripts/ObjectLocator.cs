@@ -26,7 +26,8 @@ public class ObjectLocator : MonoBehaviour {
 
     //Rotatable Beams
     private GameObject AllRotatableBeams;                 //Hierarchy-list objektet som har alla Rotatable Beams som childs
-    private List<Vector3> AllRotatableBeamsPositions = new List<Vector3>();    //Listan som håller alla coordinater på alla Rotatable Beams
+    public List<Vector3> AllRotatableBeamsPositions = new List<Vector3>();    //Listan som håller alla coordinater på alla Rotatable Beams
+    public List<Vector3> AllPartsOfRotatableBeamsPositions = new List<Vector3>();      //Listar alla delobjekt av rotatable beams
     private bool LocatedAllRotatableBeams = false;     //sätts till true då det gjorts en kontroll om vart alla Rotatable Beams är, (denna kontroll ska göras då en flyttbar box flyttats)
 
     //portal till nästa bana
@@ -113,14 +114,26 @@ public class ObjectLocator : MonoBehaviour {
         //Kollar om alla RotatableBeams tagits fram
         if (this.LocatedAllRotatableBeams == false)
         {
-            AllRotatableBeams = GameObject.Find("AllRotatableBeams");
+            AllRotatableBeams = GameObject.Find("AllRotatableBeams");       //kan flytta denna till start metoden
 
             int NumberOfRotatableBeamsChilds = AllRotatableBeams.transform.childCount;
 
             for (int i = 0; i < NumberOfRotatableBeamsChilds; i++)
             {
-                Transform RotatableBeams = AllRotatableBeams.transform.GetChild(i);
-                AllRotatableBeamsPositions.Add(RotatableBeams.position);
+                //Listar den specifika rotatableBeam
+                Transform RotatableBeam = AllRotatableBeams.transform.GetChild(i);
+                AllRotatableBeamsPositions.Add(RotatableBeam.position);
+
+                //Listar alla childObjects i den specifika rotatableBeam
+                int NumberOfChildsInCurrentRotatableBeam = RotatableBeam.childCount;
+
+                for (int j = 0; j < NumberOfChildsInCurrentRotatableBeam; j++)
+                {
+                    Transform RotatableBeamPart = RotatableBeam.transform.GetChild(j);
+
+                    AllPartsOfRotatableBeamsPositions.Add(RotatableBeamPart.position);
+                }
+
             }
 
             this.LocatedAllRotatableBeams = true;
@@ -151,10 +164,17 @@ public class ObjectLocator : MonoBehaviour {
         return this.AllMovableBoxPositions;
     }
 
-    public List<Vector3> GetAllRotatableBeamsPositions()
+    //kan kanske ta bort denna
+    //public List<Vector3> GetAllRotatableBeamsPositions()
+    //{
+    //    return this.AllRotatableBeamsPositions;
+    //}
+
+    public List<Vector3> GetAllPartsOfRotatableBeamsPositions()
     {
-        return this.AllRotatableBeamsPositions;
+        return this.AllPartsOfRotatableBeamsPositions;
     }
+
 
 
 
@@ -184,6 +204,7 @@ public class ObjectLocator : MonoBehaviour {
     {
         this.LocatedAllMovableBoxes = false;
     }
+
 
 
 
@@ -286,26 +307,34 @@ public class ObjectLocator : MonoBehaviour {
     public Transform GetRotatableBeamToTurnFromTileWalkingTo(Vector3 positionWalkingTo)
     {
         Transform RotatingBeam = transform;     //Har portal här för att scriptet inte ska gnälla om att det kan vara null längre ner
+
         for (int i = 0; i < AllRotatableBeams.transform.childCount; i++)
         {
             Transform theBeamToTurn = AllRotatableBeams.transform.GetChild(i);
-            if (theBeamToTurn.position == positionWalkingTo)
+
+            for (int j = 0; j < theBeamToTurn.childCount; j++)
             {
-                RotatingBeam = theBeamToTurn;
+                Transform partOfTheBeamToTurn = theBeamToTurn.GetChild(j);
+
+                if (partOfTheBeamToTurn.position == positionWalkingTo)
+                {
+                    RotatingBeam = theBeamToTurn;
+                }
             }
         }
+
         return RotatingBeam;
     }
 
     //Rotate the rotatable beam
     public bool RotateRotatableBeam(Transform rotatableBeam, float moveBoxX, float moveBoxZ)
     {
-        //FIXA DENNA METOD, BYT FRÅN BOXMOVE SCRIPT
         GameObject RotatableBeam = GameObject.Find(rotatableBeam.name);
-        BoxMove BoxMoveScript = RotatableBeam.GetComponent<BoxMove>();
-        bool canMoveToPreviousObsticleLocation = BoxMoveScript.MoveBox(moveBoxX, moveBoxZ);
-        LocatedAllMovableBoxes = false;
-        AllMovableBoxPositions = new List<Vector3>();
+        RotatableBeamMove RotatableBeamMoveScript = RotatableBeam.GetComponent<RotatableBeamMove>();
+        bool canMoveToPreviousObsticleLocation = RotatableBeamMoveScript.MoveBeam(moveBoxX, moveBoxZ);
+        this.LocatedAllRotatableBeams = false;
+        this.AllRotatableBeamsPositions = new List<Vector3>();
+        this.AllPartsOfRotatableBeamsPositions = new List<Vector3>();
 
         return canMoveToPreviousObsticleLocation;
     }

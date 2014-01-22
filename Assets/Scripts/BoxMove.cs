@@ -127,7 +127,7 @@ public class BoxMove : MonoBehaviour
             factor = 1f;
         }
 
-        if (!objectLocator.GetAllMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition) && !objectLocator.GetAllCandlePositions().Contains(endPosition) && !objectLocator.GetAllRotatableBeamsPositions().Contains(endPosition))
+        if (!objectLocator.GetAllMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition) && !objectLocator.GetAllCandlePositions().Contains(endPosition) && !objectLocator.GetAllPartsOfRotatableBeamsPositions().Contains(endPosition))
         {
             
             while (t < 1f)
