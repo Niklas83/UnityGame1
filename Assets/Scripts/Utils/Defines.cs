@@ -18,4 +18,6 @@ public enum TileTypes
 }
 
 public static class Defines 
-{ }
+{
+	public static int TILE_SIZE = 1; // Size of tile in all dimensions.
+}
