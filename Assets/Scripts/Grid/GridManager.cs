@@ -8,34 +8,49 @@ public class GridManager
 	private BaseTile[,] mGrid;
 	private List<BaseTile> mTilesForQueries;
 	private Iterator mIterator;
-	
-	public GridManager(BaseTile[,] iGrid)
+
+	public GridManager() {}
+
+	public void CreateGrid(int iSizeX, int iSizeY)
 	{
-		mGrid = iGrid;
-		mTilesForQueries = new List<BaseTile>(GetLength(0) * GetLength(1));
+		mGrid = new BaseTile[iSizeX, iSizeY];
+		mTilesForQueries = new List<BaseTile>(iSizeX * iSizeY);
 	}
 
+	public void PositionToIndices(Vector3 iPosition, out int oXindex, out int oYindex) {
+		oXindex = Mathf.RoundToInt(iPosition.x);
+		oYindex = Mathf.RoundToInt(iPosition.z);
+	}
+
+	public void AddTile(BaseTile iTile) {
+		int x, y;
+		PositionToIndices(iTile.transform.position, out x, out y);
+		mGrid[x, y] = iTile;
+	}
+
+	public bool InRange(Vector3 iPosition) {
+		int x, y;
+		PositionToIndices(iPosition, out x, out y);
+		return InRange(x, y);
+	}
 	public bool InRange(int iXindex, int iYindex) 
 	{
 		return iXindex < mGrid.GetLength(0) && iXindex >= 0 &&
 			   iYindex < mGrid.GetLength(1) && iYindex >= 0;
 	}
 
-	// Gets the tile at the given indices
-	public BaseTile GetTile(Vector2 iIndices)
+	public BaseTile GetTile(Vector3 iPosition)
 	{
-		int x = (int) iIndices.x;
-		int y = (int) iIndices.y;
+		int x, y;
+		PositionToIndices(iPosition, out x, out y);
 		return GetTile(x, y);
 	}
 	public BaseTile GetTile(int iXindex, int iYindex)
 	{
-		if (!InRange(iXindex, iYindex))
-		{
-			throw new ArgumentOutOfRangeException("Trying to get tile outside grid!");
-		}
+		if (InRange(iXindex, iYindex))
+			return mGrid[iXindex, iYindex];
 
-		return mGrid[iXindex, iYindex];
+		return null;
 	}
 
 	// Gets the tile at the given indices

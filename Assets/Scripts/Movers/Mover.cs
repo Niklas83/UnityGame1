@@ -19,17 +19,18 @@ public class Mover : MonoBehaviour
 	
 	public void Start()
 	{
-		GridManagerExample gme = Helper.Find<GridManagerExample>("GridManagerExample");
-		mGridManager = gme.GridManager;
+		Floor floor = Helper.Find<Floor>("Floor");
+		mGridManager = floor.GridManager;
 
 		mUnit = GetComponent<BaseUnit>();
 	}
 
 	// Checks if this mover can move in the given direction.
 	public bool TryMove(int xDir, int yDir) {
-		Vector3 position = transform.position;
-		// TODO: It crashes when trying to get "out of bounds". This should be fixed when adding walls.
-		BaseTile tile = mGridManager.GetTile(Mathf.RoundToInt(position.x) + xDir, Mathf.RoundToInt(position.z) + yDir);
+		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
+
+		if (tile == null) // Can't move to a non existing tile.
+			return false;
 
 		bool canMove = true;
 		bool occupied = tile.Occupied;

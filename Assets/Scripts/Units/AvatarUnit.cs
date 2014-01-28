@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public sealed class PlayerUnit : BaseUnit
+public sealed class AvatarUnit : BaseUnit
 {
 	public override bool CanWalkOn { get { return false; } }
 
