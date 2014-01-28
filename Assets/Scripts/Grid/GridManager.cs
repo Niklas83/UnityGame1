@@ -53,6 +53,11 @@ public class GridManager
 		return null;
 	}
 
+	public Vector2 PositionToIndices(Vector3 iPosition)
+	{
+		return new Vector2(Mathf.RoundToInt(iPosition.x), Mathf.RoundToInt(iPosition.z));
+	}
+
 	// Gets the tile at the given indices
 	protected void RemoveTile(int iXindex, int iYindex)
 	{
