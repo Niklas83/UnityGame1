@@ -7,12 +7,16 @@ public class Hud : MonoBehaviour {
 
 	public GUISkin skin;
 
-	private int mLevel = 1;
-	private int mScore = 0;
+	public Player Player { set { mPlayer = value; } }
+	public LevelInfo LevelInfo { set { mLevelInfo = value; } }
+
+	private Player mPlayer;
+	private LevelInfo mLevelInfo;
 
 	private enum InfoType {
 		Level = 0,
-		Score = 1,
+		PlayerName = 1,
+		PlayerScore = 2,
 	}
 
 	private Dictionary<InfoType, Rect> mLayout;
@@ -38,7 +42,10 @@ public class Hud : MonoBehaviour {
 	void OnGUI() {
 		GUI.skin = skin;
 
-		GUI.Label(mLayout[InfoType.Level], String.Format("Level: {0}", mLevel));
-		GUI.Label(mLayout[InfoType.Score], String.Format("Score: {0}", mScore));
+		/* GUI.Label(mLayout[InfoType.Level], String.Format("Level: {0}", mLevelInfo.FloorNr));
+
+		GUI.Label(mLayout[InfoType.PlayerName], String.Format("Name: {0}", mPlayer.Name));
+		GUI.Label(mLayout[InfoType.PlayerScore], String.Format("Score: {0}", mPlayer.Score));
+*/
 	}
 }
