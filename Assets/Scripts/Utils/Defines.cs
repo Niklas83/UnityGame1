@@ -10,13 +10,6 @@ public enum Direction
 	Left = 3,
 }
 
-[Flags]
-public enum TileTypes
-{
-	None = 0,
-	Floor = 1 << 0,
-}
-
 public static class Defines 
 {
 	public static int TILE_SIZE = 1; // Size of tile in all dimensions.

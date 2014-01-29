@@ -4,5 +4,6 @@ using System;
 
 public class FloorTile : BaseTile 
 {
-	public override TileTypes TileType { get { return TileTypes.Floor; } }
+	protected override void OnLeaved(BaseUnit iUnit) {}
+	protected override void OnArrived(BaseUnit iUnit) {}
 }

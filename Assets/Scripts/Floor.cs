@@ -27,6 +27,7 @@ public class Floor : MonoBehaviour {
 		mGridManager.CreateGrid((int)size.x + 1, (int)size.z + 1);
 		for (int i = 0; i < nrTiles; i++) {
 			BaseTile tile = transform.GetChild(i).GetComponent<BaseTile>();
+			tile.Init(mGridManager);
 			mGridManager.AddTile(tile);
 		}
 

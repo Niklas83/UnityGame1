@@ -77,7 +77,7 @@ public class GridManager
 		return t.Occupied;
 	}
 
-	public void GetAll(TileTypes iType, out List<BaseTile> oTiles)
+	public void GetAll<T>(out List<BaseTile> oTiles) where T : BaseTile
 	{
 		mTilesForQueries.Clear();
 		
@@ -85,7 +85,7 @@ public class GridManager
 		while (it.HasNext())
 		{
 			BaseTile t = it.Next();
-			if (t != null && t.TileType == iType)
+			if (t != null && t is T)
 			{
 				mTilesForQueries.Add(t);	
 			}

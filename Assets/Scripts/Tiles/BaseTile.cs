@@ -5,12 +5,15 @@ using System.Collections.Generic;
 
 public abstract class BaseTile : MonoBehaviour
 {
-	public abstract TileTypes TileType { get; }
-
 	public bool Occupied { get { return mUnit != null; } }
-	private BaseUnit mUnit; 		// The unit occupying this tile
+	protected GridManager GridManager { get { return mGridManager; } }
 
-	void Start() {}
+	private BaseUnit mUnit; 		// The unit occupying this tile
+	private GridManager mGridManager;
+
+	public void Init(GridManager iGridManager) {
+		mGridManager = iGridManager;
+	}
 	
 	public void Occupy(BaseUnit iUnit)
 	{
@@ -28,10 +31,12 @@ public abstract class BaseTile : MonoBehaviour
 			mUnit.OccupiedTile.Leave();
 
 		mUnit.OccupiedTile = this;
+		OnArrived(mUnit);
 	}
 	
-	public void Leave()
+	private void Leave()
 	{
+		OnLeaved(mUnit);
 		mUnit = null;
 	}
 	
@@ -39,4 +44,7 @@ public abstract class BaseTile : MonoBehaviour
 	{
 		return mUnit;
 	}
+
+	protected abstract void OnLeaved(BaseUnit iUnit);
+	protected abstract void OnArrived(BaseUnit iUnit);
 }
