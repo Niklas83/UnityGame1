@@ -4,6 +4,6 @@ using System;
 
 public class FloorTile : BaseTile 
 {
-	protected override void OnLeaved(BaseUnit iUnit) {}
-	protected override void OnArrived(BaseUnit iUnit) {}
+	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
+	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {}
 }

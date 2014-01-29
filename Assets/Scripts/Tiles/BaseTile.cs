@@ -28,15 +28,16 @@ public abstract class BaseTile : MonoBehaviour
 		
 		mUnit = iUnit;
 		if (mUnit.OccupiedTile != null)
-			mUnit.OccupiedTile.Leave();
+			mUnit.OccupiedTile.Leave(this);
 
+		BaseTile previousTile = mUnit.OccupiedTile;
 		mUnit.OccupiedTile = this;
-		OnArrived(mUnit);
+		OnArrived(mUnit, previousTile);
 	}
 	
-	private void Leave()
+	private void Leave(BaseTile iNextTile)
 	{
-		OnLeaved(mUnit);
+		OnLeaved(mUnit, iNextTile);
 		mUnit = null;
 	}
 	
@@ -45,6 +46,6 @@ public abstract class BaseTile : MonoBehaviour
 		return mUnit;
 	}
 
-	protected abstract void OnLeaved(BaseUnit iUnit);
-	protected abstract void OnArrived(BaseUnit iUnit);
+	protected abstract void OnLeaved(BaseUnit iUnit, BaseTile iNextTile);
+	protected abstract void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile);
 }
