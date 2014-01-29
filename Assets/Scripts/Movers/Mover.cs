@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -34,7 +34,7 @@ public class Mover : MonoBehaviour
 	public bool TryMove(int xDir, int yDir) {
 		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
 
-		if (tile == null) // Can't move to a non existing tile.
+		if (tile == null || !tile.IsActive()) // Can't move to a non existing tile.
 			return false;
 
 		bool canMove = true;

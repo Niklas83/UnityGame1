@@ -49,7 +49,7 @@ public sealed class AvatarUnit : BaseUnit
 			}
 		}
 
-		if (!mMover.IsMoving && mMoveQueue != null) {
+		if (!mMover.IsMoving && mMoveQueue != null && mMoveQueue.Count > 0) {
 			Vector2 dir = mMoveQueue.Dequeue();
 			mMover.TryMove((int)dir.x, (int)dir.y);
 			if (mMoveQueue.Count == 0)
