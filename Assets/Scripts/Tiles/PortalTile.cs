@@ -3,16 +3,19 @@ using System.Collections;
 
 public class PortalTile : BaseTile 
 {
-	public PortalTile OtherPortal;
+	public BaseTile DestinationTile;
 
 	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
 	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {
-		if (iPreviousTile == OtherPortal) // Came from the other portal
+		if (iPreviousTile == DestinationTile || DestinationTile == null) // Came from the other portal
 			return;
 
-		Vector3 position = OtherPortal.transform.position;
+		if (DestinationTile.Occupied)
+			return;
+
+		Vector3 position = DestinationTile.transform.position;
 		position.y = 1; // This should be solved better... Like "place unit on tile" function.
 		iUnit.transform.position = position;
-		OtherPortal.Occupy(iUnit);
+		DestinationTile.Occupy(iUnit);
 	}
 }
