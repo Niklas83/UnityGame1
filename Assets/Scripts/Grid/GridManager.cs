@@ -27,6 +27,11 @@ public class GridManager
 		PositionToIndices(iTile.transform.position, out x, out y);
 		mGrid[x, y] = iTile;
 	}
+	public void RemoveTile(BaseTile iTile) {
+		int x, y;
+		PositionToIndices(iTile.transform.position, out x, out y);
+		mGrid[x, y] = null;
+	}
 
 	public bool InRange(Vector3 iPosition) {
 		int x, y;
