@@ -114,11 +114,12 @@ public class PlayerGridMove : MonoBehaviour
             {
                 Transform RotatableBeam = objectLocator.GetRotatableBeamToTurnFromTileWalkingTo(endPosition);
 
+                
                 SetXandZInputValues();
 
                 if (this.moveBoxX != 0 || this.moveBoxZ != 0)
                 {
-                    this.canMoveToPreviousObsticleLocation = objectLocator.RotateRotatableBeam(RotatableBeam, this.moveBoxX, this.moveBoxZ);     //Sätter att du kan flytta rotatable beam mot önskad riktning och att du kan ta dig dit
+                    this.canMoveToPreviousObsticleLocation = objectLocator.RotateRotatableBeam(RotatableBeam, this.moveBoxX, this.moveBoxZ, startPosition);     //Sätter att du kan flytta rotatable beam mot önskad riktning och att du kan ta dig dit
                 }
 
             }

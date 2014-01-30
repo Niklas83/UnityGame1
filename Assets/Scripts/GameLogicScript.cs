@@ -130,7 +130,7 @@ public class GameLogicScript : MonoBehaviour {
     //Skapar boxar som ej kan flyttas
     void createBoxes()
     {
-        this.NumberOfBoxes = Random.Range(15, 20);
+        this.NumberOfBoxes = Random.Range(1, 3);
 
         int X = 0;
         int Z = 0;
@@ -151,7 +151,7 @@ public class GameLogicScript : MonoBehaviour {
     //Skapar boxar som KAN lyttas
     void createMovableBoxes()
     {
-        this.NumberOfMovableBoxes = Random.Range(5, 10);
+        this.NumberOfMovableBoxes = Random.Range(1, 3);
 
         int X = 0;
         int Z = 0;

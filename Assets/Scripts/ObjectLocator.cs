@@ -131,7 +131,14 @@ public class ObjectLocator : MonoBehaviour {
                 {
                     Transform RotatableBeamPart = RotatableBeam.transform.GetChild(j);
 
-                    AllPartsOfRotatableBeamsPositions.Add(RotatableBeamPart.position);
+                    if (RotatableBeamPart.name != "Axis")
+                    {
+                        AllPartsOfRotatableBeamsPositions.Add(RotatableBeamPart.position);
+                    }
+                    else
+                    {
+                        AllWallPositions.Add(RotatableBeam.position);                       //Ska vara en egen axis lista, men TEMPORÄRT LÄGGS DEN I VÄGGAR
+                    }
                 }
 
             }
@@ -327,11 +334,11 @@ public class ObjectLocator : MonoBehaviour {
     }
 
     //Rotate the rotatable beam
-    public bool RotateRotatableBeam(Transform rotatableBeam, float moveBoxX, float moveBoxZ)
+    public bool RotateRotatableBeam(Transform rotatableBeam, float moveBoxX, float moveBoxZ, Vector3 PlayerStartPosition)
     {
         GameObject RotatableBeam = GameObject.Find(rotatableBeam.name);
         RotatableBeamMove RotatableBeamMoveScript = RotatableBeam.GetComponent<RotatableBeamMove>();
-        bool canMoveToPreviousObsticleLocation = RotatableBeamMoveScript.MoveBeam(moveBoxX, moveBoxZ);
+        bool canMoveToPreviousObsticleLocation = RotatableBeamMoveScript.MoveBeam(moveBoxX, moveBoxZ, PlayerStartPosition);
         this.LocatedAllRotatableBeams = false;
         this.AllRotatableBeamsPositions = new List<Vector3>();
         this.AllPartsOfRotatableBeamsPositions = new List<Vector3>();

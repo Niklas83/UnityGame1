@@ -30,12 +30,16 @@ public class RotatableBeamMove : MonoBehaviour
     Vector3 startLocationOfObsticle = new Vector3();
 
 
+    private bool hitSide = false;
+
+
+
     public void Start()
     {
         objectLocator = GameObject.FindObjectOfType<ObjectLocator>();         //Object som håller alla positioner på object
     }
 
-    public bool MoveBeam(float moveX, float moveY)
+    public bool MoveBeam(float moveX, float moveZ, Vector3 PlayerStartPosition)
     {
         if (startLocationOfObsticle.Equals(new Vector3()))
         {
@@ -56,16 +60,16 @@ public class RotatableBeamMove : MonoBehaviour
                     }
                 }
 
-                if (input != Vector2.zero)
-                {
-                    StartCoroutine(move(transform));
-                }
+                //if (input != Vector2.zero)
+                //{
+                //    StartCoroutine(move(moveX, moveZ, PlayerStartPosition));
+                //}
         //Ovanstående kod gör att det blir en push effekt på boxen
 
 
 
         //Input som används
-                input = new Vector2(moveX, moveY);
+                input = new Vector2(moveX, moveZ);
 
             if (!allowDiagonals)
             {
@@ -81,12 +85,18 @@ public class RotatableBeamMove : MonoBehaviour
 
             if (input != Vector2.zero)
             {
-                StartCoroutine(move(transform));
+                StartCoroutine(move(moveX, moveZ, PlayerStartPosition));
             }
 
 
+        if (hitSide == true)
+        {
+            return false;
+        }
+
+
         //Kontrollerar om boxen har flyttats och returnerar true om så är fallet, i annat fall returneras false då obsticle ej kunnat flytta
-        if (startLocationOfObsticle.Equals(transform.position))
+        if (startLocationOfObsticle.Equals(this.transform.position))
         {
             return false;
         }
@@ -97,12 +107,12 @@ public class RotatableBeamMove : MonoBehaviour
        
     }
 
-    public IEnumerator move(Transform transform)
+    public IEnumerator move(float moveX, float moveZ, Vector3 PlayerStartPosition)
     {
         isMoving = true;
         if (startPosition.Equals(new Vector3()))
         {
-            startPosition = transform.position;
+            startPosition = this.transform.position;
         }
 
         t = 0;
@@ -129,33 +139,70 @@ public class RotatableBeamMove : MonoBehaviour
 
         if (!objectLocator.GetAllMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllNonMovableBoxPositions().Contains(endPosition) && !objectLocator.GetAllWallPositions().Contains(endPosition) && !objectLocator.GetAllCandlePositions().Contains(endPosition) && !objectLocator.GetAllPartsOfRotatableBeamsPositions().Contains(endPosition))
         {
-            
-            while (t < 1f)
+            int rotateDegrees = 0;
+
+            if (moveZ == -1 && PlayerStartPosition.x != this.transform.GetChild(0).position.x)
             {
-                t += Time.deltaTime * (moveSpeed / gridSize) * factor;
-
-                transform.position = Vector3.Lerp(startPosition, endPosition, t);
-
-                //Jobbar här
-                //var rotation = Quaternion.LookRotation(transform.position);
-                //rotation *= Quaternion.Euler(0, 90, 0); // this add a 90 degrees Y rotation
-
-
-                yield return null;
-
-
-                //KANSKE KAN NYTTA DETTA
-                ////var lookPos = target.position - transform.position;
-                ////lookPos.y = 0;
-                ////var rotation = Quaternion.LookRotation(lookPos);
-                ////rotation *= Quaternion.Euler(0, 90, 0); // this add a 90 degrees Y rotation
-                ////var adjustRotation = transform.rotation.y + rotationAdjust; //<- this is wrong!
-                ////transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * damping);
-
-
-
-
+                if (PlayerStartPosition.x > this.transform.position.x)
+                {
+                    rotateDegrees = 90;
+                }
+                else
+                {
+                    rotateDegrees = -90;
+                }
             }
+            else if (moveZ == 1 && PlayerStartPosition.x != this.transform.GetChild(0).position.x)
+            {
+                if (PlayerStartPosition.x > this.transform.position.x)
+                {
+                    rotateDegrees = -90;
+                }
+                else
+                {
+                    rotateDegrees = 90;
+                }
+            }
+            else if (moveX == -1 && PlayerStartPosition.z != this.transform.GetChild(0).position.z)
+            {
+                if (PlayerStartPosition.z > this.transform.position.z)
+                {
+                    rotateDegrees = -90;
+                }
+                else
+                {
+                    rotateDegrees = 90;
+                }
+            }
+            else if (moveX == 1 && PlayerStartPosition.z != this.transform.GetChild(0).position.z)
+            {
+                if (PlayerStartPosition.z > this.transform.position.z)
+                {
+                    rotateDegrees = 90;
+                }
+                else
+                {
+                    rotateDegrees = -90;
+                }
+            }
+            else
+            {
+                hitSide = true;
+            }
+
+
+            //TODO Fixa smooth förflyttning likt boxarna
+            transform.Rotate(0,rotateDegrees,0);
+
+            //while (t < 1f)
+            //{
+            //    t += Time.deltaTime * (moveSpeed / gridSize) * factor;
+
+            //    //transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+            //    yield return null;
+
+            //}
 
             startPosition = new Vector3();          //Nollställer startposition
             startLocationOfObsticle = new Vector3();          //Nollställer startLocation
