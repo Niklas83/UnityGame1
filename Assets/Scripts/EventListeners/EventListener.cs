@@ -12,12 +12,12 @@ public class EventListener : MonoBehaviour {
 	public void ReceiveEvent(EventMessage iEvent) {
 		switch (iEvent) {
 		case EventMessage.Activate : 
-			SendMessage("SetActive", true);
+			SendMessage("SetActive", true);         //Metodnamnet
 			break;
 		case EventMessage.Deactivate :
 			SendMessage("SetActive", false);
 			break;
-		case EventMessage.ToggleActivate :
+		case EventMessage.ToggleActivate :                          //används ej just nu
 			MonoBehaviour[] mb = GetComponents<MonoBehaviour>();
 			foreach (MonoBehaviour b in mb) {
 				if (b is IActivatable) {
