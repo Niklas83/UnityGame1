@@ -61,7 +61,7 @@
                 i.uvgrab.xy = i.uvgrab.xy + offset;
 
                 half4 col = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-                return col + tex2D(_MainTex, i.uv_MainTex + offset);
+                return col + tex2D(_MainTex, i.uv_MainTex + offset) * 0.75;
             }
 		ENDCG
 		}

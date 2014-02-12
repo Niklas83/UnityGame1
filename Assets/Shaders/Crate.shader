@@ -23,7 +23,7 @@
 			float2 uv_SpecMap;
 		};
 
-		void surf (Input IN, inout SurfaceOutput o) {
+		void surf(Input IN, inout SurfaceOutput o) {
 			o.Albedo = tex2D(_Diffuse, IN.uv_Diffuse).rgb;
 			o.Specular = _Shininess * tex2D(_SpecMap, IN.uv_SpecMap).r;
 			o.Gloss = tex2D(_SpecMap, IN.uv_SpecMap).g;
