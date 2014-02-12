@@ -1,0 +1,34 @@
+Initialize engine version: 4.3.3f1 (c8ca9b6b9936)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dumx.dll 9.18.13.2018]
+    Renderer: NVIDIA GeForce GTX 560 Ti 
+    Vendor:   NVIDIA
+    VRAM:     1233 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
+Loading C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
+- Completed reload, in  0.048 seconds
+desktop: 1920x1200 59Hz; virtual: 4320x1920 at -2400,-355
+<RI> Initializing input.
+<RI> Input initialized.
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Kalle\Documents\GitHub\UnityGame1\Builds\Version 0.1\Windows\x86_64\Little Bastards_Data\Managed\Boo.Lang.dll (this message is harmless)
+Exception: Can't move a unit while it is moving!
+  at DebugAux.Assert (Boolean iCondition, System.String iErrorMessage) [0x00000] in <filename unknown>:0 
+  at Mover+<Move>c__Iterator1.MoveNext () [0x00000] in <filename unknown>:0 
+UnityEngine.MonoBehaviour:StartCoroutine_Auto(IEnumerator)
+UnityEngine.MonoBehaviour:StartCoroutine(IEnumerator)
+Mover:TryMove(Int32, Int32)
+AvatarUnit:Update()
+ 
+(Filename:  Line: -1)
+
