@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,5 +15,12 @@ public abstract class BaseUnit : MonoBehaviour
 		set { mOccupiedTile = value; }
 	}
 
+    public virtual void SetActive(bool iActive)
+    {
+        throw new NotImplementedException();
+    }
+
 	void Start() { }
+
+
 }
