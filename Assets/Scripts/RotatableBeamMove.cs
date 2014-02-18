@@ -191,7 +191,7 @@ public class RotatableBeamMove : MonoBehaviour
             }
 
 
-            //TODO Fixa smooth förflyttning likt boxarna
+            //TODO: Fixa smooth förflyttning likt boxarna
             transform.Rotate(0,rotateDegrees,0);
 
             //while (t < 1f)

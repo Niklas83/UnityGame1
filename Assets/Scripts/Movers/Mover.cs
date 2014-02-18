@@ -45,8 +45,17 @@ public class Mover : MonoBehaviour
 			if (!canMove && IsPusher) {
 				// If not a walkable, check if you are a 'Pusher' and it can be moved.
 				Mover mover = unit.GetComponent<Mover>();
-				if (mover != null)
-					canMove = mover.TryMove(xDir, yDir);
+			    if (mover != null)
+			    {
+			        canMove = mover.TryMove(xDir, yDir);
+			    }
+
+                //TODO: Slå ihop ovanliggande med denna
+			    RotateMover rotateMover = unit.GetComponent<RotateMover>();
+			    if (rotateMover != null)
+			    {
+                    canMove = rotateMover.TryMove(xDir, yDir, this.gameObject.transform.position);
+			    }
 			}
 		}
 
