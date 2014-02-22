@@ -35,7 +35,7 @@ public class Floor : MonoBehaviour {
 		for (int i = 0; i < allUnits.Length; i++) {
 			BaseUnit bu = allUnits[i] as BaseUnit;
 			BaseTile tile = mGridManager.GetTile(bu.transform.position);
-			DebugAux.Assert(tile != null, "Can't have a unit placed on a non-tile");
+			DebugAux.Assert(tile != null, "Can't have a unit placed on a non-tile " + bu);
 			tile.Occupy(bu);
 		}
 	}

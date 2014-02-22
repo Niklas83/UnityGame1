@@ -2,11 +2,11 @@
 	Properties {
         _MainTex ("Diffuse (RGB)", 2D) = "white" {}
 		_BlendTex ("Blend (RGB)", 2D) = "white" {}
-		_SharpnessX ("SharpnessX", Range (0, 10)) = 3
-		_SharpnessY ("SharpnessY", Range (0, 10)) = 1
+		_SharpnessX ("SharpnessX", Range (0, 3)) = 2
+		_SharpnessY ("SharpnessY", Range (0, 3)) = 1
 	}
 	SubShader {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType" = "Opaque" }
         
         Pass {
         CGPROGRAM
@@ -43,10 +43,6 @@
                 o.uv_BlendTex = TRANSFORM_TEX(v.texcoord, _BlendTex);
                 return o;
             }
-
-            sampler2D _GrabTexture;
-            float4 _GrabTexture_TexelSize;
-            sampler2D _BumpMap;
 
             half4 frag(v2f i) : COLOR
             {
