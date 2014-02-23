@@ -6,6 +6,7 @@ public class SetupLevel : ScriptableWizard
 {
 	public int width = 15;
 	public int height = 11;
+	public float floorTexureScale = 1;
 	public Sprite background;
 	public GameObject[] floorTiles;
 	public AudioClip audioClip;
@@ -21,10 +22,12 @@ public class SetupLevel : ScriptableWizard
     {
 		Floor floor = Helper.CreateObject<Floor>("Floor");
 		GameObject parent = floor.gameObject;
+		Vector2 textureScale = new Vector2(floorTexureScale, floorTexureScale);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int index = Random.Range(0, floorTiles.Length);
 				BaseTile tile = Helper.Instansiate<BaseTile>(floorTiles[index], parent);
+				tile.renderer.material.mainTextureScale = textureScale;
 				tile.transform.position = new Vector3(x, 0, y);
 			}
 		}
@@ -42,7 +45,6 @@ public class SetupLevel : ScriptableWizard
 		sr.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
 
 		Helper.CreateObject<Hud>("Hud");
-
 		new GameObject("Boxes");
 
 		Light light = Helper.CreateObject<Light>("Sun");
