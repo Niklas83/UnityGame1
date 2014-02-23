@@ -7,7 +7,7 @@ public class SetupLevel : ScriptableWizard
 	public int width = 15;
 	public int height = 11;
 	public Sprite background;
-	public GameObject floorTile;
+	public GameObject[] floorTiles;
 	public AudioClip audioClip;
 	public GameObject player;
 	
@@ -23,7 +23,8 @@ public class SetupLevel : ScriptableWizard
 		GameObject parent = floor.gameObject;
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				BaseTile tile = Helper.Instansiate<BaseTile>(floorTile, parent);
+				int index = Random.Range(0, floorTiles.Length);
+				BaseTile tile = Helper.Instansiate<BaseTile>(floorTiles[index], parent);
 				tile.transform.position = new Vector3(x, 0, y);
 			}
 		}
@@ -40,9 +41,9 @@ public class SetupLevel : ScriptableWizard
 		sr.transform.position = new Vector3(7, -1, 5);
 		sr.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
 
-		Hud hud = Helper.CreateObject<Hud>("Hud");
+		Helper.CreateObject<Hud>("Hud");
 
-		GameObject boxes = new GameObject("Boxes");
+		new GameObject("Boxes");
 
 		Light light = Helper.CreateObject<Light>("Sun");
 		light.type = LightType.Directional;
