@@ -27,7 +27,16 @@ public class SetupLevel : ScriptableWizard
 			for (int y = 0; y < height; y++) {
 				int index = Random.Range(0, floorTiles.Length);
 				BaseTile tile = Helper.Instansiate<BaseTile>(floorTiles[index], parent);
-				tile.renderer.sharedMaterial.mainTextureScale = textureScale;
+
+				int indexX = Mathf.RoundToInt(1 / textureScale.x);
+				int indexY = Mathf.RoundToInt(1 / textureScale.y);
+
+				int randomX = Random.Range(0, indexX);
+				int randomY = Random.Range(0, indexY);
+
+				Vector2 scale = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
+
+				tile.renderer.sharedMaterial.mainTextureScale = scale;
 				tile.transform.position = new Vector3(x, 0, y);
 				/*GameObject go = PrefabUtility.InstantiatePrefab(floorTiles[index]) as GameObject;
 				go.transform.parent = parent.transform;
