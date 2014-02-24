@@ -5,55 +5,21 @@ public class Menu : MonoBehaviour {
 
 	public GUISkin guiSkin;
 	public float menuAlpha;
-	public float fadeAlpha = 1;
-	public float timer = 0;
 
 	public Vector3 littlePosition = new Vector3(390, 230, 0);
 	public Vector3 bastardsPosition = new Vector3(180, 300, 0);
 
-	Texture2D fade;
-	AsyncOperation asyncOp;
-	AudioPlayer audioPlayer;
-
-	void Start() {
-		fade = new Texture2D(1, 1);
-		fade.SetPixel(0, 0, new Color(0, 0, 0));
-		fade.Apply();
-
-		audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
-	}
-
 	void NewGame() {
-		if (asyncOp != null)
-			return;
-
-		asyncOp = Application.LoadLevelAsync(1);
-		asyncOp.allowSceneActivation = false;
-
-		timer = 0;
-
-		audioPlayer.FadeOut(2f/3f);
-
-		Animator a = this.gameObject.GetComponent<Animator>();
-		a.Play("FadeOut");
+		SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+		st.NextScene();
 	}
 	void Continue() {
 		Debug.LogWarning("Continue not implemented!");
 	}
 
-	void Update() {
-		if (asyncOp == null)
-			return;
-
-		timer += Time.deltaTime;
-		if (timer >= 2f/3f)
-			asyncOp.allowSceneActivation = true;
-	}
-
 	void OnGUI() {
 		GUI.skin = guiSkin;
 		GUIStyle labelStyle = guiSkin.GetStyle("label");
-		GUIStyle buttonStyle = guiSkin.GetStyle("button");
 
 		float width = Defines.RESOLUTION_WIDTH;
 		float height = Defines.RESOLUTION_HEIGHT;
@@ -74,9 +40,6 @@ public class Menu : MonoBehaviour {
 				Continue();
 			GUILayout.EndArea();
 		}
-
-		GUI.color = new Color(0, 0, 0, fadeAlpha);
-		GUI.DrawTexture(new Rect(0, 0, width+1, height+1), fade);
 	}
 
 	void DrawText(Vector2 offset, Color color) {
