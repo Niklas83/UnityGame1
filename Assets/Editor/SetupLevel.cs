@@ -6,7 +6,7 @@ public class SetupLevel : ScriptableWizard
 {
 	public int width = 15;
 	public int height = 11;
-	public float floorTexureScale = 1;
+	public float tileSize = 1;
 	public Sprite background;
 	public GameObject[] floorTiles;
 	public AudioClip audioClip;
@@ -22,7 +22,7 @@ public class SetupLevel : ScriptableWizard
     {
 		Floor floor = Helper.CreateObject<Floor>("Floor");
 		GameObject parent = floor.gameObject;
-		Vector2 textureScale = new Vector2(floorTexureScale, floorTexureScale);
+		Vector2 textureScale = new Vector2(tileSize, tileSize);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int index = Random.Range(0, floorTiles.Length);
@@ -34,10 +34,17 @@ public class SetupLevel : ScriptableWizard
 				int randomX = Random.Range(0, indexX);
 				int randomY = Random.Range(0, indexY);
 
-				Vector2 scale = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
+				Vector2 scale  = new Vector2(textureScale.x, textureScale.y);
+				Vector2 offset = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
 
-				tile.renderer.sharedMaterial.mainTextureScale = scale;
+				Material tempMaterial = new Material(tile.renderer.sharedMaterial);
+
+				tempMaterial.mainTextureScale = scale;
+				tempMaterial.mainTextureOffset = offset;
+
 				tile.transform.position = new Vector3(x, 0, y);
+				tile.renderer.sharedMaterial = tempMaterial;
+
 				/*GameObject go = PrefabUtility.InstantiatePrefab(floorTiles[index]) as GameObject;
 				go.transform.parent = parent.transform;
 				go.renderer.material.mainTextureScale = textureScale;
