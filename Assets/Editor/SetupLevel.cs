@@ -27,8 +27,12 @@ public class SetupLevel : ScriptableWizard
 			for (int y = 0; y < height; y++) {
 				int index = Random.Range(0, floorTiles.Length);
 				BaseTile tile = Helper.Instansiate<BaseTile>(floorTiles[index], parent);
-				tile.renderer.material.mainTextureScale = textureScale;
+				tile.renderer.sharedMaterial.mainTextureScale = textureScale;
 				tile.transform.position = new Vector3(x, 0, y);
+				/*GameObject go = PrefabUtility.InstantiatePrefab(floorTiles[index]) as GameObject;
+				go.transform.parent = parent.transform;
+				go.renderer.material.mainTextureScale = textureScale;
+				go.transform.position = new Vector3(x, 0, y);*/
 			}
 		}
 
@@ -51,7 +55,10 @@ public class SetupLevel : ScriptableWizard
 		light.type = LightType.Directional;
 		light.transform.rotation = Quaternion.AngleAxis(45, new Vector3(1, 1, 0));
 
-		GameObject p = Helper.Instansiate<AvatarUnit>(player).gameObject;
+		GameObject p = PrefabUtility.InstantiatePrefab(player) as GameObject;
 		p.transform.position = new Vector3(0, 1, 0);
+		
+		Object prefab = AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Scene/SceneTransition.prefab", typeof(GameObject));
+		PrefabUtility.InstantiatePrefab(prefab);
     }
 }
