@@ -55,7 +55,7 @@ public class RotateMover : MonoBehaviour {
         { // Something is in the place where we are passing by
             BaseUnit unitPassingBy = tilePassingBy.GetOccupyingUnit();
 
-            passingByCanMove = unitPassingBy == mUnit || unitPassingBy.CanWalkOn; // You can walk here if it's to yourself or to a "walkable" unit.
+            passingByCanMove = unitPassingBy == mUnit || unitPassingBy.CanWalkOn(this.gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
             if (!passingByCanMove && IsPusher)
             {
                 // If not a walkable, check if you are a 'Pusher' and it can be moved.
@@ -79,7 +79,7 @@ public class RotateMover : MonoBehaviour {
         { // Something is in the place we want to move
             BaseUnit unitEndPosition = tileEndPosition.GetOccupyingUnit();
 
-            endPositionCanMove = unitEndPosition == mUnit || unitEndPosition.CanWalkOn; // You can walk here if it's to yourself or to a "walkable" unit.
+            endPositionCanMove = unitEndPosition == mUnit || unitEndPosition.CanWalkOn(this.gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
             if (!endPositionCanMove && IsPusher)
             {
                 // If not a walkable, check if you are a 'Pusher' and it can be moved.

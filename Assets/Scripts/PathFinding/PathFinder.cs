@@ -120,7 +120,7 @@ public class PathFinder
 			if (addToOpenSet)
 			{
 				BaseUnit u = t.GetOccupyingUnit();
-				addToOpenSet = u == null || iUnit == u || iUnit.CanWalkOn; // Ok to pass through
+                addToOpenSet = u == null || iUnit == u || iUnit.CanWalkOn(null); // Ok to pass through
 			}
 			
 			if (addToOpenSet) 

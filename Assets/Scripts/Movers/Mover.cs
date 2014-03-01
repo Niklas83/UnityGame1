@@ -41,7 +41,7 @@ public class Mover : MonoBehaviour
 		bool occupied = tile.Occupied;
 		if (occupied) { // Something is in the place we want to move
 			BaseUnit unit = tile.GetOccupyingUnit();
-			canMove = unit == mUnit || unit.CanWalkOn; // You can walk here if it's to yourself or to a "walkable" unit.
+			canMove = unit == mUnit || unit.CanWalkOn(this.gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
 			if (!canMove && IsPusher) {
 				// If not a walkable, check if you are a 'Pusher' and it can be moved.
 				Mover mover = unit.GetComponent<Mover>();
@@ -75,6 +75,11 @@ public class Mover : MonoBehaviour
 		Vector3 endPosition = startPosition + new Vector3(xDir * Defines.TILE_SIZE, 0, yDir * Defines.TILE_SIZE);
 		mCurrentTargetPosition = endPosition;
 
+        //Moved the transform of the acctual movement to before the animation so that the projectiles wont hit when u have started to move (these 3 lines used to be after the animation)
+        transform.position = endPosition; // Avoid rounding errors with slerp when t == 1
+        BaseTile tile = mGridManager.GetTile(Mathf.RoundToInt(startPosition.x) + xDir, Mathf.RoundToInt(startPosition.z) + yDir);
+        tile.Occupy(mUnit);
+
 		while (t < 1f)
 		{
 			t += Time.deltaTime*(MoveSpeed / Defines.TILE_SIZE);
@@ -82,9 +87,7 @@ public class Mover : MonoBehaviour
 			yield return null;
 		}
 
-		transform.position = endPosition; // Avoid rounding errors with slerp when t == 1
-		BaseTile tile = mGridManager.GetTile(Mathf.RoundToInt(startPosition.x) + xDir, Mathf.RoundToInt(startPosition.z) + yDir);
-		tile.Occupy(mUnit);
+
 		mIsMoving = false;
 
 		yield return 0;

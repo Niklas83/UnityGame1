@@ -24,12 +24,12 @@ public sealed class ProjectileShooterUnit : BaseUnit
 
     private bool IsCurrentlyShooting = false;
 
-    public override bool CanWalkOn
+    // changed so u can have method handling the return value
+    public override bool CanWalkOver { get { return false; } }
+
+    public override bool CanWalkOn(string incomingUnitTag)
     {
-        get
-        {
-            return false;
-        }
+        return CanWalkOver;
     }
 
     void Update()

@@ -4,17 +4,28 @@ using System.Collections;
 public sealed class PortalUnit : BaseUnit
 {
 
-    public override bool CanWalkOn
+    public override bool CanWalkOver { get { return true; } }
+
+    public override bool CanWalkOn(string incomingUnitTag)
     {
 
-        get
-        {
-            
-            this.audio.enabled = true;
-            //Swap level or somthing :)
-            return true;
-        }
+        this.audio.enabled = true;
+        return CanWalkOver;
     }
+
+
+
+    //public override bool CanWalkOn
+    //{
+
+    //    get
+    //    {
+            
+    //        this.audio.enabled = true;
+    //        //Swap level or somthing :)
+    //        return true;
+    //    }
+    //}
 
 
     public override void SetActive(bool iActive)

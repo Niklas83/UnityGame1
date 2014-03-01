@@ -28,6 +28,8 @@ public class ProjectileMover : MonoBehaviour
 
 	// Public properties
 	public bool IsMoving { get { return mIsMoving; } }
+
+    private int NumberOfMovementOverNonExistingTiles = 0;
 	
 	public void init()
 	{
@@ -43,57 +45,113 @@ public class ProjectileMover : MonoBehaviour
     }
 
 	// Checks if this mover can move in the given direction.
-	public void TryMove() {
-
-        //Controlls that the tile the projectile is currently on has a unity it will be destroyed
-        BaseTile currenTile = mGridManager.GetTile(transform.position);
-        if (currenTile == null || !currenTile.IsActive()) // Can't move to a non existing tile.
+    public void TryMove()
+    {
+        if (!mIsMoving)
         {
-            Destroy(this.gameObject);
-            return;
-        }
-        
-		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
-
-	    if (tile == null || !tile.IsActive()) // Can't move to a non existing tile.
-	    {
-	        Destroy(this.gameObject);
-	        return;
-	    }
             
-		bool canMove = true;
-		bool occupied = tile.Occupied;
-		if (occupied) { // Something is in the place we want to move
-			BaseUnit unit = tile.GetOccupyingUnit();
-			canMove = unit == mUnit || unit.CanWalkOn; // You can walk here if it's to yourself or to a "walkable" unit.
+        BaseTile movingToTile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
 
-		    if (unit is AvatarUnit)         //checks if the unit you are walking upon is a player
-		    {
-		        Destroy(unit.gameObject);
-                Destroy(this.gameObject);
-		        if (ResetMapIfPlayerIsKilled)
-		        {
-		            Application.LoadLevel(Application.loadedLevel);
-		        }
-		    }
+        if (movingToTile == null || !movingToTile.IsActive()) // Projectiles can move over null tiles
+        {
+            NumberOfMovementOverNonExistingTiles++;
 
-
-            if (!canMove && CanPassThroughUnits)        
+            if (NumberOfMovementOverNonExistingTiles > 10)
             {
-                canMove = true;
+                Destroy(this.gameObject);
             }
             else
             {
-                Destroy(this.gameObject);
+                StartCoroutine(Move(xDir, yDir));
             }
-		}
+        }
+        else
+        {
+            NumberOfMovementOverNonExistingTiles = 0;
+            bool canMove = true;
 
-        if (canMove && !mIsMoving)
-	    {
-	        StartCoroutine(Move(xDir, yDir));
-	    }
-        
-	}
+
+            if (mGridManager.GetTile(transform.position) != null)
+            {
+                //Controlls the tile moving from
+                BaseTile currenTile = mGridManager.GetTile(transform.position);
+
+                bool currentTileIsOccupied = currenTile.Occupied;
+                if (currentTileIsOccupied)
+                {
+                    // Something is in the place we want to move
+                    BaseUnit unit = currenTile.GetOccupyingUnit();
+                    canMove = unit == mUnit || unit.CanWalkOn(this.gameObject.tag);
+                    // You can walk here if it's to yourself or to a "walkable" unit.
+
+                    if (unit is AvatarUnit) //checks if the unit you are walking upon is a player
+                    {
+                        Destroy(unit.gameObject);
+                        Destroy(this.gameObject);
+                        if (ResetMapIfPlayerIsKilled)
+                        {
+                            Application.LoadLevel(Application.loadedLevel);
+                        }
+                    }
+                    if (unit is Unit)
+                    {
+                        if (!canMove && CanPassThroughUnits)
+                        {
+                            canMove = true;
+                        }
+                        else
+                        {
+                            Destroy(this.gameObject);
+                        }
+                    }
+
+
+                }
+            }
+
+
+            //Controlls the tile moving to
+            canMove = true;
+            bool movingToTileIsOccupied = movingToTile.Occupied;
+            if (movingToTileIsOccupied)
+            {
+                // Something is in the place we want to move
+                BaseUnit unit = movingToTile.GetOccupyingUnit();
+                canMove = unit == mUnit || unit.CanWalkOn(this.gameObject.tag);
+                // You can walk here if it's to yourself or to a "walkable" unit.
+
+                if (unit is AvatarUnit) //checks if the unit you are walking upon is a player
+                {
+                    Destroy(unit.gameObject);
+                    Destroy(this.gameObject);
+                    if (ResetMapIfPlayerIsKilled)
+                    {
+                        Application.LoadLevel(Application.loadedLevel);
+                    }
+                }
+
+                if (unit is Unit || unit is ProjectileShooterUnit)
+                {
+                    if (!canMove && CanPassThroughUnits)
+                    {
+                        canMove = true;
+                    }
+                    else
+                    {
+                        Destroy(this.gameObject);
+                    }
+                }
+            }
+
+            if(canMove)
+            {
+                StartCoroutine(Move(xDir, yDir));
+            }
+        }
+
+
+    }
+}
 
 	public IEnumerator Move(int xDir, int yDir)
 	{
@@ -104,14 +162,14 @@ public class ProjectileMover : MonoBehaviour
 		Vector3 endPosition = startPosition + new Vector3(xDir * Defines.TILE_SIZE, 0, yDir * Defines.TILE_SIZE);
 		mCurrentTargetPosition = endPosition;
 
-		while (t < 1f)
+        while (t < 1f)
 		{
 			t += Time.deltaTime*(MoveSpeed / Defines.TILE_SIZE);
 			transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.Clamp01(t));
 			yield return null;
 		}
 
-		transform.position = endPosition; // Avoid rounding errors with slerp when t == 1
+        transform.position = endPosition; // Avoid rounding errors with slerp when t == 1
 		mIsMoving = false;
 
 		yield return 0;

@@ -5,7 +5,15 @@ using System.Collections.Generic;
 
 public sealed class AvatarUnit : BaseUnit
 {
-	public override bool CanWalkOn { get { return false; } }
+    //public override bool CanWalkOn { get { return false; } }
+
+    // changed so u can have method handling the return value
+    public override bool CanWalkOver { get { return false; } }
+
+    public override bool CanWalkOn(string incomingUnitTag)
+    {
+        return CanWalkOver;
+    }
 
 	private Mover mMover;
 	private PathFinder mPathFinder;

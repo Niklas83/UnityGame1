@@ -13,12 +13,20 @@ public sealed class CandleUnit : BaseUnit
         EventListener portal = GameObject.Find("ThePortal").GetComponent<EventListener>();
 
         ObjectsToNotify[0] = portal;
+
     }
 
-    public override bool CanWalkOn
-    {
 
-        get
+    // changed so u can have method handling the return value
+    public override bool CanWalkOver { get { return true; } }
+
+    public override bool CanWalkOn(string incomingUnitTag)
+    {
+        if (!incomingUnitTag.Equals(UnitTypesEnum.Player.ToString()))
+        {
+            return CanWalkOver;
+        }
+        else
         {
             if (this.gameObject.transform.parent.gameObject.transform.childCount == 1)
             {
@@ -28,11 +36,32 @@ public sealed class CandleUnit : BaseUnit
                 }
             }
 
-
             Destroy(this.gameObject);
 
-            return true;
+            return CanWalkOver;
         }
+        
     }
+
+
+    //public override bool CanWalkOn
+    //{
+
+    //    get
+    //    {
+    //        if (this.gameObject.transform.parent.gameObject.transform.childCount == 1)
+    //        {
+    //            foreach (EventListener el in ObjectsToNotify)
+    //            {
+    //                el.ReceiveEvent(Message);
+    //            }
+    //        }
+
+
+    //        Destroy(this.gameObject);
+
+    //        return true;
+    //    }
+    //}
 
 }

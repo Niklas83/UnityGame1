@@ -6,7 +6,7 @@ using System.IO;
 
 public abstract class BaseUnit : MonoBehaviour
 {
-	public abstract bool CanWalkOn { get; }
+    public abstract bool CanWalkOver { get; }
 
 	private BaseTile mOccupiedTile;
 	public BaseTile OccupiedTile
@@ -21,6 +21,9 @@ public abstract class BaseUnit : MonoBehaviour
     }
 
 	void Start() { }
+
+    public abstract bool CanWalkOn(string incomingUnitTag);     //Returns the CanWalkOver bool
+
 
 
 }

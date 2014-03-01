@@ -5,7 +5,13 @@ using System.Collections.Generic;
 
 public class ProjectileUnit : BaseUnit 
 {
-	public override bool CanWalkOn { get { return true; } }
+
+    public override bool CanWalkOver { get { return true; } }
+
+    public override bool CanWalkOn(string incomingUnitTag)
+    {
+        return CanWalkOver;
+    }
 
 	private ProjectileMover mMover;
 
