@@ -24,7 +24,8 @@ public abstract class BaseTile : MonoBehaviour, IActivatable
 	}
 
 	protected void Unoccupy(BaseUnit iUnit, BaseTile iPreviousTile) {
-		mUnit = null;
+		if (mUnit == iUnit)
+			mUnit = null;
 	}
 
 	public void Arrive(BaseUnit iUnit, BaseTile iPreviousTile) {
