@@ -47,7 +47,8 @@ public class Mover : BaseMover {
 
 		BaseTile sourceTile = mGridManager.GetTile(startPosition);
 		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		destinationTile.Occupy(mUnit, sourceTile);
+		if (destinationTile != null)
+			destinationTile.Occupy(mUnit, sourceTile);
 		
 		while (t < 1f)
 		{
@@ -57,7 +58,9 @@ public class Mover : BaseMover {
 		}
 		
 		transform.position = endPosition;
-		destinationTile.Arrive(mUnit, sourceTile);
+		if (destinationTile != null)
+			destinationTile.Arrive(mUnit, sourceTile);
+
 		mIsMoving = false;
 		
 		yield return 0;

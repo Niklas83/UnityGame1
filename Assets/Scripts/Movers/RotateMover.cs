@@ -88,7 +88,8 @@ public class RotateMover : BaseMover {
 
 		BaseTile sourceTile = mGridManager.GetTile(startPosition);
 		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		destinationTile.Occupy(mUnit, sourceTile);
+		if (destinationTile != null)
+			destinationTile.Occupy(mUnit, sourceTile);
 		
 		//TODO: fixa så att det görs en kontroll om man kommer från sidan av bommen för kommande liknande objekt.
 		int direction = (int) Mathf.Sign(rotateDegrees);
@@ -100,7 +101,9 @@ public class RotateMover : BaseMover {
 			}
 		}
 
-		destinationTile.Arrive(mUnit, sourceTile);
+		if (destinationTile != null)
+			destinationTile.Arrive(mUnit, sourceTile);
+
 		mIsMoving = false;
 		
 		yield return 0;
