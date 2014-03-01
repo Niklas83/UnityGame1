@@ -22,11 +22,7 @@ public sealed class CandleUnit : BaseUnit
 
     public override bool CanWalkOn(string incomingUnitTag)
     {
-        if (!incomingUnitTag.Equals(UnitTypesEnum.Player.ToString()))
-        {
-            return CanWalkOver;
-        }
-        else
+        if (incomingUnitTag.Equals(UnitTypesEnum.Player.ToString()))
         {
             if (this.gameObject.transform.parent.gameObject.transform.childCount == 1)
             {
@@ -40,7 +36,13 @@ public sealed class CandleUnit : BaseUnit
 
             return CanWalkOver;
         }
-        
+
+        if (incomingUnitTag.Equals(UnitTypesEnum.Box.ToString()))
+        {
+            return false;
+        }
+
+        return CanWalkOver;
     }
 
 
