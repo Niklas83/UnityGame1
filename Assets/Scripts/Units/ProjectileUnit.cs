@@ -23,7 +23,8 @@ public class ProjectileUnit : BaseUnit
 			{
 				Application.LoadLevel(Application.loadedLevel);
 			}
-		} else if (iUnit is Unit && !CanPassThroughUnits) {
+		} else if (iUnit is ProjectileUnit) {
+		} else if (iUnit is BaseUnit && !CanPassThroughUnits) {
 			Destroy(gameObject);
 		}
 	}
