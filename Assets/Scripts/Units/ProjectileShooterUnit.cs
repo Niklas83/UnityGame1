@@ -108,39 +108,32 @@ public sealed class ProjectileShooterUnit : BaseUnit
         }
 
         var projectile = new GameObject();     //Temp value that will be set below 
+		Vector3 forward = new Vector3(xDirection, 0, zDirection);
+		Quaternion rotation = Quaternion.LookRotation(forward);
 
         //Checks if its gonna shoot a fireball
         if (ProjectileType == ProjectileTypeEnum.FireBall)
         {
-             projectile = (GameObject)Instantiate(FireBallPrefab, PoisitionToSpawnTheProjectile, Quaternion.identity);
+			projectile = (GameObject)Instantiate(FireBallPrefab, PoisitionToSpawnTheProjectile, rotation);
         }
         //Checks if its gonna shoot a iceball
         if (ProjectileType == ProjectileTypeEnum.IceBall)
         {
-            projectile = (GameObject)Instantiate(IceBallPrefab, PoisitionToSpawnTheProjectile, Quaternion.identity);
+			projectile = (GameObject)Instantiate(IceBallPrefab, PoisitionToSpawnTheProjectile, rotation);
         }
         //Checks if its gonna shoot a toxicball
         if (ProjectileType == ProjectileTypeEnum.ToxicBall)
         {
-            projectile = (GameObject)Instantiate(ToxicBallPrefab, PoisitionToSpawnTheProjectile, Quaternion.identity);
+			projectile = (GameObject)Instantiate(ToxicBallPrefab, PoisitionToSpawnTheProjectile, rotation);
         }
 
         var projectileGameObject = projectile;
         ProjectileMover projectileMover = projectileGameObject.GetComponent<ProjectileMover>();
+		ProjectileUnit projectileUnit = projectileGameObject.GetComponent<ProjectileUnit>();
 
-        if (projectileMover != null)
-        {
-            projectileMover.init();
-            projectileMover.MoveSpeed = ProjectileSpeed;
-            projectileMover.CanPassThroughUnits = CanShootThroughWalls;
-            projectileMover.ResetMapIfPlayerIsKilled = ResetMapIfPlayerSlain;
-            projectileMover.xDir = xDirection;
-            projectileMover.yDir = zDirection;
+		projectileUnit.CanPassThroughUnits = CanShootThroughWalls;
+		projectileUnit.ResetMapIfPlayerIsKilled = ResetMapIfPlayerSlain;
 
-            projectileMover.TryMove();  //Instantierar flygvägen för projektilen 
-        }
-        
+        projectileMover.MoveSpeed = ProjectileSpeed;
     }
-
-
 }

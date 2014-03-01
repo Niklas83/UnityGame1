@@ -16,6 +16,7 @@ public class PortalTile : BaseTile
 		Vector3 position = DestinationTile.transform.position;
 		position.y = 1; // This should be solved better... Like "place unit on tile" function.
 		iUnit.transform.position = position;
-		DestinationTile.Occupy(iUnit);
+		DestinationTile.Occupy(iUnit, this);
+		DestinationTile.Arrive(iUnit, this);
 	}
 }

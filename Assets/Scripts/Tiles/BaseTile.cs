@@ -17,31 +17,29 @@ public abstract class BaseTile : MonoBehaviour, IActivatable
 		mGridManager = iGridManager;
 	}
 	
-	public void Occupy(BaseUnit iUnit)
-	{
-		if (mUnit == iUnit)
-			return;
-		
-		if (iUnit.OccupiedTile == this)
-		{
-			mUnit = iUnit;
-			return;
-		}
-		
+	public void Occupy(BaseUnit iUnit, BaseTile iPreviousTile) {
 		mUnit = iUnit;
-		if (mUnit.OccupiedTile != null)
-			mUnit.OccupiedTile.Leave(this);
-
-		BaseTile previousTile = mUnit.OccupiedTile;
-		mUnit.OccupiedTile = this;
-		OnArrived(mUnit, previousTile);
+		if (iPreviousTile != null)
+			iPreviousTile.Unoccupy(iUnit, this);
 	}
-	
-	private void Leave(BaseTile iNextTile) {
-		OnLeaved(mUnit, iNextTile);
+
+	protected void Unoccupy(BaseUnit iUnit, BaseTile iPreviousTile) {
 		mUnit = null;
 	}
-	
+
+	public void Arrive(BaseUnit iUnit, BaseTile iPreviousTile) {
+		iUnit.OnArrived(this, mUnit);
+		if (iPreviousTile != null) {
+			OnArrived(mUnit, iPreviousTile);
+			iPreviousTile.Leave(iUnit, iPreviousTile);
+		}
+	}
+
+	protected void Leave(BaseUnit iUnit, BaseTile iNextTile) {
+		iUnit.OnLeaved(this);
+		OnLeaved(iUnit, iNextTile);
+	}
+
 	public BaseUnit GetOccupyingUnit() {
 		return mUnit;
 	}

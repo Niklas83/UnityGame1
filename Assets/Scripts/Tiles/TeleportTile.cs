@@ -16,6 +16,7 @@ public class TeleportTile : BaseTile
 		Vector3 position = tile.transform.position;
 		position.y = 1; // This should be solved better... Like "place unit on tile" function.
 		iUnit.transform.position = position;
-		tile.Occupy(iUnit);
+		tile.Occupy(iUnit, this);
+		tile.Arrive(iUnit, this);
 	}
 }
