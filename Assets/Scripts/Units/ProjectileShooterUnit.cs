@@ -24,6 +24,8 @@ public sealed class ProjectileShooterUnit : BaseUnit
 
     private bool IsCurrentlyShooting = false;
 
+    private GameObject projectile;
+
     // changed so u can have method handling the return value
     public override bool CanWalkOver { get { return false; } }
 
@@ -107,7 +109,6 @@ public sealed class ProjectileShooterUnit : BaseUnit
                 break;
         }
 
-        var projectile = new GameObject();     //Temp value that will be set below 
 		Vector3 forward = new Vector3(xDirection, 0, zDirection);
 		Quaternion rotation = Quaternion.LookRotation(forward);
 
@@ -128,6 +129,8 @@ public sealed class ProjectileShooterUnit : BaseUnit
         }
 
         var projectileGameObject = projectile;
+        
+        
         ProjectileMover projectileMover = projectileGameObject.GetComponent<ProjectileMover>();
 		ProjectileUnit projectileUnit = projectileGameObject.GetComponent<ProjectileUnit>();
 
