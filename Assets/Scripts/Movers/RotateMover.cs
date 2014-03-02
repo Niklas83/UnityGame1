@@ -6,13 +6,16 @@ using System.Collections;
 
 public class RotateMover : BaseMover {
 
-	public override bool TryMove(int xDir, int yDir)
+	public override bool TryMove(int xDir, int zDir)
 	{
+		if (mIsMoving)
+			return false;
+
 		Transform transform = gameObject.transform;
 		Transform parent = transform.parent;
 		
-		BaseTile tilePassingBy = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
-		BaseTile tileEndPosition = mGridManager.GetTile(parent.position + new Vector3(xDir, 0, yDir));
+		BaseTile tilePassingBy = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
+		BaseTile tileEndPosition = mGridManager.GetTile(parent.position + new Vector3(xDir, 0, zDir));
 		
 		if ((tilePassingBy == null || !tilePassingBy.IsActive()) ||
 		    (tileEndPosition == null || !tileEndPosition.IsActive())) // Can't move to a non existing tile.
@@ -23,44 +26,15 @@ public class RotateMover : BaseMover {
 		bool passingByCanMove = true;
 		bool endPositionCanMove = true;
 		
-		// Kontrollerar huruvida positionen som bommen passerar samt den slutgiltiga positionen är ockuperad och huruvida den kan flytta vidare eller ej.
-		bool occupiedPassingBy = tilePassingBy.Occupied;
-		bool occupiedEndPosition = tileEndPosition.Occupied;
-		
 		//TODO: Fixa så de som blir pushade glider åt olika håll? Just nu åker båda eventualla unit som är i vägen åt samma håll (både passingby- och endPostition objekten)
+		passingByCanMove = CanMove(tilePassingBy, xDir, zDir);
+		if (passingByCanMove)
+			endPositionCanMove = CanMove(tileEndPosition, xDir, zDir);
 		
-		if (occupiedPassingBy)
-		{ // Something is in the place where we are passing by
-			BaseUnit unitPassingBy = tilePassingBy.GetOccupyingUnit();
-			
-			passingByCanMove = unitPassingBy == mUnit || unitPassingBy.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
-			if (!passingByCanMove && IsPusher)
-			{
-				// If not a walkable, check if you are a 'Pusher' and it can be moved.
-				BaseMover mover = unitPassingBy.GetComponent<BaseMover>();
-				if (mover != null)
-					passingByCanMove = mover.TryMove(xDir, yDir);
-			}
-		}
+		if (passingByCanMove && endPositionCanMove)
+			StartCoroutine(Move(xDir, zDir));
 		
-		if (occupiedEndPosition && passingByCanMove)
-		{ // Something is in the place we want to move
-			BaseUnit unitEndPosition = tileEndPosition.GetOccupyingUnit();
-			
-			endPositionCanMove = unitEndPosition == mUnit || unitEndPosition.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
-			if (!endPositionCanMove && IsPusher)
-			{
-				// If not a walkable, check if you are a 'Pusher' and it can be moved.
-				BaseMover mover = unitEndPosition.GetComponent<BaseMover>();
-				if (mover != null)
-					endPositionCanMove = mover.TryMove(xDir, yDir);
-			}
-		}
-		
-		if (passingByCanMove && endPositionCanMove && IsMoving == false)
-			StartCoroutine(Move(xDir, yDir));
-		
-		return passingByCanMove != false && endPositionCanMove != false;
+		return passingByCanMove && endPositionCanMove;
 	}
 	
 	public static float GetSignedAngleBetween(Vector3 a, Vector3 b) {
@@ -88,8 +62,7 @@ public class RotateMover : BaseMover {
 
 		BaseTile sourceTile = mGridManager.GetTile(startPosition);
 		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		if (destinationTile != null)
-			destinationTile.Occupy(mUnit, sourceTile);
+		BaseTile.HandleOccupy(mUnit, sourceTile, destinationTile);
 		
 		//TODO: fixa så att det görs en kontroll om man kommer från sidan av bommen för kommande liknande objekt.
 		int direction = (int) Mathf.Sign(rotateDegrees);
@@ -101,9 +74,7 @@ public class RotateMover : BaseMover {
 			}
 		}
 
-		if (destinationTile != null)
-			destinationTile.Arrive(mUnit, sourceTile);
-
+		BaseTile.HandleArrive(mUnit, sourceTile, destinationTile);
 		mIsMoving = false;
 		
 		yield return 0;

@@ -115,15 +115,7 @@ public class PathFinder
 		if (!ClosedSet.Contains(address))
 		{
 			BaseTile t = mGridManager.GetTile((int)iIndices.x, (int)iIndices.y);
-			
-			bool addToOpenSet = t != null;
-			if (addToOpenSet)
-			{
-				BaseUnit u = t.GetOccupyingUnit();
-                addToOpenSet = u == null || iUnit == u || iUnit.CanWalkOn(null); // Ok to pass through
-			}
-			
-			if (addToOpenSet) 
+			if (t != null && t.CanWalkOn(iUnit)) 
 			{
 				int cost = (iParent == null ? 0 : iParent.Cost) + 1; // TODO: Add different costs for different tiles
 				int heuristic = GetManhattanDistance(iIndices, iTarget);

@@ -9,7 +9,7 @@ public class ConveyorBelt : BaseTile
 	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {}
 	
 	void Update() {
-		BaseUnit unit = GetOccupyingUnit();
+		BaseUnit unit = GetOccupyingUnitOnLayer(Layer.Ground);
 		if (unit == null)
 			return;
 		

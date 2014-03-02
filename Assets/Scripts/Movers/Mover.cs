@@ -6,49 +6,37 @@ using System;
 public class Mover : BaseMover {
 
 	public float MoveSpeed = 3f;
-	
+
 	// Checks if this mover can move in the given direction.
-	public override bool TryMove(int xDir, int yDir) {
-		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
+	public override bool TryMove(int xDir, int zDir) {
+		if (mIsMoving)
+			return false;
+
+		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
 		
 		if (tile == null || !tile.IsActive()) // Can't move to a non existing tile.
 			return false;
 		
-		bool canMove = true;
-		bool occupied = tile.Occupied;
-		if (occupied) { // Something is in the place we want to move
-			BaseUnit unit = tile.GetOccupyingUnit();
-			canMove = unit == mUnit || unit.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
-			if (!canMove && IsPusher) {
-				// If not a walkable, check if you are a 'Pusher' and it can be moved.
-				BaseMover mover = unit.GetComponent<BaseMover>();
-				if (mover != null)
-					canMove = mover.TryMove(xDir, yDir);
-			}
-			mUnit.OnCollided(unit);
-			unit.OnCollided(mUnit);
-		}
-		
+		bool canMove = CanMove(tile, xDir, zDir);
 		if (canMove)
-			StartCoroutine(Move(xDir, yDir));
+			StartCoroutine(Move(xDir, zDir));
 		
 		return canMove;
 	}
 	
-	public IEnumerator Move(int xDir, int yDir)
+	public IEnumerator Move(int xDir, int zDir)
 	{
 		DebugAux.Assert(!mIsMoving, "Can't move a unit while it is moving!");
 		
 		mIsMoving = true;
 		float t = 0;
 		Vector3 startPosition = transform.position;
-		Vector3 endPosition = startPosition + new Vector3(xDir * Defines.TILE_SIZE, 0, yDir * Defines.TILE_SIZE);
+		Vector3 endPosition = startPosition + new Vector3(xDir * Defines.TILE_SIZE, 0, zDir * Defines.TILE_SIZE);
 		mCurrentTargetPosition = endPosition;
 
 		BaseTile sourceTile = mGridManager.GetTile(startPosition);
 		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		if (destinationTile != null)
-			destinationTile.Occupy(mUnit, sourceTile);
+		BaseTile.HandleOccupy(mUnit, sourceTile, destinationTile);
 		
 		while (t < 1f)
 		{
@@ -58,8 +46,7 @@ public class Mover : BaseMover {
 		}
 		
 		transform.position = endPosition;
-		if (destinationTile != null)
-			destinationTile.Arrive(mUnit, sourceTile);
+		BaseTile.HandleArrive(mUnit, sourceTile, destinationTile);
 
 		mIsMoving = false;
 		

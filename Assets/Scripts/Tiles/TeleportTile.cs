@@ -10,13 +10,12 @@ public class TeleportTile : BaseTile
 			int x = Random.Range(0, GridManager.GetLength(0));
 			int y = Random.Range(0, GridManager.GetLength(1));
 			tile = GridManager.GetTile(x, y);
-			if (tile != null && (tile == this || tile.Occupied)) // This should be solved better... A "is tile valid" check..
+			if (tile != null && tile != this && tile.CanWalkOn(iUnit)) // This should be solved better... A "is tile valid" check..
 				tile = null;
 		}
 		Vector3 position = tile.transform.position;
 		position.y = 1; // This should be solved better... Like "place unit on tile" function.
 		iUnit.transform.position = position;
-		tile.Occupy(iUnit, this);
-		tile.Arrive(iUnit, this);
+		BaseTile.TeleportTo(iUnit, tile);
 	}
 }

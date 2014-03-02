@@ -14,12 +14,12 @@ public class ProjectileMover : Mover {
     }
 
 	// Checks if this mover can move in the given direction.
-	public override bool TryMove(int xDir, int yDir)
+	public override bool TryMove(int xDir, int zDir)
     {
         if (mIsMoving)
 			return false;
 
-        BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, yDir));
+        BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
 		if (tile == null || !tile.IsActive()) // Projectiles can move over null tiles
         {
             NumberOfMovementOverNonExistingTiles++;
@@ -27,10 +27,10 @@ public class ProjectileMover : Mover {
 			if (!canMove)
                 Destroy(this.gameObject);
             else
-                StartCoroutine(Move(xDir, yDir));
+                StartCoroutine(Move(xDir, zDir));
 			return canMove;
         }
 		NumberOfMovementOverNonExistingTiles = 0;
-		return base.TryMove(xDir, yDir);
+		return base.TryMove(xDir, zDir);
 	}
 }

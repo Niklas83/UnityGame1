@@ -16,4 +16,6 @@ public static class Defines
 
 	public static float RESOLUTION_WIDTH = 2048f; // iPad with retina
 	public static float RESOLUTION_HEIGHT = 1536f; // iPad with retina
+
+	public static bool DEBUG_TILES = false;
 }

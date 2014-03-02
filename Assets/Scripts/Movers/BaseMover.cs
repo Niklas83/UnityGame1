@@ -25,5 +25,25 @@ public abstract class BaseMover : MonoBehaviour
 		mUnit = GetComponent<BaseUnit>();
 	}
 
-	public abstract bool TryMove(int xDir, int yDir);
+	protected bool CanMove(BaseTile iTile, int xDir, int zDir) {
+		bool canMove = true;
+
+		foreach (BaseUnit unit in iTile.OccupyingUnits(mUnit)) {
+			if (canMove) {
+				canMove = unit == mUnit || unit.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
+				if (!canMove && IsPusher) {
+					// If not a walkable, check if you are a 'Pusher' and it can be moved.
+					BaseMover mover = unit.GetComponent<BaseMover>();
+					if (mover != null) {
+						canMove = mover.TryMove(xDir, zDir);
+					}
+				}
+			}
+			mUnit.OnCollided(unit);
+			unit.OnCollided(mUnit);
+		}
+		return canMove;
+	}
+
+	public abstract bool TryMove(int xDir, int zDir);
 }

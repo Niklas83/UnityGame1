@@ -74,13 +74,13 @@ public class GridManager
 		return mGrid.GetLength(iDimension);
 	}
 
-	public bool IsOccupied(int iXindex, int iYindex)
+	/*public bool IsOccupied(int iXindex, int iYindex)
 	{
 		if (!InRange(iXindex, iYindex)) return true; // Is no tile at all occupied or not? ;)
 
 		BaseTile t = GetTile(iXindex, iYindex);
 		return t.Occupied;
-	}
+	}*/
 
 	public void GetAll<T>(out List<BaseTile> oTiles) where T : BaseTile
 	{

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
 
 public sealed class ProjectileShooterUnit : BaseUnit
 {
+	public override int LayerMask { get { return (int)(Layer.Ground | Layer.Air); } }
+
     //public fields
     public bool IsActive = true;            //Sets if the cannon is active (Could be disabled or something by walking on button etc)
     public float SecondsBetweenShots = 5;
