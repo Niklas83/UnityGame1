@@ -3,24 +3,21 @@ using System.Collections;
 
 public class MedusaUnit : BaseUnit
 {
+	public override int LayerMask { get { return (int)(Layer.Air | Layer.Ground); } }
 
     public bool ShootRight = true;
     public bool ShootLeft = true;
     public bool ShootUp = true;
     public bool ShootDown = true;
 
+	public override bool CanWalkOver { get { return false; } }
 
-    
+	public override bool CanWalkOn(string incomingUnitTag)
+	{
+	    return CanWalkOver;
+	}
 
-
-        public override bool CanWalkOver { get { return false; } }
-
-        public override bool CanWalkOn(string incomingUnitTag)
-        {
-            return CanWalkOver;
-        }
-
-        //private ProjectileMover mMover;
+	//private ProjectileMover mMover;
 
 
     private MedusaRay MedusaRayScript;
