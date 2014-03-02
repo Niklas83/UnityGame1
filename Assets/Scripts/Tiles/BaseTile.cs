@@ -112,7 +112,9 @@ public abstract class BaseTile : MonoBehaviour, IActivatable
 		return true;
 	}
 	public BaseUnit GetOccupyingUnitOnLayer(Layer iLayer) {
-		return mOccupyingUnits[iLayer];
+		BaseUnit unit;
+		mOccupyingUnits.TryGetValue(iLayer, out unit);
+		return unit;
 	}
 
 	public void SetActive(bool iActive) {
