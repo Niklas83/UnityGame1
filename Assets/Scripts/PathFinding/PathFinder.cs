@@ -9,7 +9,6 @@ public class PathFinder
 	IPriorityQueue<Node> PriorityQueue { get; set; }
 	HashSet<int> ClosedSet = new HashSet<int>();
 
-	private BaseTile[] mNeighbors = new BaseTile[4];
 	private List<BaseTile> mTilesForQueries;
 	private GridManager mGridManager;
 
