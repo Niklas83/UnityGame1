@@ -25,7 +25,7 @@ public class SceneTransition : MonoBehaviour {
 		if (asyncOp != null)
 			return;
 
-		asyncOp = Application.LoadLevelAsync(1); // TODO: Scene name or index!
+		asyncOp = Application.LoadLevelAsync(Application.loadedLevel + 1); // TODO: Scene name or index!
 		asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
 		audioPlayer.FadeOut(2f/3f);

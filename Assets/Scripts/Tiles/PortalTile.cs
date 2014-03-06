@@ -13,9 +13,6 @@ public class PortalTile : BaseTile
 		if (!DestinationTile.CanWalkOn(iUnit))
 			return;
 
-		Vector3 position = DestinationTile.transform.position;
-		position.y = 1; // This should be solved better... Like "place unit on tile" function.
-		iUnit.transform.position = position;
-		BaseTile.TeleportTo(iUnit, DestinationTile);
+		BaseTile.TeleportTo(iUnit, iPreviousTile, DestinationTile);
 	}
 }

@@ -12,13 +12,13 @@ public sealed class AvatarUnit : BaseUnit
     {
         return CanWalkOver;
     }
+	public bool debugTeleport = false;
 
 	private Mover mMover;
 	private PathFinder mPathFinder;
 	private GridManager mGridManager;
 	private Queue<Vector2> mMoveQueue;
-
-
+	
     private bool IsFrozen = false;      //Can be frozen by example a "medusa statue"
 
 	public void Start()
@@ -43,6 +43,15 @@ public sealed class AvatarUnit : BaseUnit
 	            float d = Vector3.Dot(new Vector3(0, 1, 0) - r.origin, Vector3.up)/Vector3.Dot(r.direction, Vector3.up);
 	            Vector3 wp = r.origin + r.direction*d;
 	            wp.y = 1; // Avoid rounding errors
+
+				if (debugTeleport) {
+					BaseTile destination = mGridManager.GetTile(wp);
+					if (destination != null && destination.CanWalkOn(this)) {
+						BaseTile source = mGridManager.GetTile(mMover.Position);
+						BaseTile.TeleportTo(this, source, destination);
+						return;
+					}
+				}
 
 	            int cost;
 	            Vector3 startPosition = mMover.Position;

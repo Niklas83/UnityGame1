@@ -46,9 +46,13 @@ public abstract class BaseTile : MonoBehaviour, IActivatable
 		}
 	}
 
-	public static void TeleportTo(BaseUnit iUnit, BaseTile iDestinationTile) {
-		HandleOccupy(iUnit, null, iDestinationTile);
-		HandleArrive(iUnit, null, iDestinationTile);
+	public static void TeleportTo(BaseUnit iUnit, BaseTile iSourceTile, BaseTile iDestinationTile) {
+		Vector3 position = iDestinationTile.transform.position;
+		position.y = 1;
+		iUnit.transform.position = position;
+
+		HandleOccupy(iUnit, iSourceTile, iDestinationTile);
+		HandleArrive(iUnit, iSourceTile, iDestinationTile);
 	}
 	public static void HandleOccupy(BaseUnit iUnit, BaseTile iSourceTile, BaseTile iDestinationTile) {
 		if (iSourceTile != null)

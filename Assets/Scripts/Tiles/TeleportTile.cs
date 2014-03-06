@@ -13,9 +13,7 @@ public class TeleportTile : BaseTile
 			if (tile != null && tile != this && tile.CanWalkOn(iUnit)) // This should be solved better... A "is tile valid" check..
 				tile = null;
 		}
-		Vector3 position = tile.transform.position;
-		position.y = 1; // This should be solved better... Like "place unit on tile" function.
-		iUnit.transform.position = position;
-		BaseTile.TeleportTo(iUnit, tile);
+
+		BaseTile.TeleportTo(iUnit, iPreviousTile, tile);
 	}
 }

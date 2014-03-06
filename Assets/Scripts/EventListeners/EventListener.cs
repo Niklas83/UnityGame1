@@ -5,6 +5,8 @@ public enum EventMessage {
 	Activate,
 	Deactivate,
 	ToggleActivate,
+	Register,
+	Unregister,
 }
 
 public class EventListener : MonoBehaviour {
@@ -25,6 +27,12 @@ public class EventListener : MonoBehaviour {
 					a.SetActive(!a.IsActive());
 				}
 			}
+			break;
+		case EventMessage.Register :
+			SendMessage("Register");
+			break;
+		case EventMessage.Unregister :
+			SendMessage("Unregister");
 			break;
 		}
 	}
