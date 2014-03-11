@@ -4,27 +4,24 @@ using System.Collections;
 
 public class MedusaRay : MonoBehaviour
 {
-
     public LayerMask PlayerLayer;
     public LayerMask ObsticleLayer;
-
 
     private GameObject PlayerGameObject;
     private GameObject ObsticleGameObject;
 
+    public GameObject[] Blast(bool shootRight, bool shootLeft, bool shootUp, bool shootDown)
+    {
+        GameObject[] PlayerAndObsticle = new GameObject[2];
 
-
-
-	public void Blast(bool shootRight, bool shootLeft, bool shootUp, bool shootDown)
-	{
         RaycastHit hit;
 
         Ray[] rayList = new Ray[4];
 
         if (shootRight == true)
-	    {
-	        rayList[0] = new Ray(transform.position + new Vector3(0, 0.5f, 0), new Vector3(1, 0, 0));
-	    }
+        {
+            rayList[0] = new Ray(transform.position + new Vector3(0, 0.5f, 0), new Vector3(1, 0, 0));
+        }
         if (shootLeft == true)
         {
             rayList[1] = new Ray(transform.position + new Vector3(0, 0.5f, 0), new Vector3(-1, 0, 0));
@@ -43,7 +40,7 @@ public class MedusaRay : MonoBehaviour
             PlayerGameObject = null;
             ObsticleGameObject = null;
 
-            if (Physics.Raycast((UnityEngine.Ray)rayList[i], out hit, 100f, PlayerLayer))
+            if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, PlayerLayer))
             {
 
                 PlayerGameObject = hit.collider.gameObject;
@@ -55,6 +52,7 @@ public class MedusaRay : MonoBehaviour
 
             if (PlayerGameObject != null)
             {
+                PlayerAndObsticle[0] = PlayerGameObject; //Adds the player hit
 
                 if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, ObsticleLayer))
                 {
@@ -68,28 +66,17 @@ public class MedusaRay : MonoBehaviour
 
                 if (ObsticleGameObject != null)
                 {
-                    var distanceToPlayer = Vector3.Distance(this.transform.position, PlayerGameObject.transform.position);
-                    var distanceToObsticle = Vector3.Distance(this.transform.position,
-                        ObsticleGameObject.transform.position);
+                    PlayerAndObsticle[1] = ObsticleGameObject; //Adds the obsticle hit
 
-                    if (distanceToObsticle > distanceToPlayer)
-                    {
-                        PlayerGameObject.SendMessage("MakePlayerFrozen");
-
-                        
-
-                        //TODO: ska fixa effekt så till att spelaren dör
-                        Destroy(PlayerGameObject);
-                    }
                 }
-                else
-                {
-                    PlayerGameObject.SendMessage("MakePlayerFrozen");
-                    //TODO: ska fixa effekt så till att spelaren dör
-                    Destroy(PlayerGameObject);
-                }
+
+                this.gameObject.SendMessage("SetStartedToShoot", true);
+                    //Sets the parameter to start executing the blast instead of trying to hit objects to return
+                return PlayerAndObsticle;
             }
+
+
         }
-        
-	}
+        return null;
+    }
 }
