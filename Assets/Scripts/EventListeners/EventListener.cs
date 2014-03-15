@@ -7,19 +7,21 @@ public enum EventMessage {
 	ToggleActivate,
 	Register,
 	Unregister,
+	OnLaserHit,
 }
 
 public class EventListener : MonoBehaviour {
 
 	public void ReceiveEvent(EventMessage iEvent) {
 		switch (iEvent) {
-		case EventMessage.Activate : 
-			SendMessage("SetActive", true);         //Metodnamnet
+		case EventMessage.Activate :
+			// Name of the method
+			SendMessage("SetActive", true, SendMessageOptions.DontRequireReceiver);
 			break;
 		case EventMessage.Deactivate :
-			SendMessage("SetActive", false);
+			SendMessage("SetActive", false, SendMessageOptions.DontRequireReceiver);
 			break;
-		case EventMessage.ToggleActivate :                          //används ej just nu
+		case EventMessage.ToggleActivate :
 			MonoBehaviour[] mb = GetComponents<MonoBehaviour>();
 			foreach (MonoBehaviour b in mb) {
 				if (b is IActivatable) {
@@ -33,6 +35,9 @@ public class EventListener : MonoBehaviour {
 			break;
 		case EventMessage.Unregister :
 			SendMessage("Unregister");
+			break;
+		case EventMessage.OnLaserHit :
+			SendMessage("OnLaserHit", null, SendMessageOptions.DontRequireReceiver);
 			break;
 		}
 	}

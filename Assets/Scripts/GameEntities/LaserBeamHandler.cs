@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class LaserBeamHandler : MonoBehaviour
 {
 	public GameObject LaserBeamPrefab;
+	public EventMessage onHitMessage;
 	private List<LineRenderer> beamCache;
 
     public void Start() {
@@ -50,10 +51,14 @@ public class LaserBeamHandler : MonoBehaviour
 			Transform hitTrans = hit.collider.transform;
 
 			direction = Vector3.Reflect(direction, hit.normal); // hitTrans.rotation * Vector3.forward;
-			lr.SetPosition(1, hitTrans.position);
+			lr.SetPosition(1, hit.point); // hitTrans.position);
 
-			hitTrans.SendMessage("HitByLaser", this, SendMessageOptions.DontRequireReceiver);
-			ShootBeam(hitTrans, direction, index+1);
+			EventListener el = hitTrans.gameObject.GetComponent<EventListener>();
+			if (el)
+				el.ReceiveEvent(onHitMessage);
+
+			if (hitTrans.gameObject.GetComponent<BeamReflector>())
+				ShootBeam(hitTrans, direction, index+1);
 		} else {
 			lr.SetPosition(1, position + direction * 50);
 		}
