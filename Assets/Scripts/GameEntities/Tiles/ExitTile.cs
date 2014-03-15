@@ -4,8 +4,8 @@ using System.Collections;
 public class ExitTile : BaseTile {
 
 	private SceneTransition mSceneTransition;
-	public bool mOpened;
-	public int mNrAliveKeys;
+	private bool mOpened;
+	private int mNrAliveKeys;
 
 	void Start() {
 		mSceneTransition = Helper.Find<SceneTransition>("SceneTransition");
@@ -20,16 +20,16 @@ public class ExitTile : BaseTile {
 
 	public void Register() {
 		mNrAliveKeys += 1;
+		SetExitOpen(mNrAliveKeys == 0);
 	}
 	public void Unregister() {
 		mNrAliveKeys -= 1;
-		if (mNrAliveKeys == 0)
-			OpenExit();
+		SetExitOpen(mNrAliveKeys == 0);
 	}
 
-	public void OpenExit() {
+	private void SetExitOpen(bool open) {
 		Transform t = gameObject.transform.GetChild(0);
-		t.gameObject.SetActive(true);
-		mOpened = true;
+		t.gameObject.SetActive(open);
+		mOpened = open;
 	}
 }
