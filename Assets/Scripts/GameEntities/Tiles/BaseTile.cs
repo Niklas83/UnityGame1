@@ -104,7 +104,7 @@ public abstract class BaseTile : BaseEntity
 		OnLeaved(iUnit, iDestinationTile);
 	}
 	
-	public bool CanWalkOn(BaseUnit iUnit) {
+	public virtual bool CanWalkOn(BaseUnit iUnit) {
 		foreach (BaseUnit unit in OccupyingUnits(iUnit)) {
 			if (unit != iUnit && !unit.CanWalkOn(iUnit.gameObject.tag))
 				return false;

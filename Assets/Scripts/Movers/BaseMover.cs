@@ -42,7 +42,7 @@ public abstract class BaseMover : MonoBehaviour
 			mUnit.OnCollided(unit);
 			unit.OnCollided(mUnit);
 		}
-		return canMove;
+		return canMove && iTile.CanWalkOn(mUnit);
 	}
 
 	public abstract bool TryMove(int xDir, int zDir);
