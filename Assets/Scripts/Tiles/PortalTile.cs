@@ -7,12 +7,13 @@ public class PortalTile : BaseTile
 
 	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
 	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {
+		Debug.Log(iPreviousTile + " " + DestinationTile);
 		if (iPreviousTile == DestinationTile || DestinationTile == null) // Came from the other portal
 			return;
 
 		if (!DestinationTile.CanWalkOn(iUnit))
 			return;
 
-		BaseTile.TeleportTo(iUnit, iPreviousTile, DestinationTile);
+		BaseTile.TeleportTo(iUnit, this, DestinationTile);
 	}
 }
