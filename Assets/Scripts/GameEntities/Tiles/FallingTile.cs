@@ -5,8 +5,10 @@ using System;
 public class FallingTile : BaseTile 
 {
 	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {
-		GridManager.RemoveTile(this);
-		Destroy(this.gameObject);
+		if (iUnit is AvatarUnit) {
+			GridManager.RemoveTile(this);
+			Destroy(this.gameObject);
+		}
 	}
 	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {}
 }
