@@ -6,7 +6,11 @@ public class SceneTransition : MonoBehaviour {
 	public float fadeAlpha = 1;
 
 	private Texture2D fadeTexture;
+#if USE_UNITY_PRO
 	private AsyncOperation asyncOp;
+#else
+	private AsyncOperationWrapper asyncOp;
+#endif
 	private AudioPlayer audioPlayer;
 	private Animator animator;
 
@@ -25,7 +29,11 @@ public class SceneTransition : MonoBehaviour {
 		if (asyncOp != null)
 			return;
 
+#if USE_UNITY_PRO
 		asyncOp = Application.LoadLevelAsync(Application.loadedLevel + 1); // TODO: Scene name or index!
+#else
+		asyncOp = new AsyncOperationWrapper();
+#endif
 		asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
 		audioPlayer.FadeOut(2f/3f);
@@ -51,4 +59,17 @@ public class SceneTransition : MonoBehaviour {
 		GUI.color = new Color(0, 0, 0, fadeAlpha);
 		GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), fadeTexture);
 	}
+
+#if !USE_UNITY_PRO
+	// This is to keep the roughly the same interface as AsyncOperation. So that we can change to actual async later.
+	private class AsyncOperationWrapper {
+		public bool allowSceneActivation { 
+			get { return true; } 
+			set { 
+				if (value)
+					Application.LoadLevel(Application.loadedLevel + 1);
+			}
+		}
+	}
+#endif
 }

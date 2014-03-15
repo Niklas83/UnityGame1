@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+// #define USE_UNITY_PRO
+
 public enum Direction
 {
 	Up = 0,
