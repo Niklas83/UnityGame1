@@ -34,6 +34,7 @@ public class Floor : MonoBehaviour {
 		Object[] allUnits = Object.FindObjectsOfType<BaseUnit>();
 		for (int i = 0; i < allUnits.Length; i++) {
 			BaseUnit bu = allUnits[i] as BaseUnit;
+			bu.Init(mGridManager);
 			BaseTile tile = mGridManager.GetTile(bu.transform.position);
 			DebugAux.Assert(tile != null, "Can't have a unit placed on a non-tile " + bu);
 			BaseTile.TeleportTo(bu, null, tile);

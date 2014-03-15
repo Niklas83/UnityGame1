@@ -8,17 +8,13 @@ public enum Layer {
 	Air = 1 << 1,
 }
 
-public abstract class BaseTile : MonoBehaviour, IActivatable
+public abstract class BaseTile : BaseEntity
 {
-	protected GridManager GridManager { get { return mGridManager; } }
-
-	public bool Active = true;
 	public Dictionary<Layer, BaseUnit> mOccupyingUnits;
 	private List<BaseUnit> mPreviousUnits;
-	private GridManager mGridManager;
 
-	public void Init(GridManager iGridManager) {
-		mGridManager = iGridManager;
+	public override void Init(GridManager iGridManager) {
+		base.Init(iGridManager);
 		mOccupyingUnits = new Dictionary<Layer, BaseUnit>();
 		mPreviousUnits = new List<BaseUnit>();
 	}
@@ -121,24 +117,8 @@ public abstract class BaseTile : MonoBehaviour, IActivatable
 		return unit;
 	}
 
-	public void SetActive(bool iActive) {
-		Active = iActive;
-		GetComponent<MeshRenderer>().enabled = iActive;
-		if (iActive)
-			OnActivated();
-		else
-			OnDeactivated();
-	}
-
-	public bool IsActive() {
-		return Active;
-	}
-
 	protected abstract void OnLeaved(BaseUnit iUnit, BaseTile iSourceTile);
 	protected abstract void OnArrived(BaseUnit iUnit, BaseTile iDestinationTile);
-
-	protected void OnActivated() {}
-	protected void OnDeactivated() {}
 
 	private static Array mLayers = Enum.GetValues(typeof(Layer));
 	public IEnumerable<BaseUnit> OccupyingUnits(BaseUnit iUnit) {
