@@ -25,4 +25,4 @@ Temp
 *.sln
 *.userprefs
 
-/UnityVS.git.sln.DotSettings
+UnityVS.*
