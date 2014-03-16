@@ -43,6 +43,18 @@ public class Helper
 		return go.GetComponent<T>();
 	}
 
+	public static GameObject Instansiate(GameObject iPrefab)
+	{
+		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		return go;
+	}
+	public static GameObject Instansiate(GameObject iPrefab, GameObject iParent)
+	{
+		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		go.transform.parent = iParent.transform;
+		return go;
+	}
+
 	public static T Find<T>(String iName) where T : UnityEngine.Component
 	{
 		GameObject go = GameObject.Find(iName) as GameObject;
