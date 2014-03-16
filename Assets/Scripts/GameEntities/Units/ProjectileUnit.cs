@@ -26,8 +26,9 @@ public class ProjectileUnit : BaseUnit  {
 
 	private IEnumerator Explode(float delay, BaseUnit hitUnit) {
 		Vector3 startPosition = transform.position;
-		Vector3 endPosition = hitUnit.transform.position;
+		Vector3 endPosition = startPosition + transform.rotation * Vector3.forward;
 		endPosition.y = startPosition.y;
+		BaseTile.HandleOccupy(this, OccupiedTile, null);
 
 		float t = 0;
 		float moveSpeed = this.GetComponent<ProjectileMover>().MoveSpeed;

@@ -28,7 +28,7 @@ public class ExitTile : BaseTile {
 	}
 
 	private void SetExitOpen(bool open) {
-		Transform t = gameObject.transform.GetChild(0);
+		Transform t = transform.FindChild("OpenEffects");
 		t.gameObject.SetActive(open);
 		mOpened = open;
 	}
