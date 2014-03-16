@@ -1,0 +1,160 @@
+fileFormatVersion: 2
+guid: 02c69376cf4384065bb7a62fd3869356
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: blue_mdl_body
+    100004: blue_mdl_eyes group3 nurbsToPoly1
+    100006: blue_mdl_eyes pSphere1 group3
+    100008: blue_mdl_group1 mouth pCube10
+    100010: blue_mdl_group1 mouth pCube12
+    100012: blue_mdl_group1 mouth pCube5
+    100014: blue_mdl_group1 mouth pCube6
+    100016: blue_mdl_group1 mouth pCube7
+    100018: blue_mdl_group1 mouth pCube8
+    100020: blue_mdl_group1 mouth pCube9
+    100022: blue_mdl_group4 eyes nurbsToPoly1
+    100024: blue_mdl_hands pCube14
+    100026: blue_mdl_mouth group6 nurbsToPoly5
+    100028: blue_mdl_mouth nurbsToPoly3
+    100030: blue_mdl_mouth nurbsToPoly4 group6
+    100032: blue_mdl_pCube11 group1 mouth
+    100034: blue_mdl_pCube13 hands
+    100036: blue_mdl_pSphere1 group4 eyes
+    100038: other_blue_mdl polySurface5
+    100040: polySurface6_other blue_mdl
+    400000: //RootNode
+    400002: blue_mdl_body
+    400004: blue_mdl_eyes group3 nurbsToPoly1
+    400006: blue_mdl_eyes pSphere1 group3
+    400008: blue_mdl_group1 mouth pCube10
+    400010: blue_mdl_group1 mouth pCube12
+    400012: blue_mdl_group1 mouth pCube5
+    400014: blue_mdl_group1 mouth pCube6
+    400016: blue_mdl_group1 mouth pCube7
+    400018: blue_mdl_group1 mouth pCube8
+    400020: blue_mdl_group1 mouth pCube9
+    400022: blue_mdl_group4 eyes nurbsToPoly1
+    400024: blue_mdl_hands pCube14
+    400026: blue_mdl_mouth group6 nurbsToPoly5
+    400028: blue_mdl_mouth nurbsToPoly3
+    400030: blue_mdl_mouth nurbsToPoly4 group6
+    400032: blue_mdl_pCube11 group1 mouth
+    400034: blue_mdl_pCube13 hands
+    400036: blue_mdl_pSphere1 group4 eyes
+    400038: other_blue_mdl polySurface5
+    400040: polySurface6_other blue_mdl
+    2300000: blue_mdl_body
+    2300002: blue_mdl_eyes group3 nurbsToPoly1
+    2300004: blue_mdl_eyes pSphere1 group3
+    2300006: blue_mdl_group1 mouth pCube10
+    2300008: blue_mdl_group1 mouth pCube12
+    2300010: blue_mdl_group1 mouth pCube5
+    2300012: blue_mdl_group1 mouth pCube6
+    2300014: blue_mdl_group1 mouth pCube7
+    2300016: blue_mdl_group1 mouth pCube8
+    2300018: blue_mdl_group1 mouth pCube9
+    2300020: blue_mdl_group4 eyes nurbsToPoly1
+    2300022: blue_mdl_hands pCube14
+    2300024: blue_mdl_mouth group6 nurbsToPoly5
+    2300026: blue_mdl_mouth nurbsToPoly3
+    2300028: blue_mdl_mouth nurbsToPoly4 group6
+    2300030: blue_mdl_pCube11 group1 mouth
+    2300032: blue_mdl_pCube13 hands
+    2300034: blue_mdl_pSphere1 group4 eyes
+    2300036: other_blue_mdl polySurface5
+    2300038: polySurface6_other blue_mdl
+    3300000: blue_mdl_body
+    3300002: blue_mdl_eyes group3 nurbsToPoly1
+    3300004: blue_mdl_eyes pSphere1 group3
+    3300006: blue_mdl_group1 mouth pCube10
+    3300008: blue_mdl_group1 mouth pCube12
+    3300010: blue_mdl_group1 mouth pCube5
+    3300012: blue_mdl_group1 mouth pCube6
+    3300014: blue_mdl_group1 mouth pCube7
+    3300016: blue_mdl_group1 mouth pCube8
+    3300018: blue_mdl_group1 mouth pCube9
+    3300020: blue_mdl_group4 eyes nurbsToPoly1
+    3300022: blue_mdl_hands pCube14
+    3300024: blue_mdl_mouth group6 nurbsToPoly5
+    3300026: blue_mdl_mouth nurbsToPoly3
+    3300028: blue_mdl_mouth nurbsToPoly4 group6
+    3300030: blue_mdl_pCube11 group1 mouth
+    3300032: blue_mdl_pCube13 hands
+    3300034: blue_mdl_pSphere1 group4 eyes
+    3300036: other_blue_mdl polySurface5
+    3300038: polySurface6_other blue_mdl
+    4300000: blue_mdl_body
+    4300002: blue_mdl_eyes group3 nurbsToPoly1
+    4300004: blue_mdl_eyes pSphere1 group3
+    4300006: blue_mdl_group1 mouth pCube10
+    4300008: blue_mdl_group1 mouth pCube12
+    4300010: blue_mdl_group1 mouth pCube5
+    4300012: blue_mdl_group1 mouth pCube6
+    4300014: blue_mdl_group1 mouth pCube7
+    4300016: blue_mdl_group1 mouth pCube8
+    4300018: blue_mdl_group1 mouth pCube9
+    4300020: blue_mdl_group4 eyes nurbsToPoly1
+    4300022: blue_mdl_hands pCube14
+    4300024: blue_mdl_mouth group6 nurbsToPoly5
+    4300026: blue_mdl_mouth nurbsToPoly3
+    4300028: blue_mdl_mouth nurbsToPoly4 group6
+    4300030: blue_mdl_pCube11 group1 mouth
+    4300032: blue_mdl_pCube13 hands
+    4300034: blue_mdl_pSphere1 group4 eyes
+    4300036: other_blue_mdl polySurface5
+    4300038: polySurface6_other blue_mdl
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  userData: 
