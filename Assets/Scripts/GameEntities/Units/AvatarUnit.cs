@@ -19,11 +19,15 @@ public sealed class AvatarUnit : BaseUnit
 	private PathFinder mPathFinder;
 	private GridManager mGridManager;
 	private Queue<Vector2> mMoveQueue;
+    
 	
     private bool IsFrozen = false;      //Can be frozen by example a "medusa statue"
 
     private bool CurrentlyActivePlayer = false;     //Is set to true when a character is selected
-
+    
+    private GameObject AudioComponent;
+    private AudioListener AudioListener;       //sets the audiolistener to active when selected
+    private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
 	public void Start()
 	{ 
 		mMover = GetComponent<Mover>();
@@ -32,10 +36,19 @@ public sealed class AvatarUnit : BaseUnit
 		Floor floor = Helper.Find<Floor>("Floor");
 		mGridManager = floor.GridManager;
 		mPathFinder = new PathFinder(mGridManager);
+        
+	    LockAudioSourceLocation = this.gameObject.transform.rotation;
+	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
+	    AudioListener = AudioComponent.GetComponent<AudioListener>();
 	}
-	
+
+   public void LateUpdate()
+    {
+        AudioComponent.transform.rotation = LockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
+    }
 	public void Update()
 	{
+	    
 	    if (IsFrozen)
 			return;
 
@@ -51,10 +64,12 @@ public sealed class AvatarUnit : BaseUnit
                     if(hit.transform.gameObject == this.gameObject)
                     {
                         CurrentlyActivePlayer = true;
+                        AudioListener.enabled = true;
                     }
                     else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
                     {
                         CurrentlyActivePlayer = false;
+                        AudioListener.enabled = false;
                     }
 	            }
              //Character selection ends
