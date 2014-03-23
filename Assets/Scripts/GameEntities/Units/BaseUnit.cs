@@ -17,7 +17,7 @@ public abstract class BaseUnit : BaseEntity
 	public virtual void OnArrived(BaseTile iTile, List<BaseUnit> iPreviousUnits) {}
 	public virtual void OnArrivedToMe(BaseUnit iUnit) {}
 
-	public void DestroyUnit() {
+	public virtual void DestroyUnit() {
 		BaseTile.HandleOccupy(this, OccupiedTile, null); // Need to leave the grid before destroying!
 		Destroy(gameObject);
 	}

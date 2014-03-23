@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using System.Collections;
 using System;
@@ -20,14 +21,17 @@ public sealed class AvatarUnit : BaseUnit
 	private GridManager mGridManager;
 	private Queue<Vector2> mMoveQueue;
     
-	
     private bool IsFrozen = false;      //Can be frozen by example a "medusa statue"
 
     private bool CurrentlyActivePlayer = false;     //Is set to true when a character is selected
-    
-    private GameObject AudioComponent;
-    private AudioListener AudioListener;       //sets the audiolistener to active when selected
+
+    //Audio related fields
+    private GameObject AudioComponent;          //Holds the audio listener with constant rotation
+    private GameObject TheAudioListener;
+    //private AudioListener PlayerAudioListener;       //sets the audiolistener to active when selected
     private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
+    private CharacterSounds CharacterSound;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+
 	public void Start()
 	{ 
 		mMover = GetComponent<Mover>();
@@ -37,18 +41,30 @@ public sealed class AvatarUnit : BaseUnit
 		mGridManager = floor.GridManager;
 		mPathFinder = new PathFinder(mGridManager);
         
+
+        //Audio related
 	    LockAudioSourceLocation = this.gameObject.transform.rotation;
 	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
-	    AudioListener = AudioComponent.GetComponent<AudioListener>();
+        TheAudioListener = GameObject.FindWithTag("TheAudioListener");
+
+        CharacterSound = GetComponentInChildren<CharacterSounds>();
+
+
 	}
 
    public void LateUpdate()
     {
         AudioComponent.transform.rotation = LockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
+
+        if (CurrentlyActivePlayer == true && mMover.IsMoving)
+        {
+            TheAudioListener.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player
+        }
     }
+
 	public void Update()
 	{
-	    
+
 	    if (IsFrozen)
 			return;
 
@@ -64,12 +80,15 @@ public sealed class AvatarUnit : BaseUnit
                     if(hit.transform.gameObject == this.gameObject)
                     {
                         CurrentlyActivePlayer = true;
-                        AudioListener.enabled = true;
+                        TheAudioListener.transform.position = this.gameObject.transform.position;
+
+                        CharacterSound.SetIdleTimeBool(false);
+                        CharacterSound.PlaySelectedCharacterSound();
                     }
                     else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
                     {
+                        CharacterSound.SetIdleTimeBool(true);
                         CurrentlyActivePlayer = false;
-                        AudioListener.enabled = false;
                     }
 	            }
              //Character selection ends
@@ -128,6 +147,9 @@ public sealed class AvatarUnit : BaseUnit
 	}
 
 	private void Move(int x, int z) {
+        //Plays movement audio each move
+        CharacterSound.PlayWalkingSound();
+
 		mMover.TryMove(x, z);
 		if (mRotation)
 			mRotation.RotateTowards(x, z);
@@ -136,5 +158,21 @@ public sealed class AvatarUnit : BaseUnit
     public void MakePlayerFrozen()
     {
         IsFrozen = true;
+    }
+
+    public override void DestroyUnit()      //Sets closest players audio to active and plays the death sound 
+    {
+       if (CharacterSound.DeathAudio != null)
+        {
+            GameObject deathAudioGameObject = new GameObject();
+
+            deathAudioGameObject.transform.position = this.gameObject.transform.position;
+            deathAudioGameObject.AddComponent<AudioSource>();
+            AudioSource deathAudioSource = deathAudioGameObject.GetComponent<AudioSource>();
+            deathAudioSource.audio.clip = CharacterSound.DeathAudio;
+
+            deathAudioSource.Play();
+        }
+        base.DestroyUnit();
     }
 }
