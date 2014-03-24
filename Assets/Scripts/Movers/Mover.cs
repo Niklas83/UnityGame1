@@ -26,7 +26,11 @@ public class Mover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
-		DebugAux.Assert(!mIsMoving, "Can't move a unit while it is moving!");
+	    if (MoveSoundEffects != null)
+	    {
+	        MoveSoundEffects.PlayWalkingSound();   // Plays move sound
+	    }
+	    DebugAux.Assert(!mIsMoving, "Can't move a unit while it is moving!");
 		
 		mIsMoving = true;
 		float t = 0;

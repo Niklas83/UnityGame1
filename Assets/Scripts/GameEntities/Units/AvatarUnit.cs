@@ -30,7 +30,7 @@ public sealed class AvatarUnit : BaseUnit
     private GameObject TheAudioListener;
     //private AudioListener PlayerAudioListener;       //sets the audiolistener to active when selected
     private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
-    private CharacterSounds CharacterSound;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+    private SoundsEffects CharacterSounsEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
 
 	public void Start()
 	{ 
@@ -47,7 +47,7 @@ public sealed class AvatarUnit : BaseUnit
 	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
         TheAudioListener = GameObject.FindWithTag("TheAudioListener");
 
-        CharacterSound = GetComponentInChildren<CharacterSounds>();
+        CharacterSounsEffects = GetComponentInChildren<SoundsEffects>();
 
 
 	}
@@ -82,12 +82,12 @@ public sealed class AvatarUnit : BaseUnit
                         CurrentlyActivePlayer = true;
                         TheAudioListener.transform.position = this.gameObject.transform.position;
 
-                        CharacterSound.SetIdleTimeBool(false);
-                        CharacterSound.PlaySelectedCharacterSound();
+                        CharacterSounsEffects.SetIdleTimeBool(false);
+                        CharacterSounsEffects.PlaySelectedCharacterSound();
                     }
                     else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
                     {
-                        CharacterSound.SetIdleTimeBool(true);
+                        CharacterSounsEffects.SetIdleTimeBool(true);
                         CurrentlyActivePlayer = false;
                     }
 	            }
@@ -148,7 +148,7 @@ public sealed class AvatarUnit : BaseUnit
 
 	private void Move(int x, int z) {
         //Plays movement audio each move
-        CharacterSound.PlayWalkingSound();
+        //CharacterSound.PlayWalkingSound();
 
 		mMover.TryMove(x, z);
 		if (mRotation)
@@ -162,14 +162,14 @@ public sealed class AvatarUnit : BaseUnit
 
     public override void DestroyUnit()      //Sets closest players audio to active and plays the death sound 
     {
-       if (CharacterSound.DeathAudio != null)
+        if (CharacterSounsEffects.DeathAudio != null)
         {
             GameObject deathAudioGameObject = new GameObject();
 
             deathAudioGameObject.transform.position = this.gameObject.transform.position;
             deathAudioGameObject.AddComponent<AudioSource>();
             AudioSource deathAudioSource = deathAudioGameObject.GetComponent<AudioSource>();
-            deathAudioSource.audio.clip = CharacterSound.DeathAudio;
+            deathAudioSource.audio.clip = CharacterSounsEffects.DeathAudio;
 
             deathAudioSource.Play();
         }
