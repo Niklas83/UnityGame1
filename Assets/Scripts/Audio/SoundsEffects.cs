@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CharacterSounds : MonoBehaviour {
+public class SoundsEffects : MonoBehaviour {
 
     //This is a list of audio clips that will play on diffefrent occations and its volume
     public AudioClip MovmentAudio1;

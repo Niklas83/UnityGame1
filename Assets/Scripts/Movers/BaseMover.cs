@@ -19,10 +19,14 @@ public abstract class BaseMover : MonoBehaviour
 	protected GridManager mGridManager;
 	protected Queue<Vector2> mMoveQueue;
 
+    public SoundsEffects MoveSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+
 	public void Start() {
 		Floor floor = Helper.Find<Floor>("Floor");
 		mGridManager = floor.GridManager;
 		mUnit = GetComponent<BaseUnit>();
+
+        MoveSoundEffects = GetComponentInChildren<SoundsEffects>();
 	}
 
 	protected bool CanMove(BaseTile iTile, int xDir, int zDir) {

@@ -36,6 +36,10 @@ public class AxisRotateMover : BaseMover
 		if (mIsMoving)
 			return false;
 
+        if (MoveSoundEffects != null)
+        {
+            MoveSoundEffects.PlayWalkingSound();   // Plays move sound
+        }
 		Vector3 directionToChild = Vector3.Normalize(pushedChild.position - transform.position);
 		Vector3 directionTowardsDest = (pushedChild.position + new Vector3(xDir, 0, zDir)) - transform.position;
 		rotationDegrees = Mathf.Sign(GetSignedAngleBetween(directionToChild, directionTowardsDest))*90;
