@@ -62,7 +62,7 @@ public class SoundsEffects : MonoBehaviour {
 
 	    IdleTimerActive = true;
 
-	    TimeUntilIdleSound = 60 + Random.Range(0, 60);
+	    TimeUntilIdleSound = 10 + Random.Range(0, 20);
 
 	}
 
@@ -82,7 +82,7 @@ public class SoundsEffects : MonoBehaviour {
         if (TimeUntilIdleSound <= 0)
         {
             PlayIdleSound();
-            TimeUntilIdleSound = 60 + Random.Range(0, 60);
+            TimeUntilIdleSound = 10 + Random.Range(0, 20);
         }
     }
     
