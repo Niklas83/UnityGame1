@@ -1,29 +1,34 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SoundsEffects : MonoBehaviour {
+public class SoundsEffects : MonoBehaviour
+{
+    public bool IceSoundMode;
 
     //This is a list of audio clips that will play on diffefrent occations and its volume
-    public AudioClip MovmentAudio1;
-    public AudioClip MovmentAudio2;
-    public AudioClip MovmentAudio3;
+    public List<AudioClip> RegularMovementAudio;
+    public List<AudioClip> IceMovementAudio;
     public float MovmentVol0To1;
-    private List<AudioClip> TheMovmentUAudioClips = new List<AudioClip>();
 
-    public AudioClip CharacterSelectedAudio;
+    public List<AudioClip> RegularCharacterSelectedAudio;
+    public List<AudioClip> IceCharacterSelectedAudio;
     public float CharacterSelectVol0To1;
 
-    public AudioClip IdleAudio1;
-    public AudioClip IdleAudio2;
-    public AudioClip IdleAudio3;
+    public List<AudioClip> RegularIdleAudio;
+    public List<AudioClip> IceIdleAudio;
     public float IdleVol0To1;
-    private List<AudioClip> TheIdleAudioClips = new List<AudioClip>();
+    //private List<AudioClip> TheIdleAudioClips = new List<AudioClip>();
 
-    public AudioClip DeathAudio;
+    public List<AudioClip> RegularDeathAudio;
+    public List<AudioClip> IceDeathAudio;
+    public float DeathVol0To1;
 
     private float TimeUntilIdleSound;       //Countdown untill the player will make a idle sound for not being moved in 1 minute + 0
     private bool IdleTimerActive;
+
+
 
     //Audio sources
     private AudioSource TheAudioSource;        //The audioSource that play steps
@@ -32,33 +37,6 @@ public class SoundsEffects : MonoBehaviour {
 	void Start ()
 	{
 	    TheAudioSource = this.gameObject.GetComponent<AudioSource>();
-
-	    if (MovmentAudio1 != null)
-	    {
-	        TheMovmentUAudioClips.Add(MovmentAudio1);
-	    }
-        if (MovmentAudio2 != null)
-        {
-            TheMovmentUAudioClips.Add(MovmentAudio2);
-        }
-        if (MovmentAudio3 != null)
-        {
-            TheMovmentUAudioClips.Add(MovmentAudio3);
-        }
-
-        if (IdleAudio1 != null)
-        {
-            TheIdleAudioClips.Add(IdleAudio1);
-        }
-        if (IdleAudio2 != null)
-        {
-            TheIdleAudioClips.Add(IdleAudio2);
-        }
-        if (IdleAudio3 != null)
-        {
-            TheIdleAudioClips.Add(IdleAudio3);
-        }
-
 
 	    IdleTimerActive = true;
 
@@ -89,31 +67,111 @@ public class SoundsEffects : MonoBehaviour {
 
     public void PlayWalkingSound()
     {
-        if (TheMovmentUAudioClips != null && (MovmentAudio1 != null || MovmentAudio2 != null || MovmentAudio3 != null))
+        if (IceSoundMode == false)
         {
-            int SizeOfMovmentAudioList = TheMovmentUAudioClips.Count;
-            int IndexOfRandomAudio = Random.Range(0, SizeOfMovmentAudioList);
+            if (RegularMovementAudio != null && RegularMovementAudio.Count > 0)
+            {
+                int SizeOfMovmentAudioList = RegularMovementAudio.Count;
+                int IndexOfRandomAudio = Random.Range(0, SizeOfMovmentAudioList);
 
-            TheAudioSource.PlayOneShot(TheMovmentUAudioClips[IndexOfRandomAudio], MovmentVol0To1);
+                TheAudioSource.PlayOneShot(RegularMovementAudio[IndexOfRandomAudio], MovmentVol0To1);
+            }
+        }
+        else if (IceSoundMode == true)
+        {
+            if (IceMovementAudio != null && IceMovementAudio.Count > 0)
+            {
+                int SizeOfIceMovmentAudioList = IceMovementAudio.Count;
+                int IndexOfRandomAudio = Random.Range(0, SizeOfIceMovmentAudioList);
+
+                TheAudioSource.PlayOneShot(IceMovementAudio[IndexOfRandomAudio], MovmentVol0To1);
+            }
         }
     }
 
     public void PlaySelectedCharacterSound()
     {
-        if (CharacterSelectedAudio != null)
+        if (IceSoundMode == false)
         {
-            TheAudioSource.PlayOneShot(CharacterSelectedAudio, CharacterSelectVol0To1);
+            if (RegularCharacterSelectedAudio != null && RegularCharacterSelectedAudio.Count > 0)
+            {
+                int sizeOfCharacterSelectedAudioList = RegularCharacterSelectedAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfCharacterSelectedAudioList);
+
+                TheAudioSource.PlayOneShot(RegularCharacterSelectedAudio[indexOfRandomAudio], CharacterSelectVol0To1);
+            }
         }
+        else if (IceSoundMode == true)
+        {
+            if (IceCharacterSelectedAudio != null && IceCharacterSelectedAudio.Count > 0)
+            {
+                int sizeOfIceCharacterSelectedAudioList = IceCharacterSelectedAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfIceCharacterSelectedAudioList);
+
+                TheAudioSource.PlayOneShot(IceCharacterSelectedAudio[indexOfRandomAudio], CharacterSelectVol0To1);
+            }
+        }
+    }
+
+    //Currently not in use, as the death sound gets droped on the floor due to player gameobuject being removed on death
+    //public void PlayDeathSound()      
+    //{
+    //    if (RegularDeathAudio != null && RegularDeathAudio.Count > 0)
+    //    {
+    //        int sizeOfDeathAudioList = RegularDeathAudio.Count;
+    //        int indexOfRandomAudio = Random.Range(0, sizeOfDeathAudioList);
+
+    //        TheAudioSource.PlayOneShot(RegularDeathAudio[indexOfRandomAudio], DeathVol0To1);
+    //    }
+    //}
+
+    public AudioClip GetRandomDeathAudioClip()
+    {
+        AudioClip randomDeathAudioClip = null;
+
+        if (IceSoundMode == false)
+        {
+            if (RegularDeathAudio != null && RegularDeathAudio.Count > 0)
+            {
+                int sizeOfDeathAudioList = RegularDeathAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfDeathAudioList);
+                randomDeathAudioClip = RegularDeathAudio[indexOfRandomAudio];
+            }
+        }
+        else if (IceSoundMode == true)
+        {
+            if (IceDeathAudio != null && IceDeathAudio.Count > 0)
+            {
+                int sizeOfIceDeathAudioList = IceDeathAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfIceDeathAudioList);
+                randomDeathAudioClip = IceDeathAudio[indexOfRandomAudio];
+            }
+        }
+
+        return randomDeathAudioClip;
     }
 
     public void PlayIdleSound()
     {
-        if (TheIdleAudioClips != null && (IdleAudio1 != null || IdleAudio2 != null || IdleAudio3 != null))
+        if (IceSoundMode == false)
         {
-            int SizeOfIdleAudioList = TheIdleAudioClips.Count;
-            int IndexOfRandomAudio = Random.Range(0, SizeOfIdleAudioList);
+            if (RegularIdleAudio != null && RegularIdleAudio.Count > 0)
+            {
+                int sizeOfIdleAudioList = RegularIdleAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfIdleAudioList);
 
-            TheAudioSource.PlayOneShot(TheIdleAudioClips[IndexOfRandomAudio], IdleVol0To1);
+                TheAudioSource.PlayOneShot(RegularIdleAudio[indexOfRandomAudio], IdleVol0To1);
+            }
+        }
+        else if (IceSoundMode == true)
+        {
+            if (IceIdleAudio != null && IceIdleAudio.Count > 0)
+            {
+                int sizeOfIceIdleAudioList = IceIdleAudio.Count;
+                int indexOfRandomAudio = Random.Range(0, sizeOfIceIdleAudioList);
+
+                TheAudioSource.PlayOneShot(IceIdleAudio[indexOfRandomAudio], IdleVol0To1);
+            }
         }
     }
 
@@ -128,6 +186,6 @@ public class SoundsEffects : MonoBehaviour {
         {
             IdleTimerActive = ActiveOrDisabled;
         }
-        
     }
+
 }
