@@ -9,16 +9,13 @@ public class AudioListenerMover : MonoBehaviour {
     public GameObject InitiallySelectedPlayer;
 
     public Vector3 _StartPosition;
-    //public Vector3 _InitiallyEndPosition;
+
     public Vector3 _CurrentlySelectedEndPosition;     //If the selected player has changed while moving to the current one
     public bool _IsMoving = false;
 
     private bool clickedNewTargetWhileMoveing = false;
 
-
     private float DistanceBetweenAudioAndPlayer;
-
-
 
     public void MoveToSelectedPlayer(GameObject selectedPlayer)
     {
@@ -48,10 +45,8 @@ public class AudioListenerMover : MonoBehaviour {
 
         DistanceBetweenAudioAndPlayer = Vector3.Distance(this.gameObject.transform.position, InitiallySelectedPlayer.transform.position);
 
-
         while (t < 1f)
         {
-            
             if (InitiallySelectedPlayer.transform.position == _CurrentlySelectedEndPosition || clickedNewTargetWhileMoveing == false)
             {
                 t += Time.deltaTime * (MovementSpeed) / DistanceBetweenAudioAndPlayer;
