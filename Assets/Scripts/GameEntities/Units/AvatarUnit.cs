@@ -28,6 +28,7 @@ public sealed class AvatarUnit : BaseUnit
     //Audio related fields
     private GameObject AudioComponent;          //Holds the audio listener with constant rotation
     private GameObject TheAudioListener;
+    private AudioListenerMover _audioListenerMover;
     //private AudioListener PlayerAudioListener;       //sets the audiolistener to active when selected
     private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
     private SoundsEffects CharacterSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
@@ -47,6 +48,8 @@ public sealed class AvatarUnit : BaseUnit
 	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
         TheAudioListener = GameObject.FindWithTag("TheAudioListener");
 
+	    _audioListenerMover = TheAudioListener.GetComponentInChildren<AudioListenerMover>();
+
         CharacterSoundEffects = GetComponentInChildren<SoundsEffects>();
 
 
@@ -56,7 +59,7 @@ public sealed class AvatarUnit : BaseUnit
     {
         AudioComponent.transform.rotation = LockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
 
-        if (CurrentlyActivePlayer == true && mMover.IsMoving)
+        if (CurrentlyActivePlayer == true && mMover.IsMoving && _audioListenerMover._IsMoving == false)
         {
             TheAudioListener.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player
         }
@@ -80,7 +83,8 @@ public sealed class AvatarUnit : BaseUnit
                     if(hit.transform.gameObject == this.gameObject)
                     {
                         CurrentlyActivePlayer = true;
-                        TheAudioListener.transform.position = this.gameObject.transform.position;
+
+                        _audioListenerMover.MoveToSelectedPlayer(this.gameObject);
 
                         CharacterSoundEffects.SetIdleTimeBool(false);
                         CharacterSoundEffects.PlaySelectedCharacterSound();
