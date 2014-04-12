@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -8,14 +8,14 @@ public class RotateMover : BaseMover {
 
 	public override bool TryMove(int xDir, int zDir)
 	{
-		if (mIsMoving)
+		if (isMoving)
 			return false;
 
 		Transform transform = gameObject.transform;
 		Transform parent = transform.parent;
 		
-		BaseTile tilePassingBy = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
-		BaseTile tileEndPosition = mGridManager.GetTile(parent.position + new Vector3(xDir, 0, zDir));
+		BaseTile tilePassingBy = gridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
+		BaseTile tileEndPosition = gridManager.GetTile(parent.position + new Vector3(xDir, 0, zDir));
 		
 		if ((tilePassingBy == null || !tilePassingBy.IsActive()) ||
 		    (tileEndPosition == null || !tileEndPosition.IsActive())) // Can't move to a non existing tile.
@@ -47,7 +47,7 @@ public class RotateMover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
-		mIsMoving = true;
+		isMoving = true;
 		
 		Transform transform = gameObject.transform;
 		Transform parent = transform.parent;
@@ -60,9 +60,9 @@ public class RotateMover : BaseMover {
 		Vector3 startPosition = transform.position;
 		Vector3 endPosition = parent.position + new Vector3(xDir, 0, zDir);
 
-		BaseTile sourceTile = mGridManager.GetTile(startPosition);
-		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		BaseTile.HandleOccupy(mUnit, sourceTile, destinationTile);
+		BaseTile sourceTile = gridManager.GetTile(startPosition);
+		BaseTile destinationTile = gridManager.GetTile(endPosition);
+		BaseTile.HandleOccupy(unit, sourceTile, destinationTile);
 		
 		//TODO: fixa så att det görs en kontroll om man kommer från sidan av bommen för kommande liknande objekt.
 		int direction = (int) Mathf.Sign(rotateDegrees);
@@ -74,8 +74,8 @@ public class RotateMover : BaseMover {
 			}
 		}
 
-		BaseTile.HandleArrive(mUnit, sourceTile, destinationTile);
-		mIsMoving = false;
+		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
+		isMoving = false;
 		
 		yield return 0;
 	}

@@ -5,39 +5,40 @@ using System.Collections.Generic;
 
 public class LaserBeamHandler : MonoBehaviour
 {
-	public GameObject LaserBeamPrefab;
+	public GameObject laserBeamPrefab;
 	public EventMessage onHitMessage;
-	private List<LineRenderer> beamCache;
+	
+	private List<LineRenderer> _beamCache;
 
     public void Start() {
-		beamCache = new List<LineRenderer>();
+		_beamCache = new List<LineRenderer>();
 		GetBeam(0);
 	}
 
 	private LineRenderer GetBeam(int index) {
 		LineRenderer lr = null;
-		if (index >= beamCache.Count) {
-			GameObject go = GameObject.Instantiate(LaserBeamPrefab) as GameObject;
+		if (index >= _beamCache.Count) {
+			GameObject go = GameObject.Instantiate(laserBeamPrefab) as GameObject;
 			go.transform.parent = transform.parent;
 			go.transform.localPosition = Vector3.zero;
 			lr = go.GetComponent<LineRenderer>();
-			beamCache.Add(lr);
+			_beamCache.Add(lr);
 		} else
-			lr = beamCache[index];
+			lr = _beamCache[index];
 
 		return lr;
 	}
 	
 	void Update() {
-		foreach(LineRenderer lr in beamCache)
+		foreach(LineRenderer lr in _beamCache)
 			lr.enabled = false;
 
 		Vector3 forward = transform.rotation * Vector3.forward;
 		ShootBeam(transform, forward, 0);
 	}
 
-	public void ShootBeam(Transform t, Vector3 direction, int index) {
-		Vector3 position = t.position;
+	public void ShootBeam(Transform transform, Vector3 direction, int index) {
+		Vector3 position = transform.position;
 
 		if (index > 100)
 			return;

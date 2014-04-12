@@ -4,11 +4,11 @@ using System.Collections;
 
 public class MedusaRay : MonoBehaviour
 {
-    public LayerMask PlayerLayer;
-    public LayerMask ObsticleLayer;
+    public LayerMask playerLayer;
+    public LayerMask obsticleLayer;
 
-    private GameObject PlayerGameObject;
-    private GameObject ObsticleGameObject;
+    private GameObject _playerGameObject;
+    private GameObject _obsticleGameObject;
 
     public GameObject[] Blast(bool shootRight, bool shootLeft, bool shootUp, bool shootDown)
     {
@@ -37,28 +37,28 @@ public class MedusaRay : MonoBehaviour
 
         for (int i = 0; i < rayList.Count(); i++)
         {
-            PlayerGameObject = null;
-            ObsticleGameObject = null;
+            _playerGameObject = null;
+            _obsticleGameObject = null;
 
-            if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, PlayerLayer))
+            if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, playerLayer))
             {
-                PlayerGameObject = hit.collider.gameObject;
+                _playerGameObject = hit.collider.gameObject;
                 Debug.DrawRay(rayList[i].origin, hit.point - rayList[i].origin, Color.red);
             }
 
-            if (PlayerGameObject != null)
+            if (_playerGameObject != null)
             {
-                PlayerAndObsticle[0] = PlayerGameObject; //Adds the player hit
+                PlayerAndObsticle[0] = _playerGameObject; //Adds the player hit
 
-                if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, ObsticleLayer))
+                if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, obsticleLayer))
                 {
-                    ObsticleGameObject = hit.collider.gameObject;
+                    _obsticleGameObject = hit.collider.gameObject;
                     Debug.DrawRay(rayList[i].origin, hit.point - rayList[i].origin, Color.red);
                 }
 
-                if (ObsticleGameObject != null)
+                if (_obsticleGameObject != null)
                 {
-                    PlayerAndObsticle[1] = ObsticleGameObject; //Adds the obsticle hit
+                    PlayerAndObsticle[1] = _obsticleGameObject; //Adds the obsticle hit
 
                 }
 

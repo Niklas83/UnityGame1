@@ -6,15 +6,15 @@ public sealed class ProjectileShooterUnit : BaseUnit
 {
 	public override int LayerMask { get { return (int)(Layer.Ground | Layer.Air); } }
 
-    public bool IsActive = true;				// Sets if the cannon is active (Could be disabled or something by walking on button etc)
-    public float SecondsBetweenShots = 5;
-    public float ProjectileSpeed = 4;
-    public DirectionEnum DirectionToShoot;      // The direction to shoot the projectile
-    public bool CanShootThroughWalls = false;
-
+    public bool isActive = true;				// Sets if the cannon is active (Could be disabled or something by walking on button etc)
+    public float secondsBetweenShots = 5;
+    public float projectileSpeed = 4;
+    public DirectionEnum directionToShoot;      // The direction to shoot the projectile
+    public bool canShootThroughWalls = false;
     public GameObject projectilePrefab;
-	private GameObject projectile;
-    private bool IsCurrentlyShooting = false;
+    
+	private GameObject _projectile;
+    private bool _isShooting = false;
 	
     public override bool CanWalkOver { get { return false; } }
     public override bool CanWalkOn(string incomingUnitTag) {
@@ -22,27 +22,27 @@ public sealed class ProjectileShooterUnit : BaseUnit
     }
 
     void Update() {
-        if (IsActive && !IsCurrentlyShooting) {
-            IsCurrentlyShooting = true;
+        if (isActive && !_isShooting) {
+            _isShooting = true;
             StartCoroutine(StartShooting());
         }
     }
 
     private IEnumerator StartShooting() {
-        while (IsActive) {
+        while (isActive) {
             Shoot();
-            yield return new WaitForSeconds(SecondsBetweenShots);
+            yield return new WaitForSeconds(secondsBetweenShots);
         }
-        IsCurrentlyShooting = false;
+        _isShooting = false;
     }
 	
-	private void Shoot(){
+	private void Shoot() {
 		Vector3 spawnPosition = transform.position + new Vector3(0, 1.1f, 0);
 
         float xDirection = 0f;
         float zDirection = 0f;
 
-        switch (DirectionToShoot)
+        switch (directionToShoot)
         {
             case DirectionEnum.Down:
                 zDirection = -1;
@@ -61,9 +61,9 @@ public sealed class ProjectileShooterUnit : BaseUnit
 		Vector3 forward = new Vector3(xDirection, 0, zDirection);
 		Quaternion rotation = Quaternion.LookRotation(forward);
 
-		projectile = (GameObject)Instantiate(projectilePrefab, spawnPosition, rotation);
+		_projectile = (GameObject)Instantiate(projectilePrefab, spawnPosition, rotation);
 
-		ProjectileMover projectileMover = projectile.GetComponent<ProjectileMover>();
-		projectileMover.MoveSpeed = ProjectileSpeed;
+		ProjectileMover projectileMover = _projectile.GetComponent<ProjectileMover>();
+		projectileMover.moveSpeed = projectileSpeed;
     }
 }

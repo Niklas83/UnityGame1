@@ -3,7 +3,7 @@ using System.Collections;
 
 public interface IActivatable
 {
-	void SetActive(bool iActive);
+	void SetActive(bool active);
 	bool IsActive();
 }
 

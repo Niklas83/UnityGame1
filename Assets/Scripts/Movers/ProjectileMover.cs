@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 public class ProjectileMover : Mover {
 
-    private int NumberOfMovementOverNonExistingTiles = 0;
+    private int _numberOfMovementOverNonExistingTiles = 0;
 
     void Update()
     {
@@ -16,21 +16,21 @@ public class ProjectileMover : Mover {
 	// Checks if this mover can move in the given direction.
 	public override bool TryMove(int xDir, int zDir)
     {
-        if (mIsMoving)
+        if (isMoving)
 			return false;
 
-        BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
+        BaseTile tile = gridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
 		if (tile == null || !tile.IsActive()) // Projectiles can move over null tiles
         {
-            NumberOfMovementOverNonExistingTiles++;
-			bool canMove = NumberOfMovementOverNonExistingTiles <= 10;
+            _numberOfMovementOverNonExistingTiles++;
+			bool canMove = _numberOfMovementOverNonExistingTiles <= 10;
 			if (!canMove)
                 Destroy(this.gameObject);
             else
                 StartCoroutine(Move(xDir, zDir));
 			return canMove;
         }
-		NumberOfMovementOverNonExistingTiles = 0;
+		_numberOfMovementOverNonExistingTiles = 0;
 		return base.TryMove(xDir, zDir);
 	}
 }

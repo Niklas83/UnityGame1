@@ -8,17 +8,17 @@ sealed class Node : IComparable<Node> {
     public int Cost {get; private set;}
     public int Heuristic {get; private set;}
 
-    public Node(Vector2 iIndices, Node iParent, int iCost, int iHeuristic) 
+    public Node(Vector2 indices, Node parent, int cost, int heuristic) 
 	{
-        Indices = iIndices;
-        Parent = iParent;
-        Cost = iCost;
-        Heuristic = iHeuristic;
+        Indices = indices;
+        Parent = parent;
+        Cost = cost;
+        Heuristic = heuristic;
     }
 
-    public int CompareTo(Node n) 
+    public int CompareTo(Node node)
 	{
-        return GetTotalCost() < n.GetTotalCost() ? -1 : 1;
+        return GetTotalCost() < node.GetTotalCost() ? -1 : 1;
     }
 
     public int GetTotalCost() 

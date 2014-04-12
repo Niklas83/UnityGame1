@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public partial class AvatarUnit {
+public partial class AvatarUnit 
+{
 	public enum AvatarState
 	{
 		Idling,
@@ -12,12 +13,13 @@ public partial class AvatarUnit {
 		Incapacitated,
 	}
 	
-	public class AvatarStates {
-	
+	public class AvatarStates 
+	{
 		Dictionary<int, BaseState> _allStates;
 		StateMachine _stateMachine;
 		
-		public AvatarStates(GameObject avatar) {
+		public AvatarStates(GameObject avatar) 
+		{
 			_allStates = new Dictionary<int, BaseState>();
 			_allStates[(int) AvatarState.Idling] = new AvatarIdle(avatar);
 			_allStates[(int) AvatarState.Walking] = new AvatarWalk(avatar);
@@ -52,7 +54,7 @@ public partial class AvatarUnit {
 		public override void OnEnter() { base.OnEnter(); }
 		public override void Update() {
 			if (_avatarUnit.IsMoving()) {
-				if (_avatarUnit.mMoveQueue != null && _avatarUnit.mMoveQueue.Count > 1)
+				if (_avatarUnit._moveQueue != null && _avatarUnit._moveQueue.Count > 1)
 					ChangeState(AvatarState.Running);
 				else
 					ChangeState(AvatarState.Walking);
@@ -64,7 +66,7 @@ public partial class AvatarUnit {
 	public class AvatarWalk : AvatarBaseState
 	{
 		public AvatarWalk(GameObject avatar) : base(avatar, "walk") {}
-		public override void OnEnter() { base.OnEnter(); _avatarUnit.mMover.MoveSpeed = 3; }
+		public override void OnEnter() { base.OnEnter(); _avatarUnit._mover.moveSpeed = 3; }
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
 				ChangeState(AvatarState.Idling);
@@ -76,7 +78,7 @@ public partial class AvatarUnit {
 	public class AvatarRun : AvatarBaseState
 	{
 		public AvatarRun(GameObject avatar) : base(avatar, "run") {}
-		public override void OnEnter() { base.OnEnter(); _avatarUnit.mMover.MoveSpeed = 4.5f; }
+		public override void OnEnter() { base.OnEnter(); _avatarUnit._mover.moveSpeed = 4.5f; }
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
 				ChangeState(AvatarState.Idling);

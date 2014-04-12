@@ -3,10 +3,10 @@ using System.Collections;
 
 public class ConveyorBelt : BaseTile 
 {
-	public float Speed = 0.5f;
+	public float speed = 0.5f;
 	
-	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
-	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {}
+	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
+	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) {}
 	
 	void Update() {
 		BaseUnit unit = GetOccupyingUnitOnLayer(Layer.Ground);
@@ -14,7 +14,7 @@ public class ConveyorBelt : BaseTile
 			return;
 		
 		Vector3 position = unit.transform.position;
-		position.x += Speed * Time.deltaTime;
+		position.x += speed * Time.deltaTime;
 		unit.transform.position = position;
 	}
 }

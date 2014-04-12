@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Floor : MonoBehaviour {
 
-	private GridManager mGridManager = new GridManager();
-	public GridManager GridManager { get { return mGridManager; } }
+	private GridManager _gridManager = new GridManager();
+	public GridManager GridManager { get { return _gridManager; } }
 
 	// Use this for initialization
 	void Awake() {
@@ -25,18 +25,18 @@ public class Floor : MonoBehaviour {
 
 		Vector3 size = levelBounds.size;
 		
-		mGridManager.CreateGrid((int)size.x + 1, (int)size.z + 1);
+		_gridManager.CreateGrid((int)size.x + 1, (int)size.z + 1);
 		for (int i = 0; i < nrTiles; i++) {
 			BaseTile tile = transform.GetChild(i).GetComponent<BaseTile>();
-			tile.Init(mGridManager);
-			mGridManager.AddTile(tile);
+			tile.Init(_gridManager);
+			_gridManager.AddTile(tile);
 		}
 
 		Object[] allUnits = Object.FindObjectsOfType<BaseUnit>();
 		for (int i = 0; i < allUnits.Length; i++) {
 			BaseUnit bu = allUnits[i] as BaseUnit;
-			bu.Init(mGridManager);
-			BaseTile tile = mGridManager.GetTile(bu.transform.position);
+			bu.Init(_gridManager);
+			BaseTile tile = _gridManager.GetTile(bu.transform.position);
 			DebugAux.Assert(tile != null, "Can't have a unit placed on a non-tile " + bu);
 			BaseTile.TeleportTo(bu, null, tile);
 		}

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class AudioPlayer : MonoBehaviour 
 {
-	private AudioSource mAudio;
+	private AudioSource _audio;
 
 	public void Start() {
-		mAudio = this.GetComponent<AudioSource>();
+		_audio = this.GetComponent<AudioSource>();
 	}
 
 	public void FadeOut(float duration) {
@@ -19,7 +19,7 @@ public class AudioPlayer : MonoBehaviour
 		float timer = 0;
 		while (timer < duration) {
 			float t = 1 - (timer / duration);
-			mAudio.volume = t;
+			_audio.volume = t;
 			timer += Time.deltaTime;
 			yield return 0;
 		}

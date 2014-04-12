@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
 
 public class ProjectileUnit : BaseUnit  {
 
-	public bool CanPassThroughUnits;
+	public bool canPassThroughUnits;
 	public GameObject onHitPfx;
 
 	public override int LayerMask { get { return (int)Layer.Air; } }
@@ -15,12 +15,12 @@ public class ProjectileUnit : BaseUnit  {
         return CanWalkOver;
     }
 
-	public override void OnCollided(BaseUnit iUnit) {
-		if (iUnit is ProjectileUnit)
+	public override void OnCollided(BaseUnit unit) {
+		if (unit is ProjectileUnit)
 			return;
 
-		if (iUnit is AvatarUnit || (iUnit is BaseUnit && !CanPassThroughUnits)) {
-			StartCoroutine(Explode(0.5f, iUnit));
+		if (unit is AvatarUnit || (unit is BaseUnit && !canPassThroughUnits)) {
+			StartCoroutine(Explode(0.5f, unit));
 		}
 	}
 
@@ -31,7 +31,7 @@ public class ProjectileUnit : BaseUnit  {
 		BaseTile.HandleOccupy(this, OccupiedTile, null);
 
 		float t = 0;
-		float moveSpeed = this.GetComponent<ProjectileMover>().MoveSpeed;
+		float moveSpeed = this.GetComponent<ProjectileMover>().moveSpeed;
 		while (t < 1f)
 		{
 			t += Time.deltaTime*moveSpeed;

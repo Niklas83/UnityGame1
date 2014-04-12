@@ -5,15 +5,15 @@ public class PortalTile : BaseTile
 {
 	public BaseTile DestinationTile;
 
-	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
-	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {
-		Debug.Log(iPreviousTile + " " + DestinationTile);
-		if (iPreviousTile == DestinationTile || DestinationTile == null) // Came from the other portal
+	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
+	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) 
+	{
+		if (previousTile == DestinationTile || DestinationTile == null) // Came from the other portal
 			return;
 
-		if (!DestinationTile.CanWalkOn(iUnit))
+		if (!DestinationTile.CanWalkOn(unit))
 			return;
 
-		BaseTile.TeleportTo(iUnit, this, DestinationTile);
+		BaseTile.TeleportTo(unit, this, DestinationTile);
 	}
 }

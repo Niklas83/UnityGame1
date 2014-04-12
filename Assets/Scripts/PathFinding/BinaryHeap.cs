@@ -2,30 +2,30 @@
 
 sealed class BinaryHeap<T> : IPriorityQueue<T> where T : IComparable<T> {
 
-    int CurrentSize;
-    T[] Array;
+    private int _currentSize;
+	private T[] _array;
 
-    public BinaryHeap(int iCapacity) 
+    public BinaryHeap(int capacity) 
 	{
-        CurrentSize = 0;
-        Array = new T[iCapacity];
+        _currentSize = 0;
+        _array = new T[capacity];
     }
 
-    public void Enqueue(T iElement) 
+    public void Enqueue(T element) 
 	{
-        if (CurrentSize == Array.Length - 1) 
+        if (_currentSize == _array.Length - 1) 
 		{
             DoubleArray();
         }
     
-        int hole = ++CurrentSize;
-        Array[ 0 ] = iElement;
-        for (; iElement.CompareTo(Array[hole / 2]) < 0; hole /= 2 ) 
+        int hole = ++_currentSize;
+        _array[ 0 ] = element;
+        for (; element.CompareTo(_array[hole / 2]) < 0; hole /= 2 ) 
 		{
-            Array[hole] = Array[hole / 2];
+            _array[hole] = _array[hole / 2];
         }
 
-        Array[hole] = iElement;
+        _array[hole] = element;
     }
 
     public T Peek() 
@@ -34,30 +34,30 @@ sealed class BinaryHeap<T> : IPriorityQueue<T> where T : IComparable<T> {
 		{
             throw new InvalidOperationException("Queue is empty!");
         }
-        return Array[1];
+        return _array[1];
     }
 
     public T Dequeue( ) 
 	{
         T minItem = Peek();
-        Array[1] = Array[CurrentSize--];
+        _array[1] = _array[_currentSize--];
         TrickleDown(1);
         return minItem;
     }
 
     public bool IsEmpty() 
 	{
-        return CurrentSize == 0;
+        return _currentSize == 0;
     }
 
     public void Clear() 
 	{
-        CurrentSize = 0;
+        _currentSize = 0;
     }
 
     private void BuildHeap() 
 	{
-        for (int i = CurrentSize / 2; i > 0; i--) 
+        for (int i = _currentSize / 2; i > 0; i--) 
 		{
             TrickleDown(i);
         }
@@ -66,36 +66,36 @@ sealed class BinaryHeap<T> : IPriorityQueue<T> where T : IComparable<T> {
     private void TrickleDown(int hole) 
 	{
         int child;
-        T tmp = Array[hole];
+        T tmp = _array[hole];
         
         bool foundInsertionPoint = false;
-        while (hole * 2 <= CurrentSize && !foundInsertionPoint) 
+        while (hole * 2 <= _currentSize && !foundInsertionPoint) 
 		{
             child = hole * 2;
-            if (child != CurrentSize && Array[child + 1].CompareTo(Array[child]) < 0 ) 
+            if (child != _currentSize && _array[child + 1].CompareTo(_array[child]) < 0 ) 
 			{
                 child++;
             }
 
-            foundInsertionPoint = Array[child].CompareTo(tmp) >= 0;
+            foundInsertionPoint = _array[child].CompareTo(tmp) >= 0;
             if (!foundInsertionPoint) 
 			{
-                Array[hole] = Array[child];
+                _array[hole] = _array[child];
                 hole = child;
             }
         }
-        Array[hole] = tmp;
+        _array[hole] = tmp;
     }
 
-    private void DoubleArray( )
+    private void DoubleArray()
 	{
         T [] newArray;
     
-        newArray = new T[Array.Length * 2];
-        for (int i = 0; i < Array.Length; i++) 
+        newArray = new T[_array.Length * 2];
+        for (int i = 0; i < _array.Length; i++) 
 		{
-            newArray[ i ] = Array[ i ];
+            newArray[i] = _array[i];
         }
-        Array = newArray;
+        _array = newArray;
     }
 }

@@ -4,25 +4,26 @@ using System.Collections.Generic;
 
 public abstract class BaseEntity : MonoBehaviour, IActivatable 
 {
-	protected GridManager GridManager { get { return mGridManager; } }
-	private GridManager mGridManager;
-	public bool Active = true;
+	protected GridManager GridManager { get { return _gridManager; } }
+	private GridManager _gridManager;
+	
+	private bool _active = true;
 
-	public virtual void Init(GridManager iGridManager) {
-		mGridManager = iGridManager;
+	public virtual void Init(GridManager gridManager) {
+		_gridManager = gridManager;
 	}
 	
-	public void SetActive(bool iActive) {
-		Active = iActive;
-		GetComponent<MeshRenderer>().enabled = iActive;
-		if (iActive)
+	public void SetActive(bool active) {
+		_active = active;
+		GetComponent<MeshRenderer>().enabled = active;
+		if (active)
 			OnActivated();
 		else
 			OnDeactivated();
 	}
 
 	public bool IsActive() {
-		return Active;
+		return _active;
 	}
 
 	protected virtual void OnActivated() {}

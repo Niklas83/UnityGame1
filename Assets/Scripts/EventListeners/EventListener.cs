@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public enum EventMessage {
@@ -12,8 +12,8 @@ public enum EventMessage {
 
 public class EventListener : MonoBehaviour {
 
-	public void ReceiveEvent(EventMessage iEvent) {
-		switch (iEvent) {
+	public void ReceiveEvent(EventMessage eventMessage) {
+		switch (eventMessage) {
 		case EventMessage.Activate :
 			// Name of the method
 			SendMessage("SetActive", true, SendMessageOptions.DontRequireReceiver);

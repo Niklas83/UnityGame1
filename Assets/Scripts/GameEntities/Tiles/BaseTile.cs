@@ -10,13 +10,13 @@ public enum Layer {
 
 public abstract class BaseTile : BaseEntity
 {
-	public Dictionary<Layer, BaseUnit> mOccupyingUnits;
-	private List<BaseUnit> mPreviousUnits;
+	private Dictionary<Layer, BaseUnit> _occupyingUnits;
+	private List<BaseUnit> _previousUnits;
 
-	public override void Init(GridManager iGridManager) {
-		base.Init(iGridManager);
-		mOccupyingUnits = new Dictionary<Layer, BaseUnit>();
-		mPreviousUnits = new List<BaseUnit>();
+	public override void Init(GridManager gridManager) {
+		base.Init(gridManager);
+		_occupyingUnits = new Dictionary<Layer, BaseUnit>();
+		_previousUnits = new List<BaseUnit>();
 	}
 
 	public void OnGUI() {
@@ -25,7 +25,7 @@ public abstract class BaseTile : BaseEntity
 
 		foreach (Layer l in Enum.GetValues(typeof(Layer))) {
 			BaseUnit unit;
-			if (mOccupyingUnits.TryGetValue(l, out unit)) {
+			if (_occupyingUnits.TryGetValue(l, out unit)) {
 				GUI.skin.label.normal.textColor = Color.black;
 				if (unit != null) {
 					Vector3 screen = Camera.main.WorldToScreenPoint(this.transform.position);
@@ -42,92 +42,92 @@ public abstract class BaseTile : BaseEntity
 		}
 	}
 
-	public static void TeleportTo(BaseUnit iUnit, BaseTile iSourceTile, BaseTile iDestinationTile) {
-		Vector3 position = iDestinationTile.transform.position;
+	public static void TeleportTo(BaseUnit unit, BaseTile sourceTile, BaseTile destinationTile) {
+		Vector3 position = destinationTile.transform.position;
 		position.y = 1;
-		iUnit.transform.position = position;
+		unit.transform.position = position;
 
-		HandleOccupy(iUnit, iSourceTile, iDestinationTile);
-		HandleArrive(iUnit, iSourceTile, iDestinationTile);
+		HandleOccupy(unit, sourceTile, destinationTile);
+		HandleArrive(unit, sourceTile, destinationTile);
 	}
-	public static void HandleOccupy(BaseUnit iUnit, BaseTile iSourceTile, BaseTile iDestinationTile) {
-		if (iSourceTile != null)
-			iSourceTile.Unoccupy(iUnit);
-		if (iDestinationTile != null)
-			iDestinationTile.Occupy(iUnit);
+	public static void HandleOccupy(BaseUnit unit, BaseTile sourceTile, BaseTile destinationTile) {
+		if (sourceTile != null)
+			sourceTile.Unoccupy(unit);
+		if (destinationTile != null)
+			destinationTile.Occupy(unit);
 	}
-	public static void HandleArrive(BaseUnit iUnit, BaseTile iSourceTile, BaseTile iDestinationTile) {
-		if (iSourceTile != null)
-			iSourceTile.Leave(iUnit, iDestinationTile);
-		if (iDestinationTile != null)
-			iDestinationTile.Arrive(iUnit, iSourceTile);
+	public static void HandleArrive(BaseUnit unit, BaseTile sourceTile, BaseTile destinationTile) {
+		if (sourceTile != null)
+			sourceTile.Leave(unit, destinationTile);
+		if (destinationTile != null)
+			destinationTile.Arrive(unit, sourceTile);
 	}
 
-	private void Occupy(BaseUnit iUnit) {
-		int mask = iUnit.LayerMask;
+	private void Occupy(BaseUnit unit) {
+		int mask = unit.LayerMask;
 		foreach (Layer l in Enum.GetValues(typeof(Layer))) {
 			int layerMask = (int)l;
 			if ((layerMask & mask) == layerMask) {
-				BaseUnit unit;
-				if (mOccupyingUnits.TryGetValue(l, out unit))
-					mPreviousUnits.Add(unit);
+				BaseUnit u;
+				if (_occupyingUnits.TryGetValue(l, out u))
+					_previousUnits.Add(u);
 
-				mOccupyingUnits[l] = iUnit;
+				_occupyingUnits[l] = unit;
 			}
 		}
-		iUnit.OccupiedTile = this;
+		unit.OccupiedTile = this;
 	}
 
-	private void Unoccupy(BaseUnit iUnit) {
-		int mask = iUnit.LayerMask;
+	private void Unoccupy(BaseUnit unit) {
+		int mask = unit.LayerMask;
 		foreach (Layer l in Enum.GetValues(typeof(Layer))) {
-			BaseUnit unit;
-			if (mOccupyingUnits.TryGetValue(l, out unit)) {
+			BaseUnit u;
+			if (_occupyingUnits.TryGetValue(l, out u)) {
 				int layerMask = (int)l;
-				if ((layerMask & mask) == layerMask && unit == iUnit)
-					mOccupyingUnits.Remove(l);
+				if ((layerMask & mask) == layerMask && unit == u)
+					_occupyingUnits.Remove(l);
 			}
 		}
 	}
 
-	private void Arrive(BaseUnit iUnit, BaseTile iSourceTile) {
-		iUnit.OnArrived(this, mPreviousUnits);
-		foreach (BaseUnit unit in mPreviousUnits)
-			unit.OnArrivedToMe(iUnit);
+	private void Arrive(BaseUnit unit, BaseTile sourceTile) {
+		unit.OnArrived(this, _previousUnits);
+		foreach (BaseUnit u in _previousUnits)
+			u.OnArrivedToMe(unit);
 
-		mPreviousUnits.Clear();
-		OnArrived(iUnit, iSourceTile);
+		_previousUnits.Clear();
+		OnArrived(unit, sourceTile);
 	}
 
-	private void Leave(BaseUnit iUnit, BaseTile iDestinationTile) {
-		iUnit.OnLeaved(this);
-		OnLeaved(iUnit, iDestinationTile);
+	private void Leave(BaseUnit unit, BaseTile destinationTile) {
+		unit.OnLeaved(this);
+		OnLeaved(unit, destinationTile);
 	}
 	
-	public virtual bool CanWalkOn(BaseUnit iUnit) {
-		foreach (BaseUnit unit in OccupyingUnits(iUnit)) {
-			if (unit != iUnit && !unit.CanWalkOn(iUnit.gameObject.tag))
+	public virtual bool CanWalkOn(BaseUnit unit) {
+		foreach (BaseUnit u in OccupyingUnits(unit)) {
+			if (u != unit && !u.CanWalkOn(unit.gameObject.tag))
 				return false;
 		}
 		return true;
 	}
 	public BaseUnit GetOccupyingUnitOnLayer(Layer iLayer) {
 		BaseUnit unit;
-		mOccupyingUnits.TryGetValue(iLayer, out unit);
+		_occupyingUnits.TryGetValue(iLayer, out unit);
 		return unit;
 	}
 
-	protected abstract void OnLeaved(BaseUnit iUnit, BaseTile iSourceTile);
-	protected abstract void OnArrived(BaseUnit iUnit, BaseTile iDestinationTile);
+	protected abstract void OnLeaved(BaseUnit unit, BaseTile sourceTile);
+	protected abstract void OnArrived(BaseUnit unit, BaseTile destinationTile);
 
 	private static Array mLayers = Enum.GetValues(typeof(Layer));
-	public IEnumerable<BaseUnit> OccupyingUnits(BaseUnit iUnit) {
+	public IEnumerable<BaseUnit> OccupyingUnits(BaseUnit unit) {
 		foreach (Layer l in mLayers) {
-			BaseUnit unit;
-			if (mOccupyingUnits.TryGetValue(l, out unit)) {
+			BaseUnit u;
+			if (_occupyingUnits.TryGetValue(l, out u)) {
 				int layerMask = (int)l;
-				if ((layerMask & iUnit.LayerMask) == layerMask)
-					yield return unit;
+				if ((layerMask & unit.LayerMask) == layerMask)
+					yield return u;
 			}
 		}
 	}

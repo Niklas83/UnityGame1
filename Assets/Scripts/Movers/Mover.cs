@@ -5,14 +5,14 @@ using System;
 
 public class Mover : BaseMover {
 
-	public float MoveSpeed = 3f;
+	public float moveSpeed = 3f;
 
 	// Checks if this mover can move in the given direction.
 	public override bool TryMove(int xDir, int zDir) {
-		if (mIsMoving)
+		if (isMoving)
 			return false;
 
-		BaseTile tile = mGridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
+		BaseTile tile = gridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
 		
 		if (tile == null || !tile.IsActive()) // Can't move to a non existing tile.
 			return false;
@@ -26,33 +26,33 @@ public class Mover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
-	    if (MoveSoundEffects != null)
+	    if (moveSoundEffects != null)
 	    {
-	        MoveSoundEffects.PlayWalkingSound();   // Plays move sound
+	        moveSoundEffects.PlayWalkingSound();   // Plays move sound
 	    }
-	    DebugAux.Assert(!mIsMoving, "Can't move a unit while it is moving!");
+	    DebugAux.Assert(!isMoving, "Can't move a unit while it is moving!");
 		
-		mIsMoving = true;
+		isMoving = true;
 		float t = 0;
 		Vector3 startPosition = transform.position;
 		Vector3 endPosition = startPosition + new Vector3(xDir * Defines.TILE_SIZE, 0, zDir * Defines.TILE_SIZE);
-		mCurrentTargetPosition = endPosition;
+		currentTargetPosition = endPosition;
 
-		BaseTile sourceTile = mGridManager.GetTile(startPosition);
-		BaseTile destinationTile = mGridManager.GetTile(endPosition);
-		BaseTile.HandleOccupy(mUnit, sourceTile, destinationTile);
+		BaseTile sourceTile = gridManager.GetTile(startPosition);
+		BaseTile destinationTile = gridManager.GetTile(endPosition);
+		BaseTile.HandleOccupy(unit, sourceTile, destinationTile);
 		
 		while (t < 1f)
 		{
-			t += Time.deltaTime*(MoveSpeed / Defines.TILE_SIZE);
+			t += Time.deltaTime*(moveSpeed / Defines.TILE_SIZE);
 			transform.position = Vector3.Lerp(startPosition, endPosition, Mathf.Clamp01(t));
 			yield return null;
 		}
 		
 		transform.position = endPosition;
-		BaseTile.HandleArrive(mUnit, sourceTile, destinationTile);
+		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
 
-		mIsMoving = false;
+		isMoving = false;
 		
 		yield return 0;
 	}

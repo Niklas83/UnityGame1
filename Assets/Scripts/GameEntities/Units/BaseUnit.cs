@@ -12,10 +12,10 @@ public abstract class BaseUnit : BaseEntity
 
     public abstract bool CanWalkOn(string incomingUnitTag);     //Returns the CanWalkOver bool
 
-	public virtual void OnLeaved(BaseTile iTile) {}
-	public virtual void OnCollided(BaseUnit iUnit) {}
-	public virtual void OnArrived(BaseTile iTile, List<BaseUnit> iPreviousUnits) {}
-	public virtual void OnArrivedToMe(BaseUnit iUnit) {}
+	public virtual void OnLeaved(BaseTile tile) {}
+	public virtual void OnCollided(BaseUnit unit) {}
+	public virtual void OnArrived(BaseTile tile, List<BaseUnit> previousUnits) {}
+	public virtual void OnArrivedToMe(BaseUnit unit) {}
 
 	public virtual void DestroyUnit() {
 		BaseTile.HandleOccupy(this, OccupiedTile, null); // Need to leave the grid before destroying!

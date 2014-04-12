@@ -1,72 +1,66 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AudioListenerMover : MonoBehaviour {
-    //Observe that this class does not inherit from BaseMover, as this mover does not use the grid
+// Note that this class does not inherit from BaseMover, as this mover does not use the grid
+public class AudioListenerMover : MonoBehaviour 
+{
+    public float movementSpeed;
+    public GameObject initiallySelectedPlayer;
+    public Vector3 startPosition;
+    public Vector3 currentlySelectedEndPosition;     //If the selected player has changed while moving to the current one
+    public bool isMoving = false;
 
-    public float MovementSpeed;
-
-    public GameObject InitiallySelectedPlayer;
-
-    public Vector3 _StartPosition;
-
-    public Vector3 _CurrentlySelectedEndPosition;     //If the selected player has changed while moving to the current one
-    public bool _IsMoving = false;
-
-    private bool clickedNewTargetWhileMoveing = false;
-
-    private float DistanceBetweenAudioAndPlayer;
+    private bool _clickedNewTargetWhileMoving = false;
+    private float _distanceBetweenAudioAndPlayer;
 
     public void MoveToSelectedPlayer(GameObject selectedPlayer)
     {
-        if (selectedPlayer != InitiallySelectedPlayer)
+        if (selectedPlayer != initiallySelectedPlayer)
         {
-            InitiallySelectedPlayer = selectedPlayer;
+            initiallySelectedPlayer = selectedPlayer;
 
-            if (_IsMoving == false)
+            if (isMoving == false)
             {
-                _StartPosition = this.gameObject.transform.position;
+                startPosition = this.gameObject.transform.position;
                 StartCoroutine(SmoothMoveTowardsSelectedPlayer());
             }
-
             else
             {
-                clickedNewTargetWhileMoveing = true;
-                _StartPosition = this.gameObject.transform.position;
+                _clickedNewTargetWhileMoving = true;
+                startPosition = this.gameObject.transform.position;
             }
         }
     }
 
     private IEnumerator SmoothMoveTowardsSelectedPlayer()
     {
-        _IsMoving = true;
+        isMoving = true;
         float t = 0;
-        _CurrentlySelectedEndPosition = InitiallySelectedPlayer.transform.position;
+        currentlySelectedEndPosition = initiallySelectedPlayer.transform.position;
 
-        DistanceBetweenAudioAndPlayer = Vector3.Distance(this.gameObject.transform.position, InitiallySelectedPlayer.transform.position);
+        _distanceBetweenAudioAndPlayer = Vector3.Distance(this.gameObject.transform.position, initiallySelectedPlayer.transform.position);
 
         while (t < 1f)
         {
-            if (InitiallySelectedPlayer.transform.position == _CurrentlySelectedEndPosition || clickedNewTargetWhileMoveing == false)
+            if (initiallySelectedPlayer.transform.position == currentlySelectedEndPosition || _clickedNewTargetWhileMoving == false)
             {
-                t += Time.deltaTime * (MovementSpeed) / DistanceBetweenAudioAndPlayer;
-                transform.position = Vector3.Lerp(_StartPosition, InitiallySelectedPlayer.transform.position, Mathf.Clamp01(t));
+                t += Time.deltaTime * (movementSpeed) / _distanceBetweenAudioAndPlayer;
+                transform.position = Vector3.Lerp(startPosition, initiallySelectedPlayer.transform.position, Mathf.Clamp01(t));
                 yield return null;
             }
-            else if (clickedNewTargetWhileMoveing == true)
+            else if (_clickedNewTargetWhileMoving == true)
             {
-                _CurrentlySelectedEndPosition = InitiallySelectedPlayer.transform.position;
+                currentlySelectedEndPosition = initiallySelectedPlayer.transform.position;
                 t = 0;
-                transform.position = Vector3.Lerp(_StartPosition, InitiallySelectedPlayer.transform.position, Mathf.Clamp01(t));
-                clickedNewTargetWhileMoveing = false;
+                transform.position = Vector3.Lerp(startPosition, initiallySelectedPlayer.transform.position, Mathf.Clamp01(t));
+                _clickedNewTargetWhileMoving = false;
                 yield return null;
             }
         }
 
-        transform.position = InitiallySelectedPlayer.transform.position;
+        transform.position = initiallySelectedPlayer.transform.position;
 
-        _IsMoving = false;
-
+        isMoving = false;
         yield return 0;
     }
 }

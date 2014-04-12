@@ -4,66 +4,66 @@ using System;
 
 public class Helper
 {
-	public static T CreateObject<T>(String iName) where T : UnityEngine.Component
+	public static T CreateObject<T>(String name) where T : UnityEngine.Component
 	{
-		GameObject go = new GameObject(iName, typeof(T));
+		GameObject go = new GameObject(name, typeof(T));
 		return go.GetComponent<T>();
 	}
 	
-	public static T CreateObject<T>(String iName, GameObject iParent) where T : UnityEngine.Component
+	public static T CreateObject<T>(String name, GameObject parent) where T : UnityEngine.Component
 	{
-		GameObject go = new GameObject(iName, typeof(T));
-		go.transform.parent = iParent.transform;
+		GameObject go = new GameObject(name, typeof(T));
+		go.transform.parent = parent.transform;
 		return go.GetComponent<T>();
 	}
 	
-	public static T InstansiateAndAdd<T>(GameObject iPrefab) where T : UnityEngine.Component
+	public static T InstansiateAndAdd<T>(GameObject prefab) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		go.AddComponent<T>();
 		return go.GetComponent<T>();
 	}
-	public static T InstansiateAndAdd<T>(GameObject iPrefab, GameObject iParent) where T : UnityEngine.Component
+	public static T InstansiateAndAdd<T>(GameObject prefab, GameObject parent) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		go.AddComponent<T>();
-		go.transform.parent = iParent.transform;
+		go.transform.parent = parent.transform;
 		return go.GetComponent<T>();
 	}
 	
-	public static T Instansiate<T>(GameObject iPrefab) where T : UnityEngine.Component
+	public static T Instansiate<T>(GameObject prefab) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		return go.GetComponent<T>();
 	}
-	public static T Instansiate<T>(GameObject iPrefab, GameObject iParent) where T : UnityEngine.Component
+	public static T Instansiate<T>(GameObject prefab, GameObject parent) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
-		go.transform.parent = iParent.transform;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		go.transform.parent = parent.transform;
 		return go.GetComponent<T>();
 	}
 
-	public static GameObject Instansiate(GameObject iPrefab)
+	public static GameObject Instansiate(GameObject prefab)
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		return go;
 	}
-	public static GameObject Instansiate(GameObject iPrefab, GameObject iParent)
+	public static GameObject Instansiate(GameObject prefab, GameObject parent)
 	{
-		GameObject go = GameObject.Instantiate(iPrefab) as GameObject;
-		go.transform.parent = iParent.transform;
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		go.transform.parent = parent.transform;
 		return go;
 	}
 
-	public static T Find<T>(String iName) where T : UnityEngine.Component
+	public static T Find<T>(String name) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Find(iName) as GameObject;
+		GameObject go = GameObject.Find(name) as GameObject;
 		return go.GetComponent<T>();
 	}
 	
-	public static T FindAndAdd<T>(String iName) where T : UnityEngine.Component
+	public static T FindAndAdd<T>(String name) where T : UnityEngine.Component
 	{
-		GameObject go = GameObject.Find(iName) as GameObject;
+		GameObject go = GameObject.Find(name) as GameObject;
 		return go.AddComponent<T>();
 	}
 }

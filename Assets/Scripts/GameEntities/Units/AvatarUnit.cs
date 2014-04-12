@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public partial class AvatarUnit : BaseUnit
 {
 	public override int LayerMask { get { return (int)(Layer.Air | Layer.Ground); } }
-    // changed so u can have method handling the return value
+    
     public override bool CanWalkOver { get { return false; } }
     public override bool CanWalkOn(string incomingUnitTag)
     {
@@ -15,42 +15,41 @@ public partial class AvatarUnit : BaseUnit
     }
 	public bool debugTeleport = false;
 
-	private Mover mMover;
-	private Rotation mRotation;
-	private PathFinder mPathFinder;
-	private GridManager mGridManager;
-	private Queue<Vector2> mMoveQueue;
+	private Mover _mover;
+	private Rotation _rotation;
+	private PathFinder _pathFinder;
+	private GridManager _gridManager;
+	private Queue<Vector2> _moveQueue;
     
-    private bool IsFrozen = false;      //Can be frozen by example a "medusa statue"
+    private bool _isFrozen = false;							// E.g by a medusa statue.
+    private bool _isActive = false;							// Is set to true when a character is selected
 
-    private bool CurrentlyActivePlayer = false;     //Is set to true when a character is selected
-
-    //Audio related fields
-    private GameObject AudioComponent;          //Holds the audio listener with constant rotation
-    private GameObject TheAudioListener;
+    // Audio related fields
+    private GameObject _audioComponent;						// Holds the audio listener with constant rotation
+    private GameObject _audioListener;
     private AudioListenerMover _audioListenerMover;
-    //private AudioListener PlayerAudioListener;       //sets the audiolistener to active when selected
-    private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
-    private SoundsEffects CharacterSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+    
+    private Quaternion _lockAudioSourceLocation;			// Sets the rotation of the character to "north" every update
+    private SoundsEffects _characterSoundEffects;			// Script containing all soundrelated _moveQueue player (Move, death, _moveQueue etc)
     
 	private StateMachine _stateMachine;
 
 	public void Start()
 	{ 
-		mMover = GetComponent<Mover>();
-		mRotation = GetComponent<Rotation>();
+		_mover = GetComponent<Mover>();
+		_rotation = GetComponent<Rotation>();
 
 		Floor floor = Helper.Find<Floor>("Floor");
-		mGridManager = floor.GridManager;
-		mPathFinder = new PathFinder(mGridManager);
+		_gridManager = floor.GridManager;
+		_pathFinder = new PathFinder(_gridManager);
         
         //Audio related
-	    LockAudioSourceLocation = this.gameObject.transform.rotation;
-	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
-        TheAudioListener = GameObject.FindWithTag("TheAudioListener");
+		_lockAudioSourceLocation = this.gameObject.transform.rotation;
+	    _audioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
+        _audioListener = GameObject.FindWithTag("TheAudioListener");
 
-	    _audioListenerMover = TheAudioListener.GetComponentInChildren<AudioListenerMover>();
-        CharacterSoundEffects = GetComponentInChildren<SoundsEffects>();
+	    _audioListenerMover = _audioListener.GetComponentInChildren<AudioListenerMover>();
+        _characterSoundEffects = GetComponentInChildren<SoundsEffects>();
         
 		AvatarStates avatarStates = new AvatarStates(gameObject);
 		_stateMachine = avatarStates.GetStateMachine();
@@ -58,17 +57,15 @@ public partial class AvatarUnit : BaseUnit
 
 	public void LateUpdate()
     {
-        AudioComponent.transform.rotation = LockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
+        _audioComponent.transform.rotation = _lockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
 
-        if (CurrentlyActivePlayer == true && mMover.IsMoving && _audioListenerMover._IsMoving == false)
-        {
-            TheAudioListener.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player
-        }
+        if (_isActive && _mover.IsMoving && _audioListenerMover.isMoving == false)
+            _audioListener.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player
     }
 
 	public void Update()
 	{
-	    if (IsFrozen)
+	    if (_isFrozen)
 			return;
 		
 		_stateMachine.Update();
@@ -77,7 +74,7 @@ public partial class AvatarUnit : BaseUnit
 	    {
 			SelectAvatar();
 	        
-	        if (CurrentlyActivePlayer)
+	        if (_isActive)
 	        {
 	            Vector3 mp = Input.mousePosition;
 	            Ray r = Camera.main.ScreenPointToRay(new Vector3(mp.x, mp.y, Camera.main.transform.position.y));
@@ -89,23 +86,23 @@ public partial class AvatarUnit : BaseUnit
 
 	            if (debugTeleport)
 	            {
-	                BaseTile destination = mGridManager.GetTile(wp);
+	                BaseTile destination = _gridManager.GetTile(wp);
 	                if (destination != null && destination.CanWalkOn(this))
 	                {
-	                    BaseTile source = mGridManager.GetTile(mMover.Position);
+	                    BaseTile source = _gridManager.GetTile(_mover.Position);
 	                    BaseTile.TeleportTo(this, source, destination);
 	                    return;
 	                }
 	            }
 
 	            int cost;
-	            Vector3 startPosition = mMover.Position;
+	            Vector3 startPosition = _mover.Position;
 	            // We use the mover position as start, since it can be moving (causing transform to be unreliable).
-	            Vector2[] path = mPathFinder.GetPathTo(startPosition, wp, this, out cost);
+	            Vector2[] path = _pathFinder.GetPathTo(startPosition, wp, this, out cost);
 
 	            if (path != null) 
 	            {
-	                mMoveQueue = new Queue<Vector2>(path);
+	                _moveQueue = new Queue<Vector2>(path);
 	            }
 	            else
 	            {
@@ -121,18 +118,18 @@ public partial class AvatarUnit : BaseUnit
 	        }
 	    }
 
-        if (!mMover.IsMoving && mMoveQueue != null && mMoveQueue.Count > 0)
+        if (!_mover.IsMoving && _moveQueue != null && _moveQueue.Count > 0)
         {
-            Vector2 dir = mMoveQueue.Dequeue();
+            Vector2 dir = _moveQueue.Dequeue();
             Move((int) dir.x, (int) dir.y);
-            if (mMoveQueue.Count == 0) {
-                mMoveQueue = null;
+            if (_moveQueue.Count == 0) {
+                _moveQueue = null;
             }
         }
 	}
 	
 	private bool IsMoving() {
-		return (mMoveQueue != null && mMoveQueue.Count > 0) || mMover.IsMoving;
+		return (_moveQueue != null && _moveQueue.Count > 0) || _mover.IsMoving;
 	}
 	
 	private void SelectAvatar() {
@@ -143,35 +140,35 @@ public partial class AvatarUnit : BaseUnit
 		{
 			if(hit.transform.gameObject == this.gameObject)
 			{
-				CurrentlyActivePlayer = true;
+				_isActive = true;
 				
 				_audioListenerMover.MoveToSelectedPlayer(this.gameObject);
 				
-				CharacterSoundEffects.SetIdleTimeBool(false);
-				CharacterSoundEffects.PlaySelectedCharacterSound();
+				_characterSoundEffects.SetIdleTimeBool(false);
+				_characterSoundEffects.PlaySelectedCharacterSound();
 			}
 			else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
 			{
-				CharacterSoundEffects.SetIdleTimeBool(true);
-				CurrentlyActivePlayer = false;
+				_characterSoundEffects.SetIdleTimeBool(true);
+				_isActive = false;
 			}
 		}
 	}
 
 	private void Move(int x, int z) {
-		mMover.TryMove(x, z);
-		if (mRotation)
-			mRotation.RotateTowards(x, z);
+		_mover.TryMove(x, z);
+		if (_rotation)
+			_rotation.RotateTowards(x, z);
 	}
 
     public void MakePlayerFrozen()
     {
-        IsFrozen = true;
+        _isFrozen = true;
     }
 
     public override void DestroyUnit()     
     {
-        if (CharacterSoundEffects.RegularDeathAudio != null)
+        if (_characterSoundEffects.regularDeathAudio != null)
         {
             GameObject deathAudioGameObject = new GameObject();
 
@@ -179,9 +176,9 @@ public partial class AvatarUnit : BaseUnit
             deathAudioGameObject.AddComponent<AudioSource>();
             AudioSource deathAudioSource = deathAudioGameObject.GetComponent<AudioSource>();
 
-            deathAudioSource.audio.clip = CharacterSoundEffects.GetRandomDeathAudioClip();
+            deathAudioSource.audio.clip = _characterSoundEffects.GetRandomDeathAudioClip();
 
-            deathAudioSource.audio.volume = CharacterSoundEffects.DeathVol0To1;
+            deathAudioSource.audio.volume = _characterSoundEffects.deathVol0To1;
 
             if (deathAudioSource.audio.clip != null)
             {

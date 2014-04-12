@@ -5,37 +5,36 @@ using System;
 
 public abstract class BaseMover : MonoBehaviour
 {
-	public bool IsPusher = false; // Can push stuff around
+	public bool isPusher = false; // Can push stuff around
+	public SoundsEffects moveSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
 
 	// Public properties
-	public bool IsMoving { get { return mIsMoving; } }
+	public bool IsMoving { get { return isMoving; } }
 	// This position will always be aligned with the grid, either transform position or the target.
-	public Vector3 Position { get { return mIsMoving ? mCurrentTargetPosition : transform.position; } }
+	public Vector3 Position { get { return isMoving ? currentTargetPosition : transform.position; } }
 	
 	// Protected members
-	protected Vector3 mCurrentTargetPosition;
-	protected bool mIsMoving = false;
-	protected BaseUnit mUnit;
-	protected GridManager mGridManager;
-	protected Queue<Vector2> mMoveQueue;
-
-    public SoundsEffects MoveSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+	protected Vector3 currentTargetPosition;
+	protected bool isMoving = false;
+	protected BaseUnit unit;
+	protected GridManager gridManager;
+	protected Queue<Vector2> moveQueue;
 
 	public void Start() {
 		Floor floor = Helper.Find<Floor>("Floor");
-		mGridManager = floor.GridManager;
-		mUnit = GetComponent<BaseUnit>();
+		gridManager = floor.GridManager;
+		unit = GetComponent<BaseUnit>();
 
-        MoveSoundEffects = GetComponentInChildren<SoundsEffects>();
+        moveSoundEffects = GetComponentInChildren<SoundsEffects>();
 	}
 
-	protected bool CanMove(BaseTile iTile, int xDir, int zDir) {
+	protected bool CanMove(BaseTile tile, int xDir, int zDir) {
 		bool canMove = true;
 
-		foreach (BaseUnit unit in iTile.OccupyingUnits(mUnit)) {
+		foreach (BaseUnit u in tile.OccupyingUnits(unit)) {
 			if (canMove) {
-				canMove = unit == mUnit || unit.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
-				if (!canMove && IsPusher) {
+				canMove = unit == u || u.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
+				if (!canMove && isPusher) {
 					// If not a walkable, check if you are a 'Pusher' and it can be moved.
 					BaseMover mover = unit.GetComponent<BaseMover>();
 					if (mover != null) {
@@ -43,10 +42,10 @@ public abstract class BaseMover : MonoBehaviour
 					}
 				}
 			}
-			mUnit.OnCollided(unit);
-			unit.OnCollided(mUnit);
+			unit.OnCollided(u);
+			u.OnCollided(unit);
 		}
-		return canMove && iTile.CanWalkOn(mUnit);
+		return canMove && tile.CanWalkOn(unit);
 	}
 
 	public abstract bool TryMove(int xDir, int zDir);

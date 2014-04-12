@@ -1,6 +1,6 @@
 using UnityEngine;
 
 public class LevelInfo : MonoBehaviour {
-	public int FloorNr = 1;
+	public int floorNr = 1;
 }
 

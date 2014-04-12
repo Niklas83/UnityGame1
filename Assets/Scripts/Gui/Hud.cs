@@ -7,23 +7,22 @@ public class Hud : MonoBehaviour {
 
 	public GUISkin skin;
 
-	public Player Player { set { mPlayer = value; } }
-	public LevelInfo LevelInfo { set { mLevelInfo = value; } }
+	public Player Player { set { _player = value; } }
+	public LevelInfo LevelInfo { set { _levelInfo = value; } }
 
-	private Player mPlayer;
-	private LevelInfo mLevelInfo;
+	private Player _player;
+	private LevelInfo _levelInfo;
 
 	private enum InfoType {
 		Level = 0,
 		PlayerName = 1,
 		PlayerScore = 2,
 	}
-
-	private Dictionary<InfoType, Rect> mLayout;
+	private Dictionary<InfoType, Rect> _layout;
 
 	// Use this for initialization
 	void Awake() {
-		mLayout = new Dictionary<InfoType, Rect>();
+		_layout = new Dictionary<InfoType, Rect>();
 		int x = 40;
 		int y = 40;
 		int height = 25;
@@ -31,7 +30,7 @@ public class Hud : MonoBehaviour {
 
 		int nrElements = Enum.GetNames(typeof(InfoType)).Length;
 		for (int i = 0; i < nrElements; i++) {
-			mLayout.Add((InfoType) i, new Rect(x, y + i * height, width, height));
+			_layout.Add((InfoType) i, new Rect(x, y + i * height, width, height));
 		}
 	}
 	

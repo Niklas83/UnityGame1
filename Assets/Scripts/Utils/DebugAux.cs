@@ -4,9 +4,9 @@ using System;
 
 public static class DebugAux
 {
-	public static void Assert(bool iCondition, string iErrorMessage)
+	public static void Assert(bool condition, string errorMessage)
 	{
-		if (!iCondition) throw new Exception(iErrorMessage);
+		if (!condition) throw new Exception(errorMessage);
 	}
 }
 

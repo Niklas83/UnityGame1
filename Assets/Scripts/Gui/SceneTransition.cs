@@ -5,49 +5,49 @@ public class SceneTransition : MonoBehaviour {
 
 	public float fadeAlpha = 1;
 
-	private Texture2D fadeTexture;
+	private Texture2D _fadeTexture;
 #if USE_UNITY_PRO
 	private AsyncOperation asyncOp;
 #else
-	private AsyncOperationWrapper asyncOp;
+	private AsyncOperationWrapper _asyncOp;
 #endif
-	private AudioPlayer audioPlayer;
-	private Animator animator;
+	private AudioPlayer _audioPlayer;
+	private Animator _animator;
 
 	void Start() {
-		fadeTexture = new Texture2D(1, 1);
-		fadeTexture.SetPixel(0, 0, new Color(0, 0, 0));
-		fadeTexture.Apply();
+		_fadeTexture = new Texture2D(1, 1);
+		_fadeTexture.SetPixel(0, 0, new Color(0, 0, 0));
+		_fadeTexture.Apply();
 
-		animator = gameObject.GetComponent<Animator>();
-		audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
+		_animator = gameObject.GetComponent<Animator>();
+		_audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
 
-		animator.Play("FadeIn");
+		_animator.Play("FadeIn");
 	}
 
 	public void NextScene() {
-		if (asyncOp != null)
+		if (_asyncOp != null)
 			return;
 
 #if USE_UNITY_PRO
 		asyncOp = Application.LoadLevelAsync(Application.loadedLevel + 1); // TODO: Scene name or index!
 #else
-		asyncOp = new AsyncOperationWrapper();
+		_asyncOp = new AsyncOperationWrapper();
 #endif
-		asyncOp.allowSceneActivation = false; // Should wait for the fade.
+		_asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
-		audioPlayer.FadeOut(2f/3f);
+		_audioPlayer.FadeOut(2f/3f);
 
 		Animator a = this.gameObject.GetComponent<Animator>();
 		a.Play("FadeOut");
 	}
 
 	void Update() {
-		if (asyncOp == null)
+		if (_asyncOp == null)
 			return;
 
 		if (fadeAlpha >= 1.0f) // Done fading
-			asyncOp.allowSceneActivation = true;
+			_asyncOp.allowSceneActivation = true;
 	}
 
 	void OnGUI() {
@@ -57,7 +57,7 @@ public class SceneTransition : MonoBehaviour {
 		GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, scale);*/
 
 		GUI.color = new Color(0, 0, 0, fadeAlpha);
-		GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), fadeTexture);
+		GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), _fadeTexture);
 	}
 
 #if !USE_UNITY_PRO

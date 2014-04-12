@@ -5,86 +5,78 @@ using System;
 
 public class GridManager
 {
-	private BaseTile[,] mGrid;
-	private List<BaseTile> mTilesForQueries;
-	private Iterator mIterator;
+	private BaseTile[,] _grid;
+	private List<BaseTile> _tilesForQueries;
+	private Iterator _iterator;
 
 	public GridManager() {}
 
-	public void CreateGrid(int iSizeX, int iSizeY)
+	public void CreateGrid(int sizeX, int sizeY)
 	{
-		mGrid = new BaseTile[iSizeX, iSizeY];
-		mTilesForQueries = new List<BaseTile>(iSizeX * iSizeY);
+		_grid = new BaseTile[sizeX, sizeY];
+		_tilesForQueries = new List<BaseTile>(sizeX * sizeY);
 	}
 
-	public void PositionToIndices(Vector3 iPosition, out int oXindex, out int oYindex) {
-		oXindex = Mathf.RoundToInt(iPosition.x);
-		oYindex = Mathf.RoundToInt(iPosition.z);
+	public void PositionToIndices(Vector3 position, out int xIndex, out int yIndex) {
+		xIndex = Mathf.RoundToInt(position.x);
+		yIndex = Mathf.RoundToInt(position.z);
 	}
 
-	public void AddTile(BaseTile iTile) {
+	public void AddTile(BaseTile tile) {
 		int x, y;
-		PositionToIndices(iTile.transform.position, out x, out y);
-		mGrid[x, y] = iTile;
+		PositionToIndices(tile.transform.position, out x, out y);
+		_grid[x, y] = tile;
 	}
-	public void RemoveTile(BaseTile iTile) {
+	public void RemoveTile(BaseTile tile) {
 		int x, y;
-		PositionToIndices(iTile.transform.position, out x, out y);
-		mGrid[x, y] = null;
+		PositionToIndices(tile.transform.position, out x, out y);
+		_grid[x, y] = null;
 	}
 
-	public bool InRange(Vector3 iPosition) {
+	public bool InRange(Vector3 position) {
 		int x, y;
-		PositionToIndices(iPosition, out x, out y);
+		PositionToIndices(position, out x, out y);
 		return InRange(x, y);
 	}
-	public bool InRange(int iXindex, int iYindex) 
+	public bool InRange(int xIndex, int yIndex) 
 	{
-		return iXindex < mGrid.GetLength(0) && iXindex >= 0 &&
-			   iYindex < mGrid.GetLength(1) && iYindex >= 0;
+		return xIndex < _grid.GetLength(0) && xIndex >= 0 &&
+			   yIndex < _grid.GetLength(1) && yIndex >= 0;
 	}
 
-	public BaseTile GetTile(Vector3 iPosition)
+	public BaseTile GetTile(Vector3 position)
 	{
 		int x, y;
-		PositionToIndices(iPosition, out x, out y);
+		PositionToIndices(position, out x, out y);
 		return GetTile(x, y);
 	}
-	public BaseTile GetTile(int iXindex, int iYindex)
+	public BaseTile GetTile(int xIndex, int yIndex)
 	{
-		if (InRange(iXindex, iYindex))
-			return mGrid[iXindex, iYindex];
+		if (InRange(xIndex, yIndex))
+			return _grid[xIndex, yIndex];
 
 		return null;
 	}
 
-	public Vector2 PositionToIndices(Vector3 iPosition)
+	public Vector2 PositionToIndices(Vector3 position)
 	{
-		return new Vector2(Mathf.RoundToInt(iPosition.x), Mathf.RoundToInt(iPosition.z));
+		return new Vector2(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
 	}
 
 	// Gets the tile at the given indices
-	protected void RemoveTile(int iXindex, int iYindex)
+	protected void RemoveTile(int xIndex, int yIndex)
 	{
-		mGrid[iXindex, iYindex] = default(BaseTile);
+		_grid[xIndex, yIndex] = default(BaseTile);
 	}
 	
-	public int GetLength(int iDimension)
+	public int GetLength(int dimension)
 	{
-		return mGrid.GetLength(iDimension);
+		return _grid.GetLength(dimension);
 	}
-
-	/*public bool IsOccupied(int iXindex, int iYindex)
+	
+	public void GetAll<T>(out List<BaseTile> tiles) where T : BaseTile
 	{
-		if (!InRange(iXindex, iYindex)) return true; // Is no tile at all occupied or not? ;)
-
-		BaseTile t = GetTile(iXindex, iYindex);
-		return t.Occupied;
-	}*/
-
-	public void GetAll<T>(out List<BaseTile> oTiles) where T : BaseTile
-	{
-		mTilesForQueries.Clear();
+		_tilesForQueries.Clear();
 		
 		Iterator it = GetIterator();
 		while (it.HasNext())
@@ -92,64 +84,64 @@ public class GridManager
 			BaseTile t = it.Next();
 			if (t != null && t is T)
 			{
-				mTilesForQueries.Add(t);	
+				_tilesForQueries.Add(t);	
 			}
 		}
 		
-		oTiles = mTilesForQueries;
+		tiles = _tilesForQueries;
 	}
 
 	public Iterator GetIterator()
 	{
-		if (mIterator == null)
+		if (_iterator == null)
 		{
-			mIterator = new Iterator();
-			mIterator.Initialize(mGrid);
+			_iterator = new Iterator();
+			_iterator.Initialize(_grid);
 		}
 		
-		mIterator.Reset();
-		return mIterator;
+		_iterator.Reset();
+		return _iterator;
 	}
 	
 	public class Iterator
 	{
-		private int mCursorX = 0;
-		private int mCursorY = 0;
+		private int _cursorX = 0;
+		private int _cursorY = 0;
 		
-		private int mSizeX;
-		private int mSizeY;
+		private int _sizeX;
+		private int _sizeY;
 		
-		private BaseTile[,] mGrid;
+		private BaseTile[,] _grid;
 		
-		public void Initialize(BaseTile[,] iGrid)
+		public void Initialize(BaseTile[,] grid)
 		{
-			mGrid = iGrid;
-			mSizeX = mGrid.GetLength(0);
-			mSizeY = mGrid.GetLength(1);
+			_grid = grid;
+			_sizeX = _grid.GetLength(0);
+			_sizeY = _grid.GetLength(1);
 		}
 		
 		public void Reset()
 		{
-			mCursorX = 0;
-			mCursorY = 0;
+			_cursorX = 0;
+			_cursorY = 0;
 		}
 		
 		public BaseTile Next()
 		{
-			mCursorX++;
-			if (mCursorX >= mSizeX)
+			_cursorX++;
+			if (_cursorX >= _sizeX)
 			{
-				mCursorX = 0;
-				mCursorY++;
-				if (mCursorY >= mSizeY)
+				_cursorX = 0;
+				_cursorY++;
+				if (_cursorY >= _sizeY)
 					return default(BaseTile);
 			}
-			return mGrid[mCursorX, mCursorY];
+			return _grid[_cursorX, _cursorY];
 		}
 		
 		public bool HasNext()
 		{
-			return mCursorY < mGrid.GetLength(1);
+			return _cursorY < _grid.GetLength(1);
 		}
 	}
 }

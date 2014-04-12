@@ -3,33 +3,33 @@ using System.Collections;
 
 public class ExitTile : BaseTile {
 
-	private SceneTransition mSceneTransition;
-	private bool mOpened;
-	private int mNrAliveKeys;
+	private SceneTransition _sceneTransition;
+	private bool _opened;
+	private int _nrAliveKeys;
 
 	void Start() {
-		mSceneTransition = Helper.Find<SceneTransition>("SceneTransition");
+		_sceneTransition = Helper.Find<SceneTransition>("SceneTransition");
 	}
 
-	protected override void OnLeaved(BaseUnit iUnit, BaseTile iNextTile) {}
-	protected override void OnArrived(BaseUnit iUnit, BaseTile iPreviousTile) {
-		if (mOpened && iUnit is AvatarUnit) {
-			mSceneTransition.NextScene();
+	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
+	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) {
+		if (_opened && unit is AvatarUnit) {
+			_sceneTransition.NextScene();
 		}
 	}
 
 	public void Register() {
-		mNrAliveKeys += 1;
-		SetExitOpen(mNrAliveKeys == 0);
+		_nrAliveKeys += 1;
+		SetExitOpen(_nrAliveKeys == 0);
 	}
 	public void Unregister() {
-		mNrAliveKeys -= 1;
-		SetExitOpen(mNrAliveKeys == 0);
+		_nrAliveKeys -= 1;
+		SetExitOpen(_nrAliveKeys == 0);
 	}
 
 	private void SetExitOpen(bool open) {
 		Transform t = transform.FindChild("OpenEffects");
 		t.gameObject.SetActive(open);
-		mOpened = open;
+		_opened = open;
 	}
 }
