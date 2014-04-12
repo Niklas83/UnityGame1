@@ -34,8 +34,6 @@ public class StateMachine {
 
 	public void ChangeState(int newState)
 	{
-		// Debug.Log("Change state " + newState);
-		
 		BaseState previous = _currentState;
 		previous.OnExit();
 		

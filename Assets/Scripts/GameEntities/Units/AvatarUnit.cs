@@ -21,7 +21,7 @@ public partial class AvatarUnit : BaseUnit
 	private GridManager _gridManager;
 	private Queue<Vector2> _moveQueue;
     
-    private bool _isFrozen = false;							// E.g by a medusa statue.
+	private bool _isDead = false;
     private bool _isActive = false;							// Is set to true when a character is selected
 
     private GameObject _audioComponent;						// Holds the audio listener with constant rotation
@@ -64,10 +64,10 @@ public partial class AvatarUnit : BaseUnit
 
 	public void Update()
 	{
-	    if (_isFrozen)
-			return;
-		
 		_stateMachine.Update();
+	
+		if (_isDead)
+			return;
 		
 	    if (Input.GetMouseButtonUp(0))
 	    {
@@ -160,14 +160,12 @@ public partial class AvatarUnit : BaseUnit
 			_rotation.RotateTowards(x, z);
 	}
 
-    public void MakePlayerFrozen()
+	public void KillAvatar()
     {
-        _isFrozen = true;
-    }
-
-    public override void DestroyUnit()     
-    {
-		// _soundEffectPlayer.PlayDeathSound();
-        base.DestroyUnit();
+		if (_isDead)
+			return;
+		
+    	_isDead = true;
+		_stateMachine.ChangeState((int) AvatarState.Dead);
     }
 }
