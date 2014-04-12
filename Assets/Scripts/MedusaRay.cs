@@ -7,12 +7,10 @@ public class MedusaRay
 {
 	private LineRenderer _beamRenderer;
 	private Ray _ray;
-	private List<GameObject> _resultCache;
 	private MedusaUnit _medusa;
 	private Vector3 _direction;
 	
 	public MedusaRay(Vector3 direction, GameObject beamPrefab, MedusaUnit medusa) {
-		_resultCache = new List<GameObject>();
 		_medusa = medusa;
 		_direction = direction;
 		
@@ -27,19 +25,20 @@ public class MedusaRay
 		RaycastHit hit;
     	if (Physics.Raycast((UnityEngine.Ray) _ray, out hit, 100f)) {
 			GameObject go = hit.collider.gameObject;
-    		SpanTo(hit.distance);
+    		Span(hit.distance);
     		return go;
     	}
-		SpanTo(50);
+		Span(50);
 			
 		return null;
     }
 
-	public void SpanTo(float distance)
+	public void Span(float distance)
 	{
-		Vector3 hitPosition = _medusa.transform.position + _direction * distance;
+		Vector3 position = _medusa.transform.position + new Vector3(0, 1, 0);
+		Vector3 hitPosition = position + _direction * distance;
 		
-		_beamRenderer.SetPosition(0, _medusa.transform.position);
+		_beamRenderer.SetPosition(0, position);
 		_beamRenderer.SetPosition(1, hitPosition);
 	}
 }
