@@ -24,10 +24,9 @@ public partial class AvatarUnit : BaseUnit
     private bool _isFrozen = false;							// E.g by a medusa statue.
     private bool _isActive = false;							// Is set to true when a character is selected
 
-    // Audio related fields
     private GameObject _audioComponent;						// Holds the audio listener with constant rotation
-    private GameObject _audioListener;
-    private AudioListenerMover _audioListenerMover;
+    private GameObject _avatarSoul;
+    private SoulMover _soulMover;
     
     private Quaternion _lockAudioSourceLocation;			// Sets the rotation of the character to "north" every update
     private SoundEffectPlayer _soundEffectPlayer;
@@ -46,9 +45,9 @@ public partial class AvatarUnit : BaseUnit
         //Audio related
 		_lockAudioSourceLocation = this.gameObject.transform.rotation;
 	    _audioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
-        _audioListener = GameObject.FindWithTag("TheAudioListener");
+        _avatarSoul = GameObject.Find("AvatarSoul");
 
-	    _audioListenerMover = _audioListener.GetComponentInChildren<AudioListenerMover>();
+		_soulMover = _avatarSoul.GetComponentInChildren<SoulMover>();
 		_soundEffectPlayer = GetComponentInChildren<SoundEffectPlayer>();
         
 		AvatarStates avatarStates = new AvatarStates(gameObject);
@@ -59,8 +58,8 @@ public partial class AvatarUnit : BaseUnit
     {
         _audioComponent.transform.rotation = _lockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
 
-        if (_isActive && _mover.IsMoving && _audioListenerMover.isMoving == false)
-            _audioListener.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player
+		/*if (_isActive && _mover.IsMoving && !_soulMover.isMoving)
+            _avatarSoul.transform.position = this.gameObject.transform.position;   //Sticks the listener to the selected player*/
     }
 
 	public void Update()
@@ -142,7 +141,7 @@ public partial class AvatarUnit : BaseUnit
 			{
 				_isActive = true;
 				
-				_audioListenerMover.MoveToSelectedPlayer(this.gameObject);
+				_soulMover.MoveToAvatar(this.gameObject);
 				
 				_soundEffectPlayer.SetIdleTimeBool(false);
 				_soundEffectPlayer.PlayAvatarSelectedSound();
