@@ -53,7 +53,7 @@ public class AxisRotateMover : BaseMover
 			Quaternion q = Quaternion.LookRotation(Vector3.Normalize(toChild));
 			Vector3 angles = q.eulerAngles;
 
-			float radius = toChild.magnitude;
+			float radius = toChild.magnitude * 0.95f;
 			float arcDistance = (Mathf.PI * 2*radius) / 4.0f;
 			float maxStepLength = 0.5f;
 			float nrSteps = Mathf.CeilToInt(arcDistance / maxStepLength);
