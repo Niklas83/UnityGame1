@@ -42,12 +42,8 @@ public class MedusaRay : MonoBehaviour
 
             if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, PlayerLayer))
             {
-
                 PlayerGameObject = hit.collider.gameObject;
-
                 Debug.DrawRay(rayList[i].origin, hit.point - rayList[i].origin, Color.red);
-
-                Debug.Log(hit.collider.gameObject.name);
             }
 
             if (PlayerGameObject != null)
@@ -56,12 +52,8 @@ public class MedusaRay : MonoBehaviour
 
                 if (Physics.Raycast((UnityEngine.Ray) rayList[i], out hit, 100f, ObsticleLayer))
                 {
-
                     ObsticleGameObject = hit.collider.gameObject;
-
                     Debug.DrawRay(rayList[i].origin, hit.point - rayList[i].origin, Color.red);
-
-                    Debug.Log(hit.collider.gameObject.name);
                 }
 
                 if (ObsticleGameObject != null)
