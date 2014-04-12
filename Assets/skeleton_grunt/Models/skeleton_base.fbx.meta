@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 08ab3d3d1cd2f224fbc9b0d8baf28d42
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
     100002: eyes1
@@ -143,7 +143,7 @@ ModelImporter:
     splitTangentsAcrossUV: 0
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human:
@@ -657,4 +657,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 3
+  additionalBone: 0
   userData: 

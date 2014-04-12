@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 657f047b76c8bbc4094c91a82e3d5666
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: Character1_Head
     100002: Character1_Hips
@@ -122,11 +122,11 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 1
-      loopBlendPositionY: 1
-      loopBlendPositionXZ: 1
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
@@ -674,4 +674,5 @@ ModelImporter:
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 08ab3d3d1cd2f224fbc9b0d8baf28d42,
     type: 3}
   animationType: 3
+  additionalBone: 0
   userData: 
