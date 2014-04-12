@@ -24,6 +24,7 @@ public partial class AvatarUnit
 			_allStates[(int) AvatarState.Idling] = new AvatarIdle(avatar);
 			_allStates[(int) AvatarState.Walking] = new AvatarWalk(avatar);
 			_allStates[(int) AvatarState.Running] = new AvatarRun(avatar);
+			_allStates[(int) AvatarState.Dead] = new AvatarDead(avatar);
 			
 			_stateMachine = new StateMachine((int) AvatarState.Idling, _allStates);
 		}
@@ -84,6 +85,14 @@ public partial class AvatarUnit
 				ChangeState(AvatarState.Idling);
 			}
 		}
+		public override void OnExit() {}
+	}
+	
+	public class AvatarDead : AvatarBaseState
+	{
+		public AvatarDead(GameObject avatar) : base(avatar, "die") {}
+		public override void OnEnter() { base.OnEnter(); _avatarUnit._soundEffectPlayer.PlayDeathSound(); }
+		public override void Update() {}
 		public override void OnExit() {}
 	}
 }
