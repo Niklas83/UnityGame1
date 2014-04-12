@@ -30,7 +30,7 @@ public partial class AvatarUnit : BaseUnit
     private AudioListenerMover _audioListenerMover;
     
     private Quaternion _lockAudioSourceLocation;			// Sets the rotation of the character to "north" every update
-    private SoundsEffects _characterSoundEffects;			// Script containing all soundrelated _moveQueue player (Move, death, _moveQueue etc)
+    private SoundEffectPlayer _soundEffectPlayer;
     
 	private StateMachine _stateMachine;
 
@@ -49,7 +49,7 @@ public partial class AvatarUnit : BaseUnit
         _audioListener = GameObject.FindWithTag("TheAudioListener");
 
 	    _audioListenerMover = _audioListener.GetComponentInChildren<AudioListenerMover>();
-        _characterSoundEffects = GetComponentInChildren<SoundsEffects>();
+		_soundEffectPlayer = GetComponentInChildren<SoundEffectPlayer>();
         
 		AvatarStates avatarStates = new AvatarStates(gameObject);
 		_stateMachine = avatarStates.GetStateMachine();
@@ -144,12 +144,12 @@ public partial class AvatarUnit : BaseUnit
 				
 				_audioListenerMover.MoveToSelectedPlayer(this.gameObject);
 				
-				_characterSoundEffects.SetIdleTimeBool(false);
-				_characterSoundEffects.PlaySelectedCharacterSound();
+				_soundEffectPlayer.SetIdleTimeBool(false);
+				_soundEffectPlayer.PlayAvatarSelectedSound();
 			}
 			else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
 			{
-				_characterSoundEffects.SetIdleTimeBool(true);
+				_soundEffectPlayer.SetIdleTimeBool(true);
 				_isActive = false;
 			}
 		}
@@ -168,23 +168,7 @@ public partial class AvatarUnit : BaseUnit
 
     public override void DestroyUnit()     
     {
-        if (_characterSoundEffects.regularDeathAudio != null)
-        {
-            GameObject deathAudioGameObject = new GameObject();
-
-            deathAudioGameObject.transform.position = this.gameObject.transform.position;
-            deathAudioGameObject.AddComponent<AudioSource>();
-            AudioSource deathAudioSource = deathAudioGameObject.GetComponent<AudioSource>();
-
-            deathAudioSource.audio.clip = _characterSoundEffects.GetRandomDeathAudioClip();
-
-            deathAudioSource.audio.volume = _characterSoundEffects.deathVol0To1;
-
-            if (deathAudioSource.audio.clip != null)
-            {
-                deathAudioSource.Play();
-            }
-        }
+		// _soundEffectPlayer.PlayDeathSound();
         base.DestroyUnit();
     }
 }

@@ -5,8 +5,8 @@ using System;
 
 public abstract class BaseMover : MonoBehaviour
 {
-	public bool isPusher = false; // Can push stuff around
-	public SoundsEffects moveSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+	public bool isPusher = false; 					// Can push stuff around
+	public SoundEffectPlayer soundEffectPLayer;
 
 	// Public properties
 	public bool IsMoving { get { return isMoving; } }
@@ -25,7 +25,7 @@ public abstract class BaseMover : MonoBehaviour
 		gridManager = floor.GridManager;
 		unit = GetComponent<BaseUnit>();
 
-        moveSoundEffects = GetComponentInChildren<SoundsEffects>();
+		soundEffectPLayer = GetComponentInChildren<SoundEffectPlayer>();
 	}
 
 	protected bool CanMove(BaseTile tile, int xDir, int zDir) {
@@ -36,10 +36,10 @@ public abstract class BaseMover : MonoBehaviour
 				canMove = unit == u || u.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
 				if (!canMove && isPusher) {
 					// If not a walkable, check if you are a 'Pusher' and it can be moved.
-					BaseMover mover = unit.GetComponent<BaseMover>();
+					BaseMover mover = u.GetComponent<BaseMover>();
 					if (mover != null) {
 						canMove = mover.TryMove(xDir, zDir);
-					}
+					} 
 				}
 			}
 			unit.OnCollided(u);

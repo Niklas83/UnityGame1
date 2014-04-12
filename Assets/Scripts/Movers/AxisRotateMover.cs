@@ -36,8 +36,8 @@ public class AxisRotateMover : BaseMover
 		if (isMoving)
 			return false;
 
-        if (moveSoundEffects != null)
-            moveSoundEffects.PlayWalkingSound();   // Plays move sound
+        /*if (soundEffectPLayer != null) // TODO: Should be triggered by animation.
+			soundEffectPLayer.PlayWalkingSound();*/
      
 		Vector3 directionToChild = Vector3.Normalize(pushedChild.position - transform.position);
 		Vector3 directionTowardsDest = (pushedChild.position + new Vector3(xDir, 0, zDir)) - transform.position;
