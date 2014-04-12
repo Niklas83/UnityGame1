@@ -67,7 +67,11 @@ public partial class AvatarUnit
 	public class AvatarWalk : AvatarBaseState
 	{
 		public AvatarWalk(GameObject avatar) : base(avatar, "walk") {}
-		public override void OnEnter() { base.OnEnter(); _avatarUnit._mover.moveSpeed = 3; }
+		public override void OnEnter() {
+			base.OnEnter(); _avatarUnit._mover.moveSpeed = 3;
+			if (Random.value < 0.25f)
+				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
+		}
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
 				ChangeState(AvatarState.Idling);
@@ -79,7 +83,11 @@ public partial class AvatarUnit
 	public class AvatarRun : AvatarBaseState
 	{
 		public AvatarRun(GameObject avatar) : base(avatar, "run") {}
-		public override void OnEnter() { base.OnEnter(); _avatarUnit._mover.moveSpeed = 4.5f; }
+		public override void OnEnter() { 
+			base.OnEnter(); _avatarUnit._mover.moveSpeed = 4.5f; 
+			if (Random.value < 0.25f)
+				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
+		}
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
 				ChangeState(AvatarState.Idling);

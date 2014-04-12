@@ -3,6 +3,14 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
+// environment (random length) then start music
+// 
+// intro 
+// music (loop x nr) range
+// outro
+//
+// short snutt
+
 public class AudioPlayer : MonoBehaviour 
 {
 	private AudioSource _audio;
