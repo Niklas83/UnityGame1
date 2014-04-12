@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public sealed class AvatarUnit : BaseUnit
+public partial class AvatarUnit : BaseUnit
 {
 	public override int LayerMask { get { return (int)(Layer.Air | Layer.Ground); } }
     // changed so u can have method handling the return value
@@ -32,6 +32,8 @@ public sealed class AvatarUnit : BaseUnit
     //private AudioListener PlayerAudioListener;       //sets the audiolistener to active when selected
     private Quaternion LockAudioSourceLocation;   // Sets the rotation of the character to "north" every update
     private SoundsEffects CharacterSoundEffects;         //Script containing all soundrelated data for the player (Move, death, selected, etc)
+    
+	private StateMachine _stateMachine;
 
 	public void Start()
 	{ 
@@ -42,20 +44,19 @@ public sealed class AvatarUnit : BaseUnit
 		mGridManager = floor.GridManager;
 		mPathFinder = new PathFinder(mGridManager);
         
-
         //Audio related
 	    LockAudioSourceLocation = this.gameObject.transform.rotation;
 	    AudioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
         TheAudioListener = GameObject.FindWithTag("TheAudioListener");
 
 	    _audioListenerMover = TheAudioListener.GetComponentInChildren<AudioListenerMover>();
-
         CharacterSoundEffects = GetComponentInChildren<SoundsEffects>();
-
-
+        
+		AvatarStates avatarStates = new AvatarStates(gameObject);
+		_stateMachine = avatarStates.GetStateMachine();
 	}
 
-   public void LateUpdate()
+	public void LateUpdate()
     {
         AudioComponent.transform.rotation = LockAudioSourceLocation;        //Make sound location constant TODO:  (might exist some better fix)
 
@@ -67,37 +68,16 @@ public sealed class AvatarUnit : BaseUnit
 
 	public void Update()
 	{
-
 	    if (IsFrozen)
 			return;
-
+		
+		_stateMachine.Update();
+		
 	    if (Input.GetMouseButtonUp(0))
 	    {
-            
-	        //Character selection begins
-	            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-	            RaycastHit hit;
-
-	            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-	            {
-                    if(hit.transform.gameObject == this.gameObject)
-                    {
-                        CurrentlyActivePlayer = true;
-
-                        _audioListenerMover.MoveToSelectedPlayer(this.gameObject);
-
-                        CharacterSoundEffects.SetIdleTimeBool(false);
-                        CharacterSoundEffects.PlaySelectedCharacterSound();
-                    }
-                    else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
-                    {
-                        CharacterSoundEffects.SetIdleTimeBool(true);
-                        CurrentlyActivePlayer = false;
-                    }
-	            }
-             //Character selection ends
+			SelectAvatar();
 	        
-	        if (CurrentlyActivePlayer == true)
+	        if (CurrentlyActivePlayer)
 	        {
 	            Vector3 mp = Input.mousePosition;
 	            Ray r = Camera.main.ScreenPointToRay(new Vector3(mp.x, mp.y, Camera.main.transform.position.y));
@@ -123,8 +103,10 @@ public sealed class AvatarUnit : BaseUnit
 	            // We use the mover position as start, since it can be moving (causing transform to be unreliable).
 	            Vector2[] path = mPathFinder.GetPathTo(startPosition, wp, this, out cost);
 
-	            if (path != null)
+	            if (path != null) 
+	            {
 	                mMoveQueue = new Queue<Vector2>(path);
+	            }
 	            else
 	            {
 	                // Couldn't get there, try pushing instead..
@@ -137,23 +119,46 @@ public sealed class AvatarUnit : BaseUnit
 	                    Move(0, z);
 	            }
 	        }
-	        
 	    }
-	    
 
         if (!mMover.IsMoving && mMoveQueue != null && mMoveQueue.Count > 0)
         {
             Vector2 dir = mMoveQueue.Dequeue();
             Move((int) dir.x, (int) dir.y);
-            if (mMoveQueue.Count == 0)
+            if (mMoveQueue.Count == 0) {
                 mMoveQueue = null;
+            }
         }
+	}
+	
+	private bool IsMoving() {
+		return (mMoveQueue != null && mMoveQueue.Count > 0) || mMover.IsMoving;
+	}
+	
+	private void SelectAvatar() {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		
+		if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+		{
+			if(hit.transform.gameObject == this.gameObject)
+			{
+				CurrentlyActivePlayer = true;
+				
+				_audioListenerMover.MoveToSelectedPlayer(this.gameObject);
+				
+				CharacterSoundEffects.SetIdleTimeBool(false);
+				CharacterSoundEffects.PlaySelectedCharacterSound();
+			}
+			else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
+			{
+				CharacterSoundEffects.SetIdleTimeBool(true);
+				CurrentlyActivePlayer = false;
+			}
+		}
 	}
 
 	private void Move(int x, int z) {
-        //Plays movement audio each move
-        //CharacterSound.PlayWalkingSound();
-
 		mMover.TryMove(x, z);
 		if (mRotation)
 			mRotation.RotateTowards(x, z);
