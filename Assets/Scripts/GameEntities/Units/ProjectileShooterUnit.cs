@@ -9,7 +9,6 @@ public sealed class ProjectileShooterUnit : BaseUnit
     public bool isActive = true;				// Sets if the cannon is active (Could be disabled or something by walking on button etc)
     public float secondsBetweenShots = 5;
     public float projectileSpeed = 4;
-    public DirectionEnum directionToShoot;      // The direction to shoot the projectile
     public bool canShootThroughWalls = false;
     public GameObject projectilePrefab;
     
@@ -36,30 +35,11 @@ public sealed class ProjectileShooterUnit : BaseUnit
         _isShooting = false;
     }
 	
-	private void Shoot() {
-		Vector3 spawnPosition = transform.position + new Vector3(0, 1.1f, 0);
-
-        float xDirection = 0f;
-        float zDirection = 0f;
-
-        switch (directionToShoot)
-        {
-            case DirectionEnum.Down:
-                zDirection = -1;
-                break;
-            case DirectionEnum.Left:
-                xDirection = -1;
-                break;
-            case DirectionEnum.Right:
-                xDirection = 1;
-                break;
-            case DirectionEnum.Up:
-                zDirection = 1;
-                break;
-        }
-
-		Vector3 forward = new Vector3(xDirection, 0, zDirection);
-		Quaternion rotation = Quaternion.LookRotation(forward);
+	private void Shoot() 
+	{
+		Vector3 spawnPosition = transform.position + new Vector3(0, 0.6f, 0);
+		Vector3 direction = transform.forward;
+		Quaternion rotation = Quaternion.LookRotation(direction);
 
 		_projectile = (GameObject)Instantiate(projectilePrefab, spawnPosition, rotation);
 

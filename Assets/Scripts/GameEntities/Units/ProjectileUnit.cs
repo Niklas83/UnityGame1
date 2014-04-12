@@ -20,13 +20,13 @@ public class ProjectileUnit : BaseUnit  {
 			return;
 
 		if (unit is AvatarUnit || (unit is BaseUnit && !canPassThroughUnits)) {
-			StartCoroutine(Explode(0.5f, unit));
+			StartCoroutine(Explode(unit));
 		}
 	}
 
-	private IEnumerator Explode(float delay, BaseUnit hitUnit) {
+	private IEnumerator Explode(BaseUnit hitUnit) {
 		Vector3 startPosition = transform.position;
-		Vector3 endPosition = startPosition + transform.rotation * Vector3.forward;
+		Vector3 endPosition = startPosition + transform.rotation * Vector3.forward * 0.5f;
 		endPosition.y = startPosition.y;
 		BaseTile.HandleOccupy(this, OccupiedTile, null);
 
@@ -40,12 +40,11 @@ public class ProjectileUnit : BaseUnit  {
 		}
 
 		if (onHitPfx) {
-			Helper.Instansiate(onHitPfx);
-			onHitPfx.transform.position = transform.position;
+			GameObject.Instantiate(onHitPfx, transform.position, Quaternion.identity);
 		}
 
 		if (hitUnit is AvatarUnit) {
-			hitUnit.DestroyUnit();
+			hitUnit.SendMessage("KillAvatar");
 		}
 
 		DestroyUnit();

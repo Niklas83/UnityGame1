@@ -44,7 +44,7 @@ public abstract class BaseTile : BaseEntity
 
 	public static void TeleportTo(BaseUnit unit, BaseTile sourceTile, BaseTile destinationTile) {
 		Vector3 position = destinationTile.transform.position;
-		position.y = 1;
+		position.y = unit.transform.position.y;
 		unit.transform.position = position;
 
 		HandleOccupy(unit, sourceTile, destinationTile);

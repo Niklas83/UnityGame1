@@ -10,7 +10,7 @@ public class ProjectileMover : Mover {
     void Update()
     {
 		Vector3 forward = transform.forward;
-		TryMove((int)forward.x, (int)forward.z);
+		TryMove(Mathf.RoundToInt(forward.x), Mathf.RoundToInt(forward.z));
     }
 
 	// Checks if this mover can move in the given direction.
