@@ -17,7 +17,7 @@ public class MedusaRay
 		GameObject beam = GameObject.Instantiate(beamPrefab) as GameObject;
 		_beamRenderer = beam.GetComponent<LineRenderer>();
 		
-		_ray = new Ray(medusa.transform.position + new Vector3(0, 0.5f, 0), direction);
+		_ray = new Ray(medusa.transform.position + new Vector3(0, 0.25f, 0), direction);
     }
 
     public GameObject Blast()
@@ -35,7 +35,7 @@ public class MedusaRay
 
 	public void Span(float distance)
 	{
-		Vector3 position = _medusa.transform.position + new Vector3(0, 1, 0);
+		Vector3 position = _medusa.transform.position + new Vector3(0, 0.25f, 0);
 		Vector3 hitPosition = position + _direction * distance;
 		
 		_beamRenderer.SetPosition(0, position);
