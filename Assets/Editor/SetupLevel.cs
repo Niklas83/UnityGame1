@@ -52,9 +52,9 @@ public class SetupLevel : ScriptableWizard
 			}
 		}
 
-		AudioPlayer audioPlayer = Helper.CreateObject<AudioPlayer>("AudioPlayer");
+		/* AudioPlayer audioPlayer = Helper.CreateObject<AudioPlayer>("AudioPlayer");
 		AudioSource source = audioPlayer.gameObject.AddComponent<AudioSource>();
-		source.clip = audioClip;
+		source.clip = audioClip; */
 
 		Camera.main.transform.position = new Vector3(7, 12, 5);
 		Camera.main.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));

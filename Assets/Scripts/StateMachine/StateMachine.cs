@@ -2,22 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class BaseState 
+public interface BaseState 
 {
-	Animator _animator;
-	int _enterAnimationHash;
-	
-	public BaseState(GameObject gameObject, string enterAnimation) 
-	{
-		_animator = gameObject.GetComponentInChildren<Animator>();
-		_enterAnimationHash = Animator.StringToHash(enterAnimation);
-	}
-	public virtual void OnEnter() 
-	{
-		_animator.SetTrigger(_enterAnimationHash);
-	}
-	public virtual void Update() {}
-	public virtual void OnExit() {}
+	void OnEnter();
+	void Update();
+	void OnExit();
 }
 
 public class StateMachine {
@@ -25,7 +14,9 @@ public class StateMachine {
 	private BaseState _currentState;
 	private Dictionary<int, BaseState> _allStates;
 	
-	public StateMachine(int startState, Dictionary<int, BaseState> allStates) 
+	public StateMachine() {}
+	
+	public void Setup(int startState, Dictionary<int, BaseState> allStates)
 	{
 		_currentState = allStates[startState];
 		_currentState.OnEnter();

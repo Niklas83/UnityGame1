@@ -11,6 +11,7 @@ public class SceneTransition : MonoBehaviour {
 #else
 	private AsyncOperationWrapper _asyncOp;
 #endif
+	private AudioPlayerAdvanced _audioPlayerAdvanced;
 	private AudioPlayer _audioPlayer;
 	private Animator _animator;
 
@@ -20,7 +21,10 @@ public class SceneTransition : MonoBehaviour {
 		_fadeTexture.Apply();
 
 		_animator = gameObject.GetComponent<Animator>();
-		_audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
+		if (GameObject.Find("AudioPlayerAdvanced") != null)
+			_audioPlayerAdvanced = Helper.Find<AudioPlayerAdvanced>("AudioPlayerAdvanced");
+		else
+			_audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
 
 		_animator.Play("FadeIn");
 	}
@@ -36,7 +40,10 @@ public class SceneTransition : MonoBehaviour {
 #endif
 		_asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
-		_audioPlayer.FadeOut(2f/3f);
+		if (_audioPlayerAdvanced != null)
+			_audioPlayerAdvanced.FadeOut(2f/3f);
+		else
+			_audioPlayer.FadeOut(2f/3f);
 
 		Animator a = this.gameObject.GetComponent<Animator>();
 		a.Play("FadeOut");

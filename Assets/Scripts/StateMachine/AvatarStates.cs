@@ -26,7 +26,8 @@ public partial class AvatarUnit
 			_allStates[(int) AvatarState.Running] = new AvatarRun(avatar);
 			_allStates[(int) AvatarState.Dead] = new AvatarDead(avatar);
 			
-			_stateMachine = new StateMachine((int) AvatarState.Idling, _allStates);
+			_stateMachine = new StateMachine();
+			_stateMachine.Setup((int) AvatarState.Idling, _allStates);
 		}
 		
 		public StateMachine GetStateMachine() 
@@ -35,18 +36,31 @@ public partial class AvatarUnit
 		}
 	}
 	
-	public class AvatarBaseState : BaseState
+	public abstract class AvatarBaseState : BaseState
 	{
 		protected AvatarUnit _avatarUnit;
-		public AvatarBaseState(GameObject avatar, string enterAnimation) : base(avatar, enterAnimation) 
+		protected Animator _animator;
+		protected int _enterAnimationHash;
+		
+		public AvatarBaseState(GameObject avatar, string enterAnimation)
 		{ 
-			_avatarUnit = avatar.GetComponent<AvatarUnit>(); 
+			_avatarUnit = avatar.GetComponent<AvatarUnit>();
+			_animator = avatar.GetComponentInChildren<Animator>();
+			_enterAnimationHash = Animator.StringToHash(enterAnimation);
 		}
 		
 		public void ChangeState(AvatarState state) 
 		{
 			_avatarUnit._stateMachine.ChangeState((int) state);
 		}
+		
+		public virtual void OnEnter()
+		{
+			_animator.SetTrigger(_enterAnimationHash);
+		}
+		
+		public abstract void Update();
+		public abstract void OnExit();
 	}
 	
 	public class AvatarIdle : AvatarBaseState
@@ -68,7 +82,8 @@ public partial class AvatarUnit
 	{
 		public AvatarWalk(GameObject avatar) : base(avatar, "walk") {}
 		public override void OnEnter() {
-			base.OnEnter(); _avatarUnit._mover.moveSpeed = 3;
+			base.OnEnter();
+			_avatarUnit._mover.moveSpeed = 3;
 			if (Random.value < 0.25f)
 				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
 		}
@@ -84,7 +99,8 @@ public partial class AvatarUnit
 	{
 		public AvatarRun(GameObject avatar) : base(avatar, "run") {}
 		public override void OnEnter() { 
-			base.OnEnter(); _avatarUnit._mover.moveSpeed = 4.5f; 
+			base.OnEnter();
+			_avatarUnit._mover.moveSpeed = 4.5f; 
 			if (Random.value < 0.25f)
 				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
 		}
