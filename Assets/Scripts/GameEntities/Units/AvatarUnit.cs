@@ -1,7 +1,5 @@
-using UnityEditor;
 using UnityEngine;
 using System.Collections;
-using System;
 using System.Collections.Generic;
 
 public partial class AvatarUnit : BaseUnit
@@ -107,11 +105,11 @@ public partial class AvatarUnit : BaseUnit
 	            {
 	                // Couldn't get there, try pushing instead..
 	                Vector3 dir = wp - startPosition;
-	                int x = Math.Sign(dir.x);
-	                int z = Math.Sign(dir.z);
-	                if (Math.Abs(dir.x) > Math.Abs(dir.z))
+	                int x = (int)Mathf.Sign(dir.x);
+					int z = (int)Mathf.Sign(dir.z);
+	                if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
 	                    Move(x, 0);
-	                else if (Math.Abs(dir.x) < Math.Abs(dir.z))
+	                else if (Mathf.Abs(dir.x) < Mathf.Abs(dir.z))
 	                    Move(0, z);
 	            }
 	        }
