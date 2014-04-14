@@ -8,6 +8,12 @@ public class AudioTrack : MonoBehaviour
 	public List<AudioClip> clips;
 	public List<AudioClip> outros;
 	
+	public float volume = 1;
+	public float fadeInDuration = 0.5f;
+	public float fadeOutDuration = 0.5f;
+	
+	public bool keepPlaying = false;
+	
 	public Vector2 nrLoopsRange;
 	public Vector2 randomTimeRange;
 	
@@ -15,8 +21,9 @@ public class AudioTrack : MonoBehaviour
 	private AudioSource _mainSource;
 	private AudioSource _outroSource;
 	
+	private float _targetVolume;
+	
 	void Start() {
-		
 	}
 
 	public void Setup ()
@@ -27,37 +34,65 @@ public class AudioTrack : MonoBehaviour
 	}
 	
 	public float Play()
-	{
+	{		
+		// Debug.Log("Starting play");
 		float delay = 0;
 		if (intros.Count > 0) {
 			int index = Random.Range(0, intros.Count);
 			AudioClip iclip = intros[index];
 			_introSource.clip = iclip;
 			_introSource.Play();
+			_introSource.volume = 0;
+			_mainSource.volume = volume;
 			delay = iclip.length;
+			
+			StartCoroutine(FadeIn(0, fadeInDuration, _introSource));
+		} else {
+			_mainSource.volume = 0;
+			StartCoroutine(FadeIn(0, fadeInDuration, _mainSource));
 		}
 		
-		AudioClip clip = clips[Random.Range(0, clips.Count)];
-		_mainSource.clip = clip;
-		_mainSource.PlayDelayed(delay);
-		_mainSource.loop = true;
-		_mainSource.volume = 1;
-		
 		float duration = 0;
-		int nrLoops = Random.Range((int)nrLoopsRange.x, (int)nrLoopsRange.y);
-		if (nrLoops > 0) {
-			duration = (nrLoops * clip.length) + delay;
-			StartCoroutine(TurnOffLooping(duration - 0.5f, _mainSource));
+		if (clips.Count > 0) {
+			AudioClip clip = clips[Random.Range(0, clips.Count)];
+			_mainSource.clip = clip;
+			_mainSource.PlayDelayed(delay);
+			_mainSource.loop = true;
+		
+			int nrLoops = Random.Range((int) nrLoopsRange.x, (int) nrLoopsRange.y);
+			if (nrLoops > 0) {
+				duration = (nrLoops * clip.length) + delay;
+				if (!keepPlaying)
+					StartCoroutine(TurnOffLooping(duration - 1, _mainSource)); // Safe with one second.
+			} else {
+				duration = Random.Range(randomTimeRange.x, randomTimeRange.y) + delay;
+			}
 		} else {
 			duration = Random.Range(randomTimeRange.x, randomTimeRange.y) + delay;
-			StartCoroutine(FadeOut(duration - 0.5f, 0.5f, _mainSource));
 		}
 		
 		if (outros.Count > 0) {
 			AudioClip oclip = outros[Random.Range(0, outros.Count)];
 			_outroSource.clip = oclip;
 			_outroSource.PlayDelayed(duration);
+			_outroSource.volume = volume;
 			duration += oclip.length;
+			StartCoroutine(FadeOut(duration - fadeOutDuration, fadeOutDuration, _outroSource));
+		} else if (!keepPlaying) {
+			StartCoroutine(FadeOut(duration - fadeOutDuration, fadeOutDuration, _mainSource));
+		}
+		
+		if (keepPlaying) {
+			AudioClip mainClip = _mainSource.clip;
+			
+			intros.Clear();
+			clips.Clear();
+			outros.Clear();
+			
+			if ((nrLoopsRange.x > 0 || nrLoopsRange.y > 0) && mainClip != null) {
+				randomTimeRange.x = (nrLoopsRange.x * mainClip.length);
+				randomTimeRange.y = (nrLoopsRange.y * mainClip.length);
+			}	
 		}
 		
 		return duration;
@@ -74,18 +109,33 @@ public class AudioTrack : MonoBehaviour
 		source.loop = false;
 	}
 	
-	
+	private IEnumerator FadeIn(float delay, float fadeDuration, AudioSource source) {
+		return Fade(delay, fadeDuration, source, volume);
+	}
 	private IEnumerator FadeOut(float delay, float fadeDuration, AudioSource source) {
+		return Fade(delay, fadeDuration, source, 0);
+	}
+	
+	private IEnumerator Fade(float delay, float fadeDuration, AudioSource source, float target) {
 		yield return new WaitForSeconds(delay);
 		
 		float startVolume = source.volume;
+		_targetVolume = target;
 		float timer = 0;
+		// Debug.Log("Start fade " + source.volume + " " + target);
 		while (timer < fadeDuration) {
 			float t = timer / fadeDuration;
-			source.volume = Mathf.Lerp(startVolume, 0, t);
+			if (_targetVolume != target)
+				break;
+				
+			source.volume = Mathf.Lerp(startVolume, target, t);
 			timer += Time.deltaTime;
 			yield return 0;
 		}
-		source.volume = 0;
+		
+		// Debug.Log("Fade done " + _targetVolume + " " + target + " " + (_targetVolume == target));
+		if (_targetVolume == target) {
+			source.volume = target;
+		}
 	}
 }
