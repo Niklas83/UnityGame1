@@ -25,8 +25,10 @@ Shader "Custom/Liquid" {
         
         Pass {
         CGPROGRAM
-        	#pragma glsl
-        	#pragma only_renderers opengl
+        
+			#pragma glsl
+			#pragma exclude_renderers d3d9
+         
             #pragma vertex vert
             #pragma fragment frag
 
@@ -120,46 +122,8 @@ Shader "Custom/Liquid" {
 			   	float3 c = voronoi(8.0f * p);
 			   	
 			   	float4 c2 = tex2D(_NoiseTex, p);
-
-				// float3 col = lerp(_EdgeColor, _CellColor, smoothstep(0, 0.06, c.x*c2.r));
-//			    float dd = length(c.yz); // Distance to cell center.
-//			    if (dd < 0.4f)
-//			    	dd = 0;
-//			    else if (dd < 0.6f)
-//			    	dd = 0.4f;
-//			    else if (dd < 0.8f)
-//			    	dd = 0.6f;
-//			    else
-//			    	dd = 1;
-//			    
-//				float3 col = lerp(_CellColor, _EdgeColor, dd);//lerp(dd, c2.r, _NoiseBlend)));
-
-//			    float dd = sqrt(c.x)*2; // Distance to cell center.
-//			    if (dd < 0.4f)
-//			    	dd = 0;
-//			    else if (dd < 0.6f)
-//			    	dd = 0.4f;
-//			    else if (dd < 0.8f)
-//			    	dd = 0.6f;
-//			    else
-//			    	dd = 1;
-//			    
-//				float3 col = lerp(_CellColor, _EdgeColor, 1-dd);//lerp(dd, c2.r, _NoiseBlend)));
-
 			    float dd = length(c.yz); // Distance to cell center.
 			    float t = dd * (1-c.x) * c2.r * _Noise;
-			    
-//			    if (t < 0.2f)
-//			    	t = 0;
-//			    if (t < 0.4f)
-//			    	t = 0.2f;
-//			    else if (t < 0.6f)
-//			    	t = 0.4f;
-//			    else if (dd < 0.8f)
-//			    	t = 0.6f;
-//			    else
-//			    	t = 1;
-
 				t = saturate(floor(t * _ColorSteps) / _ColorSteps);
 				float3 col = lerp(_CellColor, _EdgeColor, smoothstep(0, 1, pow(t, _RampPower)));
 				return half4(col, 1);
