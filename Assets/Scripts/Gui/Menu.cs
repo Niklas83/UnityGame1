@@ -8,13 +8,25 @@ public class Menu : MonoBehaviour {
 
 	public Vector3 littlePosition = new Vector3(390, 230, 0);
 	public Vector3 bastardsPosition = new Vector3(180, 300, 0);
+	
+	private Player _player;
+	
+	void Start()
+	{
+		_player = Player.CreatePlayer();
+	}
 
-	void NewGame() {
+	void NewGame() 
+	{
+		_player.saveData = new SaveData();
 		SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
 		st.NextScene();
 	}
-	void Continue() {
-		Debug.LogWarning("Continue not implemented!");
+	
+	void Continue() 
+	{
+		SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+		st.NextScene(_player.Level);
 	}
 
 	void OnGUI() {
@@ -36,7 +48,7 @@ public class Menu : MonoBehaviour {
 			GUILayout.BeginArea(new Rect(width/2-300, height/2+300, 600, 300));
 			if (GUILayout.Button("New Game"))
 				NewGame();
-			if (GUILayout.Button("Continue"))
+			if (_player.saveData != null && GUILayout.Button("Continue"))
 				Continue();
 			GUILayout.EndArea();
 		}
@@ -50,7 +62,7 @@ public class Menu : MonoBehaviour {
 		GUI.Label(new Rect(littlePosition.x+offset.x, littlePosition.y+offset.y, 0, 0), "Little");
 
 		labelStyle.fontSize = 300;
-		GUI.Label(new Rect(bastardsPosition.x+offset.x, bastardsPosition.y+offset.y, 0, 00), "Bastards");
+		GUI.Label(new Rect(bastardsPosition.x+offset.x, bastardsPosition.y+offset.y, 0, 0), "Bastards");
 	}
 
 	/*bool IsMouseOver()

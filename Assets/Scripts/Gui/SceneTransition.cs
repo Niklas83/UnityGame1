@@ -14,6 +14,7 @@ public class SceneTransition : MonoBehaviour {
 	private AudioPlayerAdvanced _audioPlayerAdvanced;
 	private AudioPlayer _audioPlayer;
 	private Animator _animator;
+	private Player _player;
 
 	void Start() {
 		_fadeTexture = new Texture2D(1, 1);
@@ -26,17 +27,25 @@ public class SceneTransition : MonoBehaviour {
 		else
 			_audioPlayer = Helper.Find<AudioPlayer>("AudioPlayer");
 
+		_player = Player.CreatePlayer();
+		
 		_animator.Play("FadeIn");
 	}
 
 	public void NextScene() {
-		if (_asyncOp != null)
-			return;
+		_player.Level = _player.Level + 1;
+		NextScene(_player.Level);
+		_player.Save();
+	}
+	public void NextScene(int nextLevel) 
+	{
+		DebugAux.Assert(_asyncOp == null, "Scene transition already in progress!");
+		Log.debug("SceneTransition", "Set next level {0}", nextLevel);
 
 #if USE_UNITY_PRO
-		asyncOp = Application.LoadLevelAsync(Application.loadedLevel + 1); // TODO: Scene name or index!
+		asyncOp = Application.LoadLevelAsync(nextLevel); // TODO: Scene name or index!
 #else
-		_asyncOp = new AsyncOperationWrapper();
+		_asyncOp = new AsyncOperationWrapper(nextLevel);
 #endif
 		_asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
@@ -70,11 +79,16 @@ public class SceneTransition : MonoBehaviour {
 #if !USE_UNITY_PRO
 	// This is to keep the roughly the same interface as AsyncOperation. So that we can change to actual async later.
 	private class AsyncOperationWrapper {
+		private int _nextLevel;
+		
+		public AsyncOperationWrapper(int nextLevel) {
+			_nextLevel = nextLevel;
+		}
 		public bool allowSceneActivation { 
 			get { return true; } 
 			set { 
 				if (value)
-					Application.LoadLevel(Application.loadedLevel + 1);
+					Application.LoadLevel(_nextLevel);
 			}
 		}
 	}
