@@ -50,9 +50,9 @@ public class SceneTransition : MonoBehaviour {
 		_asyncOp.allowSceneActivation = false; // Should wait for the fade.
 
 		if (_audioPlayerAdvanced != null)
-			_audioPlayerAdvanced.FadeOut(2f/3f);
+			_audioPlayerAdvanced.FadeOut(1f/4f);
 		else
-			_audioPlayer.FadeOut(2f/3f);
+			_audioPlayer.FadeOut(1f/4f);
 
 		Animator a = this.gameObject.GetComponent<Animator>();
 		a.Play("FadeOut");
