@@ -12,6 +12,7 @@ public partial class AvatarUnit : BaseUnit
         return CanWalkOver;
     }
 	public bool debugTeleport = false;
+	public bool debugInvincible = false;
 
 	private Mover _mover;
 	private Rotation _rotation;
@@ -160,7 +161,7 @@ public partial class AvatarUnit : BaseUnit
 
 	public void KillAvatar()
     {
-		if (_isDead)
+		if (_isDead || debugInvincible)
 			return;
 		
     	_isDead = true;

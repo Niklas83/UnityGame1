@@ -6,6 +6,8 @@ public class ExitTile : BaseTile {
 	private SceneTransition _sceneTransition;
 	private bool _opened;
 	private int _nrAliveKeys;
+	
+	public bool debugOpen = false;
 
 	void Start() {
 		_sceneTransition = Helper.Find<SceneTransition>("SceneTransition");
@@ -13,7 +15,7 @@ public class ExitTile : BaseTile {
 
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
 	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) {
-		if (_opened && unit is AvatarUnit) {
+		if ((_opened || debugOpen) && unit is AvatarUnit) {
 			_sceneTransition.NextScene();
 		}
 	}
