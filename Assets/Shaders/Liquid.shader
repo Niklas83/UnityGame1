@@ -15,7 +15,7 @@ Shader "Custom/Liquid" {
 		_NoiseTex("Noise (RGB)", 2D) = "white" {}
 		_CellColor("Cell Color", Color) = (0, 0.4, 0.7, 1)
 		_EdgeColor("Edge Color", Color) = (1, 1, 1, 1)
-		_CellSize("Cell Size", Range (0.05, 1)) = 0.3
+		_CellSize("Cell Size", Range (0.99, 0)) = 0.95
 		_Noise("Noise Influence", Range (0, 4)) = 1.5
 		_RampPower("Ramp Power", Range (0, 4)) = 1
 		_ColorSteps("Color Steps", Float) = 4
@@ -31,6 +31,10 @@ Shader "Custom/Liquid" {
          
             #pragma vertex vert
             #pragma fragment frag
+            
+            #ifdef SHADER_API_D3D11
+            	#pragma target 3.0
+            #endif
 
     		#include "UnityCG.cginc"
 			
@@ -98,7 +102,7 @@ Shader "Custom/Liquid" {
 
             struct v2f {
                 float4 vertex : POSITION;
-              	float2 vpos : VPOS;
+                float4 pos : TEXCOORD0;
             };
             
             sampler2D _NoiseTex;
@@ -112,21 +116,23 @@ Shader "Custom/Liquid" {
             v2f vert(appdata_t v)
             {
                 v2f o;
-                o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+                float4 position = mul(UNITY_MATRIX_MVP, v.vertex);
+               	o.vertex = position;
+               	o.pos = position;
                 return o;
             }
             
             half4 frag(v2f i) : COLOR
             {
-				float2 p = i.vpos.xy / (_ScreenParams.xx*_CellSize);
+				float2 p = i.pos.xy * _CellSize;
 			   	float3 c = voronoi(8.0f * p);
 			   	
 			   	float4 c2 = tex2D(_NoiseTex, p);
-			    float dd = length(c.yz); // Distance to cell center.
+			    float dd = length(c.yz);
 			    float t = dd * (1-c.x) * c2.r * _Noise;
 				t = saturate(floor(t * _ColorSteps) / _ColorSteps);
-				float3 col = lerp(_CellColor, _EdgeColor, smoothstep(0, 1, pow(t, _RampPower)));
-				return half4(col, 1);
+				float4 col = lerp(_CellColor, _EdgeColor, smoothstep(0, 1, pow(t, _RampPower)));
+				return half4(col);
             }
 
 		ENDCG
