@@ -2,22 +2,17 @@
 	Properties {
 		_AlphaMask("AlphaMask (RGB)", 2D) = "white" {}
 		_Noise("Noise (RGB)", 2D) = "white" {}
+		_Magnitude("Magnitude", Float) = 0.1
 	}
 	SubShader {
-        Tags { "Queue"="Transparent +100" "IgnoreProjector"="True" "RenderType"="Transparent" }
+        Tags { "RenderType"="Transparent" }
 
         GrabPass { }
 
         Pass {
 			Blend SrcAlpha OneMinusSrcAlpha
-			AlphaTest Greater .01
-			ColorMask RGB
-			Cull Off Lighting Off ZWrite Off Fog { Color (0,0,0,0) }
-			BindChannels {
-				Bind "Color", color
-				Bind "Vertex", vertex
-				Bind "TexCoord", texcoord
-			}
+			AlphaTest Greater 0
+			Cull Off Lighting On ZWrite Off
         CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -40,9 +35,12 @@
             };
             sampler2D _Noise;
             sampler2D _AlphaMask;
+            sampler2D _GrabTexture;
             
             float4 _Noise_ST;
             float4 _AlphaMask_ST;
+            float4 _GrabTexture_TexelSize;
+            float _Magnitude;
 
             v2f vert(appdata_t v)
             {
@@ -62,9 +60,6 @@
                 return o;
             }
 
-            sampler2D _GrabTexture;
-            float4 _GrabTexture_TexelSize;
-
             half4 frag(v2f i) : COLOR
             {
             	half4 alpha_mask = tex2D(_AlphaMask, i.uvalpha_mask);
@@ -72,7 +67,7 @@
             	i.uvnoise.y -= _Time.x*2;
                 half2 noise = tex2D(_Noise, i.uvnoise).rg;
                 
-                float2 offset = noise * 0.1f * i.color.a * alpha_mask.a;
+                float2 offset = noise * i.color.a * alpha_mask.a * _Magnitude;
                 i.uvgrab.xy = i.uvgrab.xy + offset;
 
                 half4 col = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
