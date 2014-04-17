@@ -14,22 +14,25 @@ public class ExitTile : BaseTile {
 	}
 
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
-	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) {
-		if ((_opened || debugOpen) && unit is AvatarUnit) {
+	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) 
+	{
+		if ((_opened || debugOpen) && unit is AvatarUnit)
 			_sceneTransition.NextScene();
-		}
 	}
 
-	public void Register() {
+	public void Register() 
+	{
 		_nrAliveKeys += 1;
 		SetExitOpen(_nrAliveKeys == 0);
 	}
-	public void Unregister() {
+	public void Unregister() 
+	{
 		_nrAliveKeys -= 1;
 		SetExitOpen(_nrAliveKeys == 0);
 	}
 
-	private void SetExitOpen(bool open) {
+	private void SetExitOpen(bool open) 
+	{
 		Transform t = transform.FindChild("OpenEffects");
 		t.gameObject.SetActive(open);
 		_opened = open;

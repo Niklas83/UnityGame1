@@ -5,6 +5,7 @@ using System.Collections;
 public class Rotation : MonoBehaviour {
 
 	public float rotationSpeed = 5f;
+	public float shearAngle = 25f;
 
 	public void RotateTowards(int xDir, int zDir) {
 		StartCoroutine(Rotate(xDir, zDir));
@@ -12,10 +13,13 @@ public class Rotation : MonoBehaviour {
 	
 	public IEnumerator Rotate(int xDir, int zDir)
 	{
-		// mIsRotating = true;
 		float t = 0;
 
-		Quaternion target = Quaternion.LookRotation(new Vector3(xDir, 0, zDir));
+		Quaternion shear = Quaternion.Euler(shearAngle, 0, 0);
+		Vector3 up = shear * Vector3.up;
+		Vector3 lookDirection = shear * new Vector3(xDir, 0, zDir);
+		
+		Quaternion target = Quaternion.LookRotation(lookDirection, up);
 		Quaternion start = transform.rotation;
 		
 		while (t < 1f)
@@ -26,8 +30,6 @@ public class Rotation : MonoBehaviour {
 		}
 		
 		transform.rotation = target;
-		// mIsRotating = false;
-		
 		yield return 0;
 	}
 }
