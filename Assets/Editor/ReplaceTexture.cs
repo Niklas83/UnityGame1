@@ -5,6 +5,7 @@ using System.Collections;
 public class ReplaceTexture : ScriptableWizard
 {
 	public float tileSize = 1;
+	public bool randomRotation = true;
 	public Texture texture;
 	public GameObject[] Objects;
 	
@@ -25,18 +26,17 @@ public class ReplaceTexture : ScriptableWizard
 			int randomX = Random.Range(0, indexX);
 			int randomY = Random.Range(0, indexY);
 
-			float x = Mathf.Sign(Random.value - 0.5f);
-			float y = Mathf.Sign(Random.value - 0.5f);
-
-			Vector2 scale  = new Vector2(textureScale.x * x, textureScale.y * y);
-			Vector2 offset = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
+			float x = randomRotation ? Mathf.Sign(Random.value - 0.5f) : 1;
+			float y = randomRotation ? Mathf.Sign(Random.value - 0.5f) : 1;
 
 			Material tempMaterial = new Material(go.renderer.sharedMaterial);
-
 			tempMaterial.mainTexture = texture;
+			
+			Vector2 scale  = new Vector2(textureScale.x * x, textureScale.y * y);
 			tempMaterial.mainTextureScale = scale;
+			Vector2 offset = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
 			tempMaterial.mainTextureOffset = offset;
-
+			
 			go.renderer.sharedMaterial = tempMaterial;
 		}
     }
