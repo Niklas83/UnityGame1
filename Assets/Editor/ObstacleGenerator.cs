@@ -383,12 +383,20 @@ public class ObstacleGeneratorWindow : EditorWindow
         _LocationToPlacePrefab = EditorGUILayout.Vector3Field("",_LocationToPlacePrefab);
         EditorGUI.EndDisabledGroup();
 
-        if (_ShowDebugMarkOnPrefabSpawnLocation == true)
+        if (_ShowDebugMarkOnPrefabSpawnLocation == true && _NumberOfPrefabsToSpawn == 1)
         {
             Debug.DrawLine(new Vector3(_LocationToPlacePrefab.x - 0.3f, 0.5f, _LocationToPlacePrefab.z - 0.3f),
                 new Vector3(_LocationToPlacePrefab.x + 0.3f, 0.5f, _LocationToPlacePrefab.z + 0.3f), Color.red);
             Debug.DrawLine(new Vector3(_LocationToPlacePrefab.x - 0.3f, 0.5f, _LocationToPlacePrefab.z + 0.3f),
                 new Vector3(_LocationToPlacePrefab.x + 0.3f, 0.5f, _LocationToPlacePrefab.z - 0.3f), Color.red);
+        }
+        else if (_ShowDebugMarkOnPrefabSpawnLocation == true && _NumberOfPrefabsToSpawn > 1)
+        {
+            Debug.DrawLine(new Vector3(_xCoordinateToStartSpawnMultiplePrefabs - 0.3f, 0.5f, 0 - 0.3f),
+                new Vector3(_xCoordinateToStartSpawnMultiplePrefabs + 0.3f, 0.5f, 0 + 0.3f), Color.blue);
+
+            Debug.DrawLine(new Vector3(_xCoordinateToStartSpawnMultiplePrefabs - 0.3f, 0.5f, 0 + 0.3f),
+                new Vector3(_xCoordinateToStartSpawnMultiplePrefabs + 0.3f, 0.5f, 0 - 0.3f), Color.blue);
         }
 
         GUILayout.EndArea();
