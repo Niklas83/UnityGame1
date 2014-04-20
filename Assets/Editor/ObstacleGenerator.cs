@@ -56,9 +56,6 @@ public class ObstacleGeneratorWindow : EditorWindow
     private int _NumberOfPrefabsToSpawn = 1;
     private int _xCoordinateToStartSpawnMultiplePrefabs = -2;
 
-
-       // private int _Prefabs = 0;     (NOT IN USE)
-       //private List<string> prefabTypes = new List<string>(); 
     
     [MenuItem("Window/ObstacleGenerator")]
     static void Init()
@@ -116,36 +113,10 @@ public class ObstacleGeneratorWindow : EditorWindow
             ALLPrefabs = Resources.LoadAll<GameObject>("");
         }
 
-        //DENNA KOD TAR FRAM ALLA FOLDERS I RESOURCES FOLDERN STARTAR   (NOT IN USE)
-        //var dirPaths = Directory.GetFiles(Application.dataPath + "/Resources/", "*.PREFAB", SearchOption.AllDirectories);
-
-        //if (prefabTypes.Count < 1)
-        //{
-        //    for (int i = 0; i < dirPaths.Count(); i++)
-        //    {
-
-        //        string folderPath = dirPaths[i].Remove(0, dirPaths[i].LastIndexOf("Resources") + 10);
-
-
-        //        folderPath = folderPath.Replace("\\", "/");
-
-        //        if (folderPath.Contains("/"))
-        //        {
-        //            folderPath = folderPath.Remove(folderPath.LastIndexOf("/"));
-        //        }
-        //        prefabTypes.Add(folderPath);
-        //    }
-        //}
-        //DENNA KOD TAR FRAM ALLA FOLDERS I RESOURCES FOLDERN SLUTAR    (NOT IN USE)
-
 
         EditorGUILayout.BeginVertical(GUILayout.Width(300), GUILayout.MinWidth(300));
 
         EditorGUILayout.Space();
-
-        //The GUI dropdown field that shows all the folders:
-        //_Prefabs = EditorGUILayout.MaskField("Selected prefab folders", _Prefabs, prefabTypes.ToArray());     //(NOT IN USE)
-
 
         EditorGUILayout.Space();
 
@@ -253,7 +224,7 @@ public class ObstacleGeneratorWindow : EditorWindow
         }
 
         //The GUI list shown in the window:
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(300), GUILayout.MinWidth(300), GUILayout.Height(300));
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(230), GUILayout.MinWidth(230), GUILayout.Height(345));
 
         if (AllObstaclesToCurrentlyShow != null && AllObstaclesToCurrentlyShow.Any())
 
@@ -262,55 +233,55 @@ public class ObstacleGeneratorWindow : EditorWindow
             if (MovableObstacles.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.green;
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (NoneMovableObstacles.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.Lerp(Color.white, Color.red,0.5f);
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (RotatableObstacles.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.cyan;
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (EnemieObstacles.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.red;
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (AvatarPrefabs.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.yellow;
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (FloorPrefabs.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.Lerp(Color.white, Color.blue, 0.4f);
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (ScenePrefabs.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.Lerp(Color.magenta, Color.red, 0.5f);
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
             else if (SpecialPrefabs.Contains(AllObstaclesToCurrentlyShow[i]))
             {
                 GUI.color = Color.Lerp(Color.red, Color.yellow, 0.4f);
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
                 GUI.color = Color.white;
             }
 
             else
             {
-                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i].name, AllObstaclesToCurrentlyShow[i], typeof(GameObject));
+                EditorGUILayout.ObjectField(AllObstaclesToCurrentlyShow[i], typeof(GameObject));
             }
         }
 
@@ -373,7 +344,7 @@ public class ObstacleGeneratorWindow : EditorWindow
         //The GUI Checkbox section (ENDS)
 
         //THE GUI label that, in text shows what item is selected:
-        GUILayout.BeginArea(new Rect(350, 5, 350, 20));
+        GUILayout.BeginArea(new Rect(280, 5, 350, 20));
 
         if (Selection.activeGameObject != null)
         {
@@ -387,7 +358,7 @@ public class ObstacleGeneratorWindow : EditorWindow
 
 
         //The GUI 3D preview window of the currently selected item:
-        GUILayout.BeginArea(new Rect(315, 30, 250, 250));
+        GUILayout.BeginArea(new Rect(245, 30, 250, 250));
         if (Selection.activeGameObject != null)
         {
             if (gameObjectEditor == null)
@@ -404,7 +375,7 @@ public class ObstacleGeneratorWindow : EditorWindow
         GUILayout.EndArea();
 
         //The GUI vector3-field where you decide location to place a prefab:
-        GUILayout.BeginArea(new Rect(315, 310, 130, 50));
+        GUILayout.BeginArea(new Rect(245, 310, 130, 50));
         GUILayout.Label("Single fields (if #=1):");
         
             EditorGUI.BeginDisabledGroup(_NumberOfPrefabsToSpawn > 1);
@@ -424,7 +395,7 @@ public class ObstacleGeneratorWindow : EditorWindow
 
 
         //The checkbox that tells if the debugger should draw a X where the prefab will be placed
-        GUILayout.BeginArea(new Rect(460, 285, 150, 50));
+        GUILayout.BeginArea(new Rect(385, 285, 150, 50));
         _ShowDebugMarkOnPrefabSpawnLocation = EditorGUILayout.ToggleLeft("Mark location (Buggy)", _ShowDebugMarkOnPrefabSpawnLocation, GUILayout.MaxWidth(150), GUILayout.Width(150));
         GUILayout.EndArea();
 
@@ -432,7 +403,7 @@ public class ObstacleGeneratorWindow : EditorWindow
 
 
         //The GUI int-field that tells how many prefabs of the selected type should be spawned AND its X-Coordinate
-        GUILayout.BeginArea(new Rect(460, 310, 120, 50));
+        GUILayout.BeginArea(new Rect(385, 310, 120, 50));
         
         GUILayout.Label("Multi fields(if #>1):");
         EditorGUI.BeginDisabledGroup(_NumberOfPrefabsToSpawn <= 1);
@@ -451,7 +422,7 @@ public class ObstacleGeneratorWindow : EditorWindow
 
 
         //The GUI "create prefab button":
-        GUILayout.BeginArea(new Rect(315, 285, 130, 50));
+        GUILayout.BeginArea(new Rect(245, 285, 130, 50));
         if (GUILayout.Button("Create prefab(s)!"))
         {
             if (Selection.activeGameObject != null)
