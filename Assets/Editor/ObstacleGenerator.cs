@@ -49,8 +49,13 @@ public class ObstacleGeneratorWindow : EditorWindow
     private List<bool> _PrefabSectionsToShow = new List<bool>();    //Used to see if the list of items should be updated (by differing vs _PrefabSectionsPreviouslyShown)
     private List<bool> _PrefabSectionsPreviouslyShown;          //Used to see if the list of items should be updated(by differing vs _PrefabSectionsToShow)
 
-
+    
     private Vector3 _LocationToPlacePrefab = new Vector3(5,1,5);
+    private bool _ShowDebugMarkOnPrefabSpawnLocation = false;
+
+    private int _NumberOfPrefabsToSpawn = 1;
+    private int _xCoordinateToStartSpawnMultiplePrefabs = -2;
+
 
        // private int _Prefabs = 0;     (NOT IN USE)
        //private List<string> prefabTypes = new List<string>(); 
@@ -315,7 +320,7 @@ public class ObstacleGeneratorWindow : EditorWindow
 
         
         //The GUI Checkbox section (BEGINS):
-        GUILayout.BeginArea(new Rect(5, 350, 500, 250));
+        GUILayout.BeginArea(new Rect(5, 360, 500, 250));
         _ShowPrefabCheckBoxes = EditorGUILayout.Foldout(_ShowPrefabCheckBoxes, "Toggle prefab folders");
 
         EditorGUILayout.BeginHorizontal();
@@ -398,30 +403,85 @@ public class ObstacleGeneratorWindow : EditorWindow
         }
         GUILayout.EndArea();
 
+        //The GUI vector3-field where you decide location to place a prefab:
+        GUILayout.BeginArea(new Rect(315, 310, 130, 50));
+        GUILayout.Label("Single fields (if #=1):");
         
-        //The GUI "create prefab button":
-        GUILayout.BeginArea(new Rect(375, 285, 130, 50));
+            EditorGUI.BeginDisabledGroup(_NumberOfPrefabsToSpawn > 1);
+        GUILayout.Label("Place prefab at:");
+        _LocationToPlacePrefab = EditorGUILayout.Vector3Field("",_LocationToPlacePrefab);
+        EditorGUI.EndDisabledGroup();
 
-        if (GUILayout.Button("Create prefab!"))
+        if (_ShowDebugMarkOnPrefabSpawnLocation == true)
         {
-            if (Selection.activeGameObject != null)
-            {
-                GameObject newGameObject = (GameObject)Instantiate(Selection.activeGameObject, _LocationToPlacePrefab, Quaternion.identity);
-                newGameObject.name = Selection.activeGameObject.name;
-            }
+            Debug.DrawLine(new Vector3(_LocationToPlacePrefab.x - 0.3f, 0.5f, _LocationToPlacePrefab.z - 0.3f),
+                new Vector3(_LocationToPlacePrefab.x + 0.3f, 0.5f, _LocationToPlacePrefab.z + 0.3f), Color.red);
+            Debug.DrawLine(new Vector3(_LocationToPlacePrefab.x - 0.3f, 0.5f, _LocationToPlacePrefab.z + 0.3f),
+                new Vector3(_LocationToPlacePrefab.x + 0.3f, 0.5f, _LocationToPlacePrefab.z - 0.3f), Color.red);
         }
 
         GUILayout.EndArea();
 
-        //The GUI vector3-field where you decide location to place a prefab:
-        GUILayout.BeginArea(new Rect(375, 310, 130, 50));
-        _LocationToPlacePrefab = EditorGUILayout.Vector3Field("Place prefab at:", _LocationToPlacePrefab);
 
+        //The checkbox that tells if the debugger should draw a X where the prefab will be placed
+        GUILayout.BeginArea(new Rect(460, 285, 150, 50));
+        _ShowDebugMarkOnPrefabSpawnLocation = EditorGUILayout.ToggleLeft("Mark location (Buggy)", _ShowDebugMarkOnPrefabSpawnLocation, GUILayout.MaxWidth(150), GUILayout.Width(150));
         GUILayout.EndArea();
 
+
+
+
+        //The GUI int-field that tells how many prefabs of the selected type should be spawned AND its X-Coordinate
+        GUILayout.BeginArea(new Rect(460, 310, 120, 50));
+        
+        GUILayout.Label("Multi fields(if #>1):");
+        EditorGUI.BeginDisabledGroup(_NumberOfPrefabsToSpawn <= 1);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("X-Cooridnate");
+        _xCoordinateToStartSpawnMultiplePrefabs = EditorGUILayout.IntField(_xCoordinateToStartSpawnMultiplePrefabs, GUILayout.MaxWidth(40), GUILayout.Width(40));
+        GUILayout.EndHorizontal();
+        EditorGUI.EndDisabledGroup();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("# Of Objects ");
+        _NumberOfPrefabsToSpawn = EditorGUILayout.IntField(_NumberOfPrefabsToSpawn, GUILayout.MaxWidth(40), GUILayout.Width(40));
+        GUILayout.EndHorizontal();
+        
+        GUILayout.EndArea();
+
+
+        //The GUI "create prefab button":
+        GUILayout.BeginArea(new Rect(315, 285, 130, 50));
+        if (GUILayout.Button("Create prefab(s)!"))
+        {
+            if (Selection.activeGameObject != null)
+            {
+                if (_NumberOfPrefabsToSpawn == 1)
+                {
+                    GameObject newGameObject =
+                        (GameObject)
+                            Instantiate(Selection.activeGameObject, _LocationToPlacePrefab, Quaternion.identity);
+                    newGameObject.name = Selection.activeGameObject.name;
+                }
+                else if (_NumberOfPrefabsToSpawn > 1)
+                {
+                    if (_NumberOfPrefabsToSpawn > 50)
+                    {
+                        _NumberOfPrefabsToSpawn = 50;
+                    }
+                    for (int i = 0; i < _NumberOfPrefabsToSpawn; i++)
+                    {
+                        GameObject newGameObject =(GameObject)Instantiate(Selection.activeGameObject,new Vector3(_xCoordinateToStartSpawnMultiplePrefabs, 1, i), Quaternion.identity);
+                        newGameObject.name = Selection.activeGameObject.name;
+                    }
+                }
+            }
+        }
+        GUILayout.EndArea();
     }
 
-}
 
+
+}
 
 
