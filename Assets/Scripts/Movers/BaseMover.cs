@@ -20,27 +20,58 @@ public abstract class BaseMover : MonoBehaviour
 	protected GridManager gridManager;
 	protected Queue<Vector2> moveQueue;
 
+    private bool isAvatarMover;
+    private AvatarUnit currentAvatarUnit;
+
 	public void Start() {
 		Floor floor = Helper.Find<Floor>("Floor");
 		gridManager = floor.GridManager;
 		unit = GetComponent<BaseUnit>();
 
 		soundEffectPLayer = GetComponentInChildren<SoundEffectPlayer>();
+
+	    if (unit is AvatarUnit)
+	    {
+	        isAvatarMover = true;
+            currentAvatarUnit = (AvatarUnit)unit;
+	    }
+	    else
+	    {
+	        isAvatarMover = false;
+	    }
 	}
 
-	protected bool CanMove(BaseTile tile, int xDir, int zDir) {
+	protected bool CanMove(BaseTile tile, int xDir, int zDir) 
+    {
 		bool canMove = true;
 
 		foreach (BaseUnit u in tile.OccupyingUnits(unit)) {
 			if (canMove) {
 				canMove = unit == u || u.CanWalkOn(gameObject.tag); // You can walk here if it's to yourself or to a "walkable" unit.
-				if (!canMove && isPusher) {
-					// If not a walkable, check if you are a 'Pusher' and it can be moved.
-					BaseMover mover = u.GetComponent<BaseMover>();
-					if (mover != null) {
-						canMove = mover.TryMove(xDir, zDir);
-					} 
-				}
+				if (!canMove && isPusher) 
+                {
+                    if (isAvatarMover == false)
+                    {
+                        // If not a walkable, check if you are a 'Pusher' and it can be moved.
+                        BaseMover mover = u.GetComponent<BaseMover>();
+                        if (mover != null)
+                        {
+                            canMove = mover.TryMove(xDir, zDir);
+                        }
+                    }
+                    else
+                    {
+                        if (currentAvatarUnit.Strength >= u.Weight)
+                        {
+                            // If not a walkable, check if you are a 'Pusher' and it can be moved.
+                            BaseMover mover = u.GetComponent<BaseMover>();
+                            if (mover != null)
+                            {
+                                canMove = mover.TryMove(xDir, zDir);
+                            }
+                        }                        
+                    }
+                }
 			}
 			unit.OnCollided(u);
 			u.OnCollided(unit);

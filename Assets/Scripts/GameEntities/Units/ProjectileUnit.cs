@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 public class ProjectileUnit : BaseUnit  {
 
+    //This weight is compared to the floors durability, if the weight > durability you fall through the floor
+    public int CurrentWeight = 50;
+    public override int Weight { get { return CurrentWeight; } }
+
 	public bool canPassThroughUnits;
 	public GameObject onHitPfx;
 

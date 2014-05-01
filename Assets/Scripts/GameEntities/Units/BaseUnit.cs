@@ -6,6 +6,8 @@ using System.IO;
 
 public abstract class BaseUnit : BaseEntity
 {
+    public abstract int Weight { get; }
+
     public abstract bool CanWalkOver { get; }
 	public abstract int LayerMask { get; }
 	public BaseTile OccupiedTile { get; set; }
@@ -30,4 +32,46 @@ public abstract class BaseUnit : BaseEntity
 	protected override void OnDeactivated() {
 		BaseTile.HandleOccupy(this, OccupiedTile, null);
 	}
+
+
+    public void InitStartFallingRoutine()
+    {
+        bool isAvatarUnit = false;
+
+        AvatarUnit currentAvatar = null;
+        
+        if (this is AvatarUnit)
+        {
+            isAvatarUnit = true;
+            currentAvatar = (AvatarUnit)this;
+        }
+
+
+        StartCoroutine(StartFalling(isAvatarUnit, currentAvatar));
+    }
+
+    private IEnumerator StartFalling(bool isAvatar, AvatarUnit currentAvatar)
+    {
+        if (isAvatar)
+        {
+            currentAvatar.SetIsFalling();
+        }
+       
+        while (this.transform.position.y > -10)
+        {
+            this.transform.position = this.transform.position - new Vector3(0, 1, 0);
+            yield return new WaitForSeconds(0.03f);
+        }
+
+        if (isAvatar)
+        {
+            currentAvatar.KillAvatar();
+        }
+        else
+        {
+            this.DestroyUnit();
+        }
+        
+        yield return 0;
+    }
 }

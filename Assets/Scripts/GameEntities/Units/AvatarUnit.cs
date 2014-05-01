@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 public partial class AvatarUnit : BaseUnit
 {
+    //This weight is compared to the floors durability, if the weight > durability you fall through the floor
+    public int CurrentWeight = 50;
+    public override int Weight { get { return CurrentWeight; } }
+
+    public int Strength = 100;
+
 	public override int LayerMask { get { return (int)(Layer.Air | Layer.Ground); } }
     
     public override bool CanWalkOver { get { return false; } }
@@ -31,6 +37,8 @@ public partial class AvatarUnit : BaseUnit
     private SoundEffectPlayer _soundEffectPlayer;
     
 	private StateMachine _stateMachine;
+
+    private bool _isFalling = false;                    //This is set when a player is falling to his death
 
 	public void Start()
 	{ 
@@ -116,7 +124,7 @@ public partial class AvatarUnit : BaseUnit
 	        }
 	    }
 
-        if (!_mover.IsMoving && _moveQueue != null && _moveQueue.Count > 0)
+        if (!_mover.IsMoving && _moveQueue != null && _moveQueue.Count > 0 && !_isFalling)
         {
             Vector2 dir = _moveQueue.Dequeue();
             Move((int) dir.x, (int) dir.y);
@@ -166,5 +174,10 @@ public partial class AvatarUnit : BaseUnit
 		
     	_isDead = true;
 		_stateMachine.ChangeState((int) AvatarState.Dead);
+    }
+
+    public void SetIsFalling()
+    {
+        _isFalling = true;
     }
 }
