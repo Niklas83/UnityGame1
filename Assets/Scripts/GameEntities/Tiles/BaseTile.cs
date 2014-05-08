@@ -10,6 +10,8 @@ public enum Layer {
 
 public abstract class BaseTile : BaseEntity
 {
+    public abstract int Durability { get; }
+
 	private Dictionary<Layer, BaseUnit> _occupyingUnits;
 	private List<BaseUnit> _previousUnits;
 
@@ -118,7 +120,17 @@ public abstract class BaseTile : BaseEntity
 	}
 
 	protected abstract void OnLeaved(BaseUnit unit, BaseTile sourceTile);
-	protected abstract void OnArrived(BaseUnit unit, BaseTile destinationTile);
+
+    protected virtual void OnArrived(BaseUnit unit, BaseTile destinationTile)
+    {
+        if (unit.Weight > Durability)
+        {
+            GridManager.RemoveTile(this);
+            Destroy(this.gameObject);
+
+            unit.InitStartFallingRoutine();
+        }   
+    }
 
 	private static Array mLayers = Enum.GetValues(typeof(Layer));
 	public IEnumerable<BaseUnit> OccupyingUnits(BaseUnit unit) {

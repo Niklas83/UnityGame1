@@ -19,6 +19,7 @@ public class Menu : MonoBehaviour {
 	void NewGame() 
 	{
 		_player.saveData = new SaveData();
+	    _player.saveData.level = 1;
 		SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
 		st.NextScene();
 	}
@@ -28,6 +29,12 @@ public class Menu : MonoBehaviour {
 		SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
 		st.NextScene(_player.Level);
 	}
+
+    void SelectLevelFromNode()
+    {
+        SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+        st.NextScene(0);
+    }
 
 	void OnGUI() {
 		GUI.skin = guiSkin;
@@ -50,6 +57,9 @@ public class Menu : MonoBehaviour {
 				NewGame();
 			if (_player.saveData != null && GUILayout.Button("Continue"))
 				Continue();
+            if (GUILayout.Button("Select Level"))
+                SelectLevelFromNode();
+
 			GUILayout.EndArea();
 		}
 	}
