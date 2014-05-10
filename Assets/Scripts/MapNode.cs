@@ -1,12 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using System.Collections;
+
+public enum MapType
+{
+    NotSet,
+    Graveyard,
+    Desert,
+    Water,
+    Ice,
+    Forest,
+    Hell,
+    Heaven,
+    Halloween,
+    Castle
+}
+
+
 
 public class MapNode : MonoBehaviour
 {
     public bool IsFirstLevel;
 
     //public string SceneName;      Need to add this functionallity to scenetransition
+
+    public MapType MapType;     //The maptype of the level
 
     public int SceneNr;         //Number of the scene from file->buildsetting (the menu in unity)
 
@@ -51,6 +70,22 @@ public class MapNode : MonoBehaviour
             SetGraphicalConnectionsBetweenBranches();
             SetBranchNodesActive();
         }
+
+        if (IsActive && IsCleared)
+        {
+            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(0.141f, 1.000f, 0.811f, 0.502f));
+        }
+        else if (IsActive && !IsCleared)
+        {
+            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(0.147f, 0.259f, 1.000f, 0.502f));
+        }
+        else
+        {
+            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(1.000f, 0.297f, 0.102f, 0.502f));
+        }
+
+
+        
     }
 
     private void Update()
