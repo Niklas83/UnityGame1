@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="JsonMap" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:26388/JsonMap.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:26388/JsonMap.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:26388/JsonMap.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IJsonMap_Sendmap_InputMessage">
+    <wsdl:part name="parameters" element="tns:Sendmap" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_Sendmap_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendmapResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_Getmap_InputMessage">
+    <wsdl:part name="parameters" element="tns:Getmap" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_Getmap_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetmapResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetmapsFromUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetmapsFromUser" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetmapsFromUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetmapsFromUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetMultipleMapsByMapIDs_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMultipleMapsByMapIDs" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetMultipleMapsByMapIDs_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMultipleMapsByMapIDsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetAllMapsID_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllMapsID" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_GetAllMapsID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllMapsIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_SendmapWithImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendmapWithImage" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_SendmapWithImage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendmapWithImageResponse" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_UpdateMapInProgress_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateMapInProgress" />
+  </wsdl:message>
+  <wsdl:message name="IJsonMap_UpdateMapInProgress_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateMapInProgressResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IJsonMap">
+    <wsdl:operation name="Sendmap">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/Sendmap" message="tns:IJsonMap_Sendmap_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/SendmapResponse" message="tns:IJsonMap_Sendmap_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Getmap">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/Getmap" message="tns:IJsonMap_Getmap_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/GetmapResponse" message="tns:IJsonMap_Getmap_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetmapsFromUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/GetmapsFromUser" message="tns:IJsonMap_GetmapsFromUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/GetmapsFromUserResponse" message="tns:IJsonMap_GetmapsFromUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMultipleMapsByMapIDs">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/GetMultipleMapsByMapIDs" message="tns:IJsonMap_GetMultipleMapsByMapIDs_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/GetMultipleMapsByMapIDsResponse" message="tns:IJsonMap_GetMultipleMapsByMapIDs_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMapsID">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/GetAllMapsID" message="tns:IJsonMap_GetAllMapsID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/GetAllMapsIDResponse" message="tns:IJsonMap_GetAllMapsID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendmapWithImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/SendmapWithImage" message="tns:IJsonMap_SendmapWithImage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/SendmapWithImageResponse" message="tns:IJsonMap_SendmapWithImage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMapInProgress">
+      <wsdl:input wsaw:Action="http://tempuri.org/IJsonMap/UpdateMapInProgress" message="tns:IJsonMap_UpdateMapInProgress_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IJsonMap/UpdateMapInProgressResponse" message="tns:IJsonMap_UpdateMapInProgress_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:service name="JsonMap" />
+</wsdl:definitions>
