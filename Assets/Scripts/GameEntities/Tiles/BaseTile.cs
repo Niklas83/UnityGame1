@@ -14,6 +14,8 @@ public abstract class BaseTile : BaseEntity
 
 	private Dictionary<Layer, BaseUnit> _occupyingUnits;
 	private List<BaseUnit> _previousUnits;
+	
+	public bool PROTOTYPE_UseIceFriction = false;
 
 	public override void Init(GridManager gridManager) {
 		base.Init(gridManager);

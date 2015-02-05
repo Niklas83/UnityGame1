@@ -6,6 +6,8 @@ using System;
 public class Mover : BaseMover {
 
 	public float moveSpeed = 3f;
+	
+	public bool PROTOTYPE_IceFriction = false;
 
 	// Checks if this mover can move in the given direction.
 	public override bool TryMove(int xDir, int zDir) {
@@ -52,6 +54,10 @@ public class Mover : BaseMover {
 		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
 
 		isMoving = false;
+		
+		if (PROTOTYPE_IceFriction && destinationTile.PROTOTYPE_UseIceFriction) {
+			TryMove(xDir, zDir);
+		}
 		
 		yield return 0;
 	}
