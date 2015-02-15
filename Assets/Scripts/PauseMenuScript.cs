@@ -57,4 +57,23 @@ public class PauseMenuScript : MonoBehaviour {
         //set back the time scale to normal time scale
         Time.timeScale = 1;
     }
+
+    public void RestartLevel()
+    {
+        Application.LoadLevel(Application.loadedLevel);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void MainMenu()
+    {
+        SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+
+            st.NextScene(2);
+            Time.timeScale = 1; 
+    }
+
 }
