@@ -18,7 +18,14 @@ public partial class AvatarUnit : BaseUnit
     public override bool CanWalkOver { get { return false; } }
     public override bool CanWalkOn(string incomingUnitTag)
     {
-        return CanWalkOver;
+        if (!_isDead)
+        {
+            return CanWalkOver;
+        }
+        else
+        {
+            return true;
+        }
     }
 	public bool debugTeleport = false;
 	public bool debugInvincible = false;
