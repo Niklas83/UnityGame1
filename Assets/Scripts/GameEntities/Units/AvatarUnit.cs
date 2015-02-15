@@ -98,13 +98,9 @@ public partial class AvatarUnit : BaseUnit
 
 	    if (Input.GetMouseButtonUp(0) && ((_pauseMenuPanel == null) || (_pauseMenuPanel.rect.yMin == _pauseMenuStartLocation)))
 	    {
-	        if (EventSystem.current.IsPointerOverGameObject())      //Kollar om det är ett gui element som klickats
+	        if (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject())      //Kollar om det är ett gui element som klickats
 	        {
-	            //nada
-	        }
-	        else
-	        {
-
+	      
 	            SelectAvatar();
 
 	            if (_isActive)
