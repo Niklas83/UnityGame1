@@ -1,6 +1,9 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public partial class AvatarUnit : BaseUnit
 {
@@ -40,8 +43,25 @@ public partial class AvatarUnit : BaseUnit
 
     private bool _isFalling = false;                    //This is set when a player is falling to his death
 
+
+    //Pause function added to the move to avoid move (Start)
+    private RectTransform _pauseMenuPanel;
+    private float _pauseMenuStartLocation;
+    //Pause function added to the move (ends)
+
 	public void Start()
-	{ 
+	{
+	    try
+	    {
+            _pauseMenuPanel = Helper.Find<RectTransform>("PauseMenuPanel");
+            _pauseMenuStartLocation = _pauseMenuPanel.rect.yMin;
+	    }
+	    catch (Exception)
+	    {
+            //Continue with bussiness as usual...
+            //Detta händer om det inte finns någon paus-meny och knapp
+	    }
+        
 		_mover = GetComponent<Mover>();
 		_rotation = GetComponent<Rotation>();
 
@@ -75,60 +95,68 @@ public partial class AvatarUnit : BaseUnit
 	
 		if (_isDead)
 			return;
-		
-	    if (Input.GetMouseButtonUp(0))
+
+	    if (Input.GetMouseButtonUp(0) && ((_pauseMenuPanel == null) || (_pauseMenuPanel.rect.yMin == _pauseMenuStartLocation)))
 	    {
-			SelectAvatar();
-	        
-	        if (_isActive)
+	        if (EventSystem.current.IsPointerOverGameObject())      //Kollar om det är ett gui element som klickats
 	        {
-	            Vector3 mp = Input.mousePosition;
-	            Ray r = Camera.main.ScreenPointToRay(new Vector3(mp.x, mp.y, Camera.main.transform.position.y));
-	            // Create a ray that starts at the camera and goes through the mouse position in world space.
+	            //nada
+	        }
+	        else
+	        {
 
-	            float d = Vector3.Dot(new Vector3(0, 1, 0) - r.origin, Vector3.up)/Vector3.Dot(r.direction, Vector3.up);
-	            Vector3 wp = r.origin + r.direction*d;
-	            wp.y = 1; // Avoid rounding errors
+	            SelectAvatar();
 
-	            if (debugTeleport)
+	            if (_isActive)
 	            {
-	                BaseTile destination = _gridManager.GetTile(wp);
-	                if (destination != null && destination.CanWalkOn(this))
+	                Vector3 mp = Input.mousePosition;
+	                Ray r = Camera.main.ScreenPointToRay(new Vector3(mp.x, mp.y, Camera.main.transform.position.y));
+	                // Create a ray that starts at the camera and goes through the mouse position in world space.
+
+	                float d = Vector3.Dot(new Vector3(0, 1, 0) - r.origin, Vector3.up)/Vector3.Dot(r.direction, Vector3.up);
+	                Vector3 wp = r.origin + r.direction*d;
+	                wp.y = 1; // Avoid rounding errors
+
+	                if (debugTeleport)
 	                {
-	                    BaseTile source = _gridManager.GetTile(_mover.Position);
-	                    BaseTile.TeleportTo(this, source, destination);
-	                    return;
+	                    BaseTile destination = _gridManager.GetTile(wp);
+	                    if (destination != null && destination.CanWalkOn(this))
+	                    {
+	                        BaseTile source = _gridManager.GetTile(_mover.Position);
+	                        BaseTile.TeleportTo(this, source, destination);
+	                        return;
+	                    }
+	                }
+
+	                int cost;
+	                Vector3 startPosition = _mover.Position;
+	                // We use the mover position as start, since it can be moving (causing transform to be unreliable).
+	                Vector2[] path = _pathFinder.GetPathTo(startPosition, wp, this, out cost);
+
+	                if (path != null)
+	                {
+	                    _moveQueue = new Queue<Vector2>(path);
+	                }
+	                else
+	                {
+	                    // Couldn't get there, try pushing instead..
+	                    Vector3 dir = wp - startPosition;
+	                    int x = (int) Mathf.Sign(dir.x);
+	                    int z = (int) Mathf.Sign(dir.z);
+	                    if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
+	                        Move(x, 0);
+	                    else if (Mathf.Abs(dir.x) < Mathf.Abs(dir.z))
+	                        Move(0, z);
 	                }
 	            }
-
-	            int cost;
-	            Vector3 startPosition = _mover.Position;
-	            // We use the mover position as start, since it can be moving (causing transform to be unreliable).
-	            Vector2[] path = _pathFinder.GetPathTo(startPosition, wp, this, out cost);
-
-	            if (path != null) 
-	            {
-	                _moveQueue = new Queue<Vector2>(path);
-	            }
-	            else
-	            {
-	                // Couldn't get there, try pushing instead..
-	                Vector3 dir = wp - startPosition;
-	                int x = (int)Mathf.Sign(dir.x);
-					int z = (int)Mathf.Sign(dir.z);
-	                if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
-	                    Move(x, 0);
-	                else if (Mathf.Abs(dir.x) < Mathf.Abs(dir.z))
-	                    Move(0, z);
-	            }
-	        }
+	        }  
 	    }
-
         if (!_mover.IsMoving && _moveQueue != null && _moveQueue.Count > 0 && !_isFalling)
         {
             Vector2 dir = _moveQueue.Dequeue();
-            Move((int) dir.x, (int) dir.y);
-            if (_moveQueue.Count == 0) {
+            Move((int)dir.x, (int)dir.y);
+            if (_moveQueue.Count == 0)
+            {
                 _moveQueue = null;
             }
         }
