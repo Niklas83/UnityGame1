@@ -10,6 +10,10 @@ public class PauseMenuScript : MonoBehaviour {
     //variable for checking if the game is paused 
     private bool isPaused = false;
     // Use this for initialization
+
+
+    private GameObject _menuButton;
+ 
     void Start()
     {
         //unpause the game on start
@@ -18,6 +22,8 @@ public class PauseMenuScript : MonoBehaviour {
         anim = pauseMenuPanel.GetComponent<Animator>();
         //disable it on start to stop it from playing the default animation
         anim.enabled = false;
+
+        _menuButton = GameObject.Find("MenuButton");
     }
 
     // Update is called once per frame
@@ -46,6 +52,8 @@ public class PauseMenuScript : MonoBehaviour {
         isPaused = true;
         //freeze the timescale
         Time.timeScale = 0;
+        _menuButton.SetActive(false);
+
     }
     //function to unpause the game
     public void UnpauseGame()
@@ -56,6 +64,7 @@ public class PauseMenuScript : MonoBehaviour {
         anim.Play("PauseMenuSlideOut");
         //set back the time scale to normal time scale
         Time.timeScale = 1;
+        _menuButton.SetActive(true);
     }
 
     public void RestartLevel()
