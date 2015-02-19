@@ -8,6 +8,7 @@ public enum EventMessage {
 	Register,
 	Unregister,
 	OnLaserHit,
+    ToggleUpDown
 }
 
 public class EventListener : MonoBehaviour {
@@ -39,6 +40,9 @@ public class EventListener : MonoBehaviour {
 		case EventMessage.OnLaserHit :
 			SendMessage("OnLaserHit", null, SendMessageOptions.DontRequireReceiver);
 			break;
+        case EventMessage.ToggleUpDown:
+            SendMessage("ToggleUpDown");
+            break;
 		}
 	}
 }
