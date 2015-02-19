@@ -24,7 +24,7 @@ public class RedAndBlueUnit : BaseUnit
     {
         if (!lowered)
         {
-            this.transform.position = new Vector3(this.transform.position.x, (this.transform.position.y - 0.99f),
+            this.transform.position = new Vector3(this.transform.position.x, 0.05f,
                 this.transform.position.z);
             walkOver = true;
             lowered = true;
