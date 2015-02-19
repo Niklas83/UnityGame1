@@ -28,12 +28,16 @@ public class RedAndBlueUnit : BaseUnit
                 this.transform.position.z);
             walkOver = true;
             lowered = true;
+
+            this.OnDeactivated();
         }
         else
         {
             this.transform.position = new Vector3(this.transform.position.x, 1f, this.transform.position.z);
             walkOver = false;
             lowered = false;
+
+            this.OnActivated();
         }
     }
 }
