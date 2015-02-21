@@ -6,6 +6,9 @@ using System;
 public abstract class BaseMover : MonoBehaviour
 {
 	public bool isPusher = false; 					// Can push stuff around
+
+    public bool canBePushed = true;             //Bool that can be set to make pushing possible of current unit
+
 	public SoundEffectPlayer soundEffectPLayer;
 
 	// Public properties
@@ -65,7 +68,7 @@ public abstract class BaseMover : MonoBehaviour
                         {
                             // If not a walkable, check if you are a 'Pusher' and it can be moved.
                             BaseMover mover = u.GetComponent<BaseMover>();
-                            if (mover != null)
+                            if (mover != null && mover.canBePushed)
                             {
                                 canMove = mover.TryMove(xDir, zDir);
                             }
