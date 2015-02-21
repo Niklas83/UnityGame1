@@ -25,10 +25,13 @@ public class RedBlueButtonTile : BaseTile {
     private List<GameObject> blueObjects;       //Gets all the objects of the blueBox tag
 
     private EventListener[] redObjectsToNotify;
-
     private EventListener[] blueObjectsToNotify;
 
     private bool isRed = false;
+
+
+    private List<GameObject> redBlueButtonObjects;        //Gets all the objects of the redBox tag
+    private EventListener[] RedBlueButtonTilesToNotify;
     //public EventMessage message;
 
     protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) { }
@@ -47,22 +50,26 @@ public class RedBlueButtonTile : BaseTile {
             el.ReceiveEvent(EventMessage.ToggleUpDown);
         }
 
-        if (isRed)
+        foreach (EventListener el in RedBlueButtonTilesToNotify)
         {
-            this.renderer.material.color = Color.blue;
-            isRed = false;
+            el.ReceiveEvent(EventMessage.ToggleColor);
         }
-        else
-        {
-            this.renderer.material.color = Color.red;
-            isRed = true;
-        }
+
     }
 
 
     // Use this for initialization
     void Start()
     {
+        redBlueButtonObjects = GameObject.FindGameObjectsWithTag(this.tag).ToList();
+        RedBlueButtonTilesToNotify = new EventListener[redBlueButtonObjects.Count];
+        for (int i = 0; i < redBlueButtonObjects.Count; i++)
+        {
+            RedBlueButtonTilesToNotify[i] = redBlueButtonObjects[i].GetComponent<EventListener>();
+        }
+
+
+
         redObjects = GameObject.FindGameObjectsWithTag(redBox.tag).ToList();
         blueObjects = GameObject.FindGameObjectsWithTag(blueBox.tag).ToList();
         
@@ -78,29 +85,55 @@ public class RedBlueButtonTile : BaseTile {
         {
             blueObjectsToNotify[i] = blueObjects[i].GetComponent<EventListener>();
         }   
-        
-        //string asfdasdf = "test";
 
-
+        RedAndBlueUnit redAndBlueUnit;
         if (StartColorRed == true)
         {
+            
             this.renderer.material.color = Color.red;
             isRed = true;
             foreach (EventListener el in blueObjectsToNotify)
-                el.ReceiveEvent(EventMessage.ToggleUpDown);
+            {
+                redAndBlueUnit = el.GetComponentInParent<RedAndBlueUnit>();
+                if (redAndBlueUnit.hasBeenActivated == false)
+                {
+                    el.ReceiveEvent(EventMessage.ToggleUpDown);
+                    redAndBlueUnit.hasBeenActivated = true;
+                }
+            }
         }
         else
         {
             this.renderer.material.color = Color.blue;
             isRed = false;
             foreach (EventListener el in redObjectsToNotify)
-                el.ReceiveEvent(EventMessage.ToggleUpDown);
+            {
+                redAndBlueUnit = el.GetComponentInParent<RedAndBlueUnit>();
+                if (redAndBlueUnit.hasBeenActivated == false)
+                {
+                    el.ReceiveEvent(EventMessage.ToggleUpDown);
+                    redAndBlueUnit.hasBeenActivated = true;
+                }
+            }
         }
 
 
 
     }
 
+    public void ToggleColor()
+    {
+        if (isRed)
+        {
+            this.renderer.material.color = Color.blue;
+            isRed = false;
+        }
+        else
+        {
+            this.renderer.material.color = Color.red;
+            isRed = true;
+        }
+    }
 
 }
 

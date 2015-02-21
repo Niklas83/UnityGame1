@@ -9,9 +9,11 @@ public class RedAndBlueUnit : BaseUnit
 
     public override int LayerMask { get { return (int)(Layer.Ground | Layer.Air); } }
 
-    public bool lowered = false;
+    private bool lowered = false;
 
-    public bool walkOver = false;
+    private bool walkOver = false;
+
+    public bool hasBeenActivated = false;
 
     public override bool CanWalkOver { get { return walkOver; } }
     public override bool CanWalkOn(string incomingUnitTag)
