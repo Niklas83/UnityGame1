@@ -15,6 +15,8 @@ public class RedAndBlueUnit : BaseUnit
 
     public bool hasBeenActivated = false;
 
+    public ParticleSystem DestructionEffect;
+
     public override bool CanWalkOver { get { return walkOver; } }
     public override bool CanWalkOn(string incomingUnitTag)
     {
@@ -39,7 +41,40 @@ public class RedAndBlueUnit : BaseUnit
             walkOver = false;
             lowered = false;
 
+
+            BaseTile currentTile = GridManager.GetTile(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+
+            BaseUnit OccupyingUnit = currentTile.GetOccupyingUnitOnLayer(Layer.Ground);
+
+            if (OccupyingUnit is AvatarUnit)
+            {
+                AvatarUnit avatarUnit = (AvatarUnit) OccupyingUnit;
+                PlayDestructionEffect();
+                avatarUnit.KillAvatar();
+            }
+            else if(OccupyingUnit != null)
+            {
+                PlayDestructionEffect();
+                OccupyingUnit.DestroyUnit();
+            }
+            
             this.OnActivated();
         }
+    }
+
+    private void PlayDestructionEffect()
+    {
+        //Instantiate our one-off particle system
+        ParticleSystem explosionEffect = Instantiate(DestructionEffect) as ParticleSystem;
+
+        explosionEffect.transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+
+        //play it
+        explosionEffect.loop = false;
+        explosionEffect.Play();
+
+        //destroy the particle system when its duration is up, right
+        //it would play a second time.
+        Destroy(explosionEffect.gameObject, explosionEffect.duration);
     }
 }
