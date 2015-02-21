@@ -13,6 +13,10 @@ public class ExitTile : BaseTile {
 	
 	public bool debugOpen = false;
 
+    //Trainunits check if this is true, if so it may move on it
+    public override bool TrainTile { get { return IsTrainTile; } }
+    public bool IsTrainTile = false;
+
 	void Start() {
 		_sceneTransition = Helper.Find<SceneTransition>("SceneTransition");
 	}

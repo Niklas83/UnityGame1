@@ -8,6 +8,10 @@ public class ArrowTile : BaseTile  {
     public int CurrentDurability = 100;
     public override int Durability { get { return CurrentDurability; } }
 
+    //Trainunits check if this is true, if so it may move on it
+    public override bool TrainTile { get { return IsTrainTile; } }
+    public bool IsTrainTile = false;
+
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
     protected override void OnArrived(BaseUnit unit, BaseTile previousTile)
     {

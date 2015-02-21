@@ -11,6 +11,10 @@ public class RedBlueButtonTile : BaseTile {
     public int CurrentDurability = 100;
     public override int Durability { get { return CurrentDurability; } }
 
+    //Trainunits check if this is true, if so it may move on it
+    public override bool TrainTile { get { return IsTrainTile; } }
+    public bool IsTrainTile = false;
+
     public GameObject redBox;           //One of the types to be lowered/raised
 
     public GameObject blueBox;          //One of the types to be lowered/raised

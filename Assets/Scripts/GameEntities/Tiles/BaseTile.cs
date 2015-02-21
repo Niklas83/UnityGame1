@@ -12,6 +12,8 @@ public abstract class BaseTile : BaseEntity
 {
     public abstract int Durability { get; }
 
+    public abstract bool TrainTile { get; }
+
 	private Dictionary<Layer, BaseUnit> _occupyingUnits;
 	private List<BaseUnit> _previousUnits;
 	
