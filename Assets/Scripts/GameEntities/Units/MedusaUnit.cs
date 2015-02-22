@@ -9,6 +9,10 @@ public class MedusaUnit : BaseUnit
     public int CurrentWeight = 50;
     public override int Weight { get { return CurrentWeight; } }
 
+    //Check this TRUE if you want the unit to be breakable by medusarays and other projectiles
+    public bool BreaksByProjectile = false;
+    public override bool BreaksByProjectileAndMedusa { get { return BreaksByProjectile; } }
+
 	public GameObject beamPrefab;
 	
 	public bool shootRight = true;
@@ -51,5 +55,10 @@ public class MedusaUnit : BaseUnit
 		if (hitObject != null && hitObject.GetComponent<AvatarUnit>() != null) {
 			hitObject.SendMessage("KillAvatar", SendMessageOptions.DontRequireReceiver);
 		}
+
+        if (hitObject != null && hitObject.GetComponent<BaseUnit>() != null && hitObject.GetComponent<BaseUnit>().BreaksByProjectileAndMedusa)
+        {
+            hitObject.GetComponent<BaseUnit>().DestroyUnit();
+        }
 	}
 }

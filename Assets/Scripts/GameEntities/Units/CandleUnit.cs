@@ -7,6 +7,10 @@ public sealed class CandleUnit : BaseUnit
     public int CurrentWeight = 10;
     public override int Weight { get { return CurrentWeight; } }
 
+    //Check this TRUE if you want the unit to be breakable by medusarays and other projectiles
+    public bool BreaksByProjectile = false;
+    public override bool BreaksByProjectileAndMedusa { get { return BreaksByProjectile; } }
+
 	public override int LayerMask { get { return (int)Layer.Ground; } }
 	
     private EventListener[] _objectsToNotify;

@@ -8,6 +8,8 @@ public abstract class BaseUnit : BaseEntity
 {
     public abstract int Weight { get; }
 
+    public abstract bool BreaksByProjectileAndMedusa { get; } 
+
     public abstract bool CanWalkOver { get; }
 	public abstract int LayerMask { get; }
 	public BaseTile OccupiedTile { get; set; }
