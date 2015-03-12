@@ -73,15 +73,15 @@ public class MapNode : MonoBehaviour
 
         if (IsActive && IsCleared)
         {
-            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(0.141f, 1.000f, 0.811f, 0.502f));
+            this.gameObject.GetComponent<Renderer>().materials[0].SetColor("_TintColor", new Color(0.141f, 1.000f, 0.811f, 0.502f));
         }
         else if (IsActive && !IsCleared)
         {
-            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(0.147f, 0.259f, 1.000f, 0.502f));
+            this.gameObject.GetComponent<Renderer>().materials[0].SetColor("_TintColor", new Color(0.147f, 0.259f, 1.000f, 0.502f));
         }
         else
         {
-            this.gameObject.renderer.materials[0].SetColor("_TintColor", new Color(1.000f, 0.297f, 0.102f, 0.502f));
+            this.gameObject.GetComponent<Renderer>().materials[0].SetColor("_TintColor", new Color(1.000f, 0.297f, 0.102f, 0.502f));
         }
 
 

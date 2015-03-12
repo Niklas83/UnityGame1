@@ -29,7 +29,7 @@ public class ReplaceTexture : ScriptableWizard
 			float x = randomRotation ? Mathf.Sign(Random.value - 0.5f) : 1;
 			float y = randomRotation ? Mathf.Sign(Random.value - 0.5f) : 1;
 
-			Material tempMaterial = new Material(go.renderer.sharedMaterial);
+			Material tempMaterial = new Material(go.GetComponent<Renderer>().sharedMaterial);
 			tempMaterial.mainTexture = texture;
 			
 			Vector2 scale  = new Vector2(textureScale.x * x, textureScale.y * y);
@@ -37,7 +37,7 @@ public class ReplaceTexture : ScriptableWizard
 			Vector2 offset = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
 			tempMaterial.mainTextureOffset = offset;
 			
-			go.renderer.sharedMaterial = tempMaterial;
+			go.GetComponent<Renderer>().sharedMaterial = tempMaterial;
 		}
     }
 }

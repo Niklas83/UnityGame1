@@ -19,8 +19,8 @@ public class Floor : MonoBehaviour {
 		int nrTiles = this.transform.childCount;
 		for (int i = 0; i < nrTiles; i++) {
 			Transform child = transform.GetChild(i);
-			if (child.renderer)
-				levelBounds.Encapsulate(child.renderer.bounds);
+			if (child.GetComponent<Renderer>())
+				levelBounds.Encapsulate(child.GetComponent<Renderer>().bounds);
 		}
 
 		Vector3 size = levelBounds.size;

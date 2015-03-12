@@ -37,13 +37,13 @@ public class SetupLevel : ScriptableWizard
 				Vector2 scale  = new Vector2(textureScale.x, textureScale.y);
 				Vector2 offset = new Vector2(randomX * textureScale.x, randomY * textureScale.y);
 
-				Material tempMaterial = new Material(tile.renderer.sharedMaterial);
+				Material tempMaterial = new Material(tile.GetComponent<Renderer>().sharedMaterial);
 
 				tempMaterial.mainTextureScale = scale;
 				tempMaterial.mainTextureOffset = offset;
 
 				tile.transform.position = new Vector3(x, 0, y);
-				tile.renderer.sharedMaterial = tempMaterial;
+				tile.GetComponent<Renderer>().sharedMaterial = tempMaterial;
 
 				/*GameObject go = PrefabUtility.InstantiatePrefab(floorTiles[index]) as GameObject;
 				go.transform.parent = parent.transform;

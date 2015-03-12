@@ -90,7 +90,7 @@ public class RedBlueButtonTile : BaseTile {
         if (StartColorRed == true)
         {
             
-            this.renderer.material.color = Color.red;
+            this.GetComponent<Renderer>().material.color = Color.red;
             isRed = true;
             foreach (EventListener el in blueObjectsToNotify)
             {
@@ -104,7 +104,7 @@ public class RedBlueButtonTile : BaseTile {
         }
         else
         {
-            this.renderer.material.color = Color.blue;
+            this.GetComponent<Renderer>().material.color = Color.blue;
             isRed = false;
             foreach (EventListener el in redObjectsToNotify)
             {
@@ -125,12 +125,12 @@ public class RedBlueButtonTile : BaseTile {
     {
         if (isRed)
         {
-            this.renderer.material.color = Color.blue;
+            this.GetComponent<Renderer>().material.color = Color.blue;
             isRed = false;
         }
         else
         {
-            this.renderer.material.color = Color.red;
+            this.GetComponent<Renderer>().material.color = Color.red;
             isRed = true;
         }
     }
