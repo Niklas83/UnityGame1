@@ -37,6 +37,49 @@ public class GUILogic : MonoBehaviour
     }
 
 
+    //Before scene selection (Start menu + level selection)
+
+    public void LoadScene(int sceneNumber, bool sceneIsActive)
+    {
+        if (sceneIsActive == true)
+        {
+            SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+
+            if (sceneNumber != 0)
+            {
+                st.NextScene(sceneNumber);
+            }
+
+            //TODO: Add the avalility in SceneTransition that you can load a map from the scene name aswell
+            //else if (SceneName != null && SceneName != "")
+            //{
+            //    st.NextScene(SceneName);
+            //}
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //IN SCENE (After scene selection)
 
     public void StartLevel()
     {
@@ -56,7 +99,7 @@ public class GUILogic : MonoBehaviour
         }
     }
 
-
+    
 
 
 
