@@ -115,23 +115,26 @@ public class LevelManager : MonoBehaviour {
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
             GameObject newLevelToGUI = Instantiate(levelGameObject);
+            Level newLevelToGUIScript = newLevelToGUI.GetComponent<Level>();
 
-            newLevelToGUI.GetComponent<Level>().SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
-            newLevelToGUI.GetComponent<Level>().Name = ListOfAllLevelScriptInstances[i].Name;
-            newLevelToGUI.GetComponent<Level>().HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
-            newLevelToGUI.GetComponent<Level>().IsActive = ListOfAllLevelScriptInstances[i].IsActive;
-            newLevelToGUI.GetComponent<Level>().Star1 = ListOfAllLevelScriptInstances[i].Star1;
-            newLevelToGUI.GetComponent<Level>().Star2 = ListOfAllLevelScriptInstances[i].Star2;
-            newLevelToGUI.GetComponent<Level>().Star3 = ListOfAllLevelScriptInstances[i].Star3;
-            newLevelToGUI.GetComponent<Level>().MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
-            newLevelToGUI.GetComponent<Level>().MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
-            newLevelToGUI.GetComponent<Level>().MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
-            newLevelToGUI.GetComponent<Level>().NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
-            newLevelToGUI.GetComponent<Level>().NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
-            newLevelToGUI.GetComponent<Level>().NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
-            newLevelToGUI.GetComponent<Level>().CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
-            newLevelToGUI.GetComponent<Level>().ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
 
+            newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
+            newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
+            newLevelToGUIScript.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
+            newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
+            newLevelToGUIScript.Star1 = ListOfAllLevelScriptInstances[i].Star1;
+            newLevelToGUIScript.Star2 = ListOfAllLevelScriptInstances[i].Star2;
+            newLevelToGUIScript.Star3 = ListOfAllLevelScriptInstances[i].Star3;
+            newLevelToGUIScript.MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
+            newLevelToGUIScript.MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
+            newLevelToGUIScript.MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
+            newLevelToGUIScript.NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
+            newLevelToGUIScript.NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
+            newLevelToGUIScript.NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
+            newLevelToGUIScript.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
+            newLevelToGUIScript.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
+
+            newLevelToGUIScript.SetLevelToLoad();
 
             newLevelToGUI.name = "LevelObject_" + i;
 
@@ -160,16 +163,10 @@ public class LevelManager : MonoBehaviour {
                 newRectTransform.anchorMin = new Vector2(0.575f, distanceFromTopMinY);
                 newRectTransform.anchorMax = new Vector2(0.95f, distanceFromTopMaxY);
             }
-        }
-        
 
-   
+        }
     }
 
-
-
-
-    
 
     //Saves LevelJSON (nonunity c# files)
     void SaveToJson()

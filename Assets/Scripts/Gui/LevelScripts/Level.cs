@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Level : MonoBehaviour {
 
-    public int SceneNr;                             //Number of the scene from file->buildsetting (the menu in unity)
+    public int SceneNr;                    //kan nog tabort denna         //Number of the scene from file->buildsetting (the menu in unity)
 
     public string Name;                                                     //(Denna måste sparas)
     public bool HasPassed;                                                  //(Denna måste sparas)
@@ -35,6 +36,7 @@ public class Level : MonoBehaviour {
     void Start()
     {
         //Set values
+        SetLevelNameInUI();
     }
 
     // Update is called once per frame
@@ -42,6 +44,50 @@ public class Level : MonoBehaviour {
     {
 
     }
+
+
+    private void SetLevelNameInUI()
+    {
+        GetComponentInChildren<Text>().text = Name;
+    }
+
+
+
+    //used when LOADING to set script to use on creation
+    public void SetLevelToLoad()
+    {
+        Button button = GetComponentInChildren<Button>();
+
+        button.onClick.AddListener(StartLevel);
+    }
+
+
+
+    public void StartLevel()
+    {
+        Debug.Log("LoggarInneIKnappForLevel: " + Name);
+
+        Application.LoadLevel(Name);     //Kan byta till namn
+        
+        /*
+        if (IsActive)
+        {
+            SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+
+            if (SceneNr != 0)
+            {
+                st.NextScene(SceneNr);
+            }
+
+            //TODO: Add the avalility in SceneTransition that you can load a map from the scene name aswell
+            //else if (SceneName != null && SceneName != "")
+            //{
+            //    st.NextScene(SceneName);
+            //}
+        }
+         */
+    }
+
 
 
 
