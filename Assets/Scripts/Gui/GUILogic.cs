@@ -10,16 +10,17 @@ using UnityEngine.EventSystems;
 public class GUILogic : MonoBehaviour
 {
 
-    private GameObject HUD;
+    private GameObject TitelAndStartButtons;        //The "page" when game loads
+
+    private GameObject LevelSelection;        //The "page" where the levels are listed
+
 
     // Use this for initialization
     void Start()
     {
-        Time.timeScale = 1;
+        TitelAndStartButtons = GameObject.Find("TitleAndStartButtons");
 
-
-
-        // HUD = GameObject.Find("_HUD");
+        LevelSelection = GameObject.Find("LevelSelection");
 
     }
 
@@ -38,6 +39,16 @@ public class GUILogic : MonoBehaviour
 
 
 
+
+    public void SelectLevelPage()
+    {
+        LevelSelection.transform.SetAsLastSibling();
+    }
+
+    public void SelectStartPage()
+    {
+        TitelAndStartButtons.transform.SetAsLastSibling();
+    }
 
 
 
@@ -58,6 +69,9 @@ public class GUILogic : MonoBehaviour
     }
 
 
+
+
+    /*
     private void ShowHUD()
     {
         for (int i = 0; i < HUD.transform.childCount; i++)
@@ -65,7 +79,7 @@ public class GUILogic : MonoBehaviour
             HUD.transform.GetChild(i).gameObject.SetActive(true);
         }
     }
-
+    */
     
 
 
