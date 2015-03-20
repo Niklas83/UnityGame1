@@ -112,6 +112,8 @@ public class LevelManager : MonoBehaviour {
         float distanceFromTopMinY = 0.78f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
         float distanceFromTopMaxY = 0.96f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
 
+        float totalHeightOfScrollList = 0f;
+
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
             GameObject newLevelToGUI = Instantiate(levelGameObject);
@@ -142,11 +144,10 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUI.transform.SetParent(levelPanel.transform, false);
 
 
-            RectTransform levelPanelRect = levelPanel.GetComponent<RectTransform>();
-            levelPanelRect.sizeDelta = new Vector2(0f, 1300f);                              //Set this to add some for each
 
-            levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -1300f);
-            levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
+
+            totalHeightOfScrollList += 85f;
+
 
             //levelPanelRect.rect.Set(0,0,0,-1300f);
 
@@ -175,6 +176,12 @@ public class LevelManager : MonoBehaviour {
             }
             */
         }
+
+        RectTransform levelPanelRect = levelPanel.GetComponent<RectTransform>();
+        levelPanelRect.sizeDelta = new Vector2(0f, totalHeightOfScrollList);                              //Set this to add some for each
+
+        levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -totalHeightOfScrollList);
+        levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
     }
 
 
