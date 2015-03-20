@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Level : MonoBehaviour {
 
-    public int SceneNr;                    //kan nog tabort denna         //Number of the scene from file->buildsetting (the menu in unity)
+    public int SceneNr;                    //TODO kan nog tabort denna         //Number of the scene from file->buildsetting (the menu in unity)
 
     public string Name;                                                     //(Denna måste sparas)
     public bool HasPassed;                                                  //(Denna måste sparas)

@@ -107,7 +107,7 @@ public class LevelManager : MonoBehaviour {
     private void LoadAllLevelGameObjects()
     {
         //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
-        Transform levelPanel = GameObject.FindGameObjectWithTag("LevelListPanel").transform;
+        GameObject levelPanel = GameObject.FindGameObjectWithTag("LevelListPanel");
 
         float distanceFromTopMinY = 0.78f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
         float distanceFromTopMaxY = 0.96f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
@@ -139,9 +139,19 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUI.name = "LevelObject_" + i;
 
             //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
-            newLevelToGUI.transform.SetParent(levelPanel, false);
-            
+            newLevelToGUI.transform.SetParent(levelPanel.transform, false);
 
+
+            RectTransform levelPanelRect = levelPanel.GetComponent<RectTransform>();
+            levelPanelRect.sizeDelta = new Vector2(0f, 1300f);                              //Set this to add some for each
+
+            levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -1300f);
+            levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
+
+            //levelPanelRect.rect.Set(0,0,0,-1300f);
+
+
+            /*
             //Positionering av level objektet i listan
             if (i > 1)
             {
@@ -163,7 +173,7 @@ public class LevelManager : MonoBehaviour {
                 newRectTransform.anchorMin = new Vector2(0.575f, distanceFromTopMinY);
                 newRectTransform.anchorMax = new Vector2(0.95f, distanceFromTopMaxY);
             }
-
+            */
         }
     }
 
