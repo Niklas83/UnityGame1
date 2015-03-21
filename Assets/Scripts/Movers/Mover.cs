@@ -28,8 +28,8 @@ public class Mover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
-	    /*if (soundEffectPLayer != null) // TODO: Should be triggered by animation.
-			soundEffectPLayer.PlayWalkingSound();*/
+	    if (soundEffectPLayer != null) // Reactivated this code as it was not working properly in the AvatarStates script
+			soundEffectPLayer.PlayWalkingSound();
 			
 	    DebugAux.Assert(!isMoving, "Can't move a unit while it is moving!");
 		

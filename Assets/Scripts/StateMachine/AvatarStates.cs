@@ -84,8 +84,8 @@ public partial class AvatarUnit
 		public override void OnEnter() {
 			base.OnEnter();
 			_avatarUnit._mover.moveSpeed = 3;
-			if (Random.value < 0.25f)
-				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
+          //if (Random.value < 0.25f)           //Kördes bara en gång och vilket bara gav ett steg (i bästa fall, då det var en slump om den kördes)
+		//		_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
 		}
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
@@ -100,9 +100,9 @@ public partial class AvatarUnit
 		public AvatarRun(GameObject avatar) : base(avatar, "run") {}
 		public override void OnEnter() { 
 			base.OnEnter();
-			_avatarUnit._mover.moveSpeed = 4.5f; 
-			if (Random.value < 0.25f)
-				_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
+			_avatarUnit._mover.moveSpeed = 4.5f;
+            // if (Random.value < 0.25f)                 //Kördes bara en gång och vilket bara gav ett steg (i bästa fall, då det var en slump om den kördes)
+	//			_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
 		}
 		public override void Update() {
 			if (!_avatarUnit.IsMoving()) {
