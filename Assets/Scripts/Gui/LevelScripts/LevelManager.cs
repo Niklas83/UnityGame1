@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Assets.DustinHorne.JsonDotNetUnity.TestCases;
 using Assets.DustinHorne.JsonDotNetUnity.TestCases.TestModels;
+using UnityEngine.UI;
 
 
 public class LevelManager : MonoBehaviour {
@@ -143,12 +144,9 @@ public class LevelManager : MonoBehaviour {
             //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
             newLevelToGUI.transform.SetParent(levelPanel.transform, false);
 
+            totalHeightOfScrollList += 85f;     //sätter varje knapp till 85f hög 
 
-
-
-            totalHeightOfScrollList += 85f;
-
-
+            SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
             //levelPanelRect.rect.Set(0,0,0,-1300f);
 
 
@@ -183,6 +181,30 @@ public class LevelManager : MonoBehaviour {
         levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -totalHeightOfScrollList);
         levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
     }
+
+
+    private void SetLevelColor(GameObject LevelObject, bool isActive)
+    {
+       Image[] buttonImage = LevelObject.GetComponentsInChildren<Image>();
+
+       foreach (var imag in buttonImage)
+       {
+           if (imag.name == "LevelButton")
+           {
+               if (!isActive)
+               {
+                   imag.color = new Color(255f, 0f, 0f, 255f);
+               }
+               else
+               {
+                   imag.color = new Color(0f, 255f, 0f, 255f);
+               }
+           }
+       }  
+    }
+
+
+
 
 
     //Saves LevelJSON (nonunity c# files)

@@ -65,18 +65,14 @@ public class Level : MonoBehaviour {
 
     public void StartLevel()
     {
-        Debug.Log("LoggarInneIKnappForLevel: " + Name);
-
-        Application.LoadLevel(Name);     //Kan byta till namn
-        
-        /*
+        Debug.Log("LoggarInneIKnappForLevel: " + Name);       
         if (IsActive)
         {
             SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
 
             if (SceneNr != 0)
             {
-                st.NextScene(SceneNr);
+                st.NextSceneString(Name);
             }
 
             //TODO: Add the avalility in SceneTransition that you can load a map from the scene name aswell
@@ -84,14 +80,8 @@ public class Level : MonoBehaviour {
             //{
             //    st.NextScene(SceneName);
             //}
-        }
-         */
+        }     
     }
-
-
-
-
-
 
     private void AddExitsToCleared(int coordinate)  //ska vara inte vara int utan vector3
     {
