@@ -74,6 +74,24 @@ public class SceneTransition : MonoBehaviour {
         a.Play("FadeOut");
     }
 
+
+    public IEnumerator RestartLevel()
+    {
+        DebugAux.Assert(_asyncOp == null, "Scene transition already in progress!");
+        Log.debug("SceneTransition", "Set next level {0}", Application.loadedLevel);
+
+        yield return new WaitForSeconds(1.5f);                  //1.5 sec restart delay
+        Application.LoadLevelAsync(Application.loadedLevel);
+
+        if (_audioPlayerAdvanced != null)
+            _audioPlayerAdvanced.FadeOut(1f / 4f);
+        else
+            _audioPlayer.FadeOut(1f / 4f);
+
+        Animator a = this.gameObject.GetComponent<Animator>();
+        a.Play("FadeOut");
+    }
+
 	void Update() {
 		if (_asyncOp == null)
 			return;

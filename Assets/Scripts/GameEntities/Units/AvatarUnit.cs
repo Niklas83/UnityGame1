@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -209,6 +210,27 @@ public partial class AvatarUnit : BaseUnit
 		
     	_isDead = true;
 		_stateMachine.ChangeState((int) AvatarState.Dead);
+
+
+        //Check if level shall restart aka all avatar objects are dead
+	    GameObject[] AvatarObjects = GameObject.FindGameObjectsWithTag("Player");
+
+	    bool allAvatarsDead = true;
+
+        for (int i = 0; i < AvatarObjects.Count(); i++)
+	    {
+	        if (!AvatarObjects[i].GetComponent<AvatarUnit>()._isDead)
+	        {
+	            allAvatarsDead = false;
+	        }
+
+	    }
+        if (allAvatarsDead)
+	    {
+	        SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+	        StartCoroutine(st.RestartLevel());
+	    }
+
     }
 
     public void SetIsFalling()
