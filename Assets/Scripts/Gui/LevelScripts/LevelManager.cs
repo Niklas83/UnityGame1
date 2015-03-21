@@ -115,6 +115,8 @@ public class LevelManager : MonoBehaviour {
 
         float totalHeightOfScrollList = 0f;
 
+        bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
+
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
             GameObject newLevelToGUI = Instantiate(levelGameObject);
@@ -124,7 +126,14 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
             newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
             newLevelToGUIScript.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
-            newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
+            if (i > 0)
+            {
+                newLevelToGUIScript.IsActive = previousMapWasPassed;
+            }
+            else
+            {
+                newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
+            }
             newLevelToGUIScript.Star1 = ListOfAllLevelScriptInstances[i].Star1;
             newLevelToGUIScript.Star2 = ListOfAllLevelScriptInstances[i].Star2;
             newLevelToGUIScript.Star3 = ListOfAllLevelScriptInstances[i].Star3;
@@ -140,6 +149,8 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUIScript.SetLevelToLoad();
 
             newLevelToGUI.name = "LevelObject_" + i;
+
+            previousMapWasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
 
             //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
             newLevelToGUI.transform.SetParent(levelPanel.transform, false);

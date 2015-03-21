@@ -40,21 +40,27 @@ public class RedBlueButtonTile : BaseTile {
     {
         base.OnArrived(unit, previousTile);
 
-        foreach (EventListener el in redObjectsToNotify)
+        if (redObjectsToNotify != null)
         {
-            el.ReceiveEvent(EventMessage.ToggleUpDown);
-        }
+            foreach (EventListener el in redObjectsToNotify)
+            {
+                el.ReceiveEvent(EventMessage.ToggleUpDown);
+            }
 
-        foreach (EventListener el in blueObjectsToNotify)
+            foreach (EventListener el in blueObjectsToNotify)
+            {
+                el.ReceiveEvent(EventMessage.ToggleUpDown);
+            }
+
+            foreach (EventListener el in RedBlueButtonTilesToNotify)
+            {
+                el.ReceiveEvent(EventMessage.ToggleColor);
+            }
+        }
+        else
         {
-            el.ReceiveEvent(EventMessage.ToggleUpDown);
+            Debug.Log("redObjectsToNotify has not been set");
         }
-
-        foreach (EventListener el in RedBlueButtonTilesToNotify)
-        {
-            el.ReceiveEvent(EventMessage.ToggleColor);
-        }
-
     }
 
 
