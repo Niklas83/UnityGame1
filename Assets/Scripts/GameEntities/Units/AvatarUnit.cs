@@ -228,7 +228,7 @@ public partial class AvatarUnit : BaseUnit
         if (allAvatarsDead)
 	    {
 	        SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
-	        StartCoroutine(st.RestartLevel());
+            StartCoroutine(st.LoadLevelWithDelay(1.5f, Application.loadedLevelName));
 	    }
 
     }

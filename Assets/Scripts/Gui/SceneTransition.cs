@@ -74,14 +74,13 @@ public class SceneTransition : MonoBehaviour {
         a.Play("FadeOut");
     }
 
-
-    public IEnumerator RestartLevel()
+    public IEnumerator LoadLevelWithDelay(float delay, string sceneName)
     {
         DebugAux.Assert(_asyncOp == null, "Scene transition already in progress!");
-        Log.debug("SceneTransition", "Set next level {0}", Application.loadedLevel);
+        Log.debug("SceneTransition", "Set next level {0}", Application.loadedLevelName);
 
-        yield return new WaitForSeconds(1.5f);                  //1.5 sec restart delay
-        Application.LoadLevelAsync(Application.loadedLevel);
+        yield return new WaitForSeconds(delay);                  //restart delay
+        Application.LoadLevelAsync(sceneName);
 
         if (_audioPlayerAdvanced != null)
             _audioPlayerAdvanced.FadeOut(1f / 4f);
