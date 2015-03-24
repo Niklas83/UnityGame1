@@ -19,11 +19,22 @@ public class TrainMover : Mover {
 
 
             Vector3 currentLocation = transform.position;
-
-            NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(0, 0, 1)));
-            NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(1, 0, 0)));
-            NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(0, 0, -1)));
-            NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(-1, 0, 0)));
+            if (gridManager.GetTile(transform.position + new Vector3(0, 0, 1)) != null)
+            {
+                NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(0, 0, 1)));
+            }
+            if (gridManager.GetTile(transform.position + new Vector3(1, 0, 0)) != null)
+            {
+                NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(1, 0, 0)));
+            }
+            if (gridManager.GetTile(transform.position + new Vector3(0, 0, -1)) != null)
+            {
+                NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(0, 0, -1)));
+            }
+            if (gridManager.GetTile(transform.position + new Vector3(-1, 0, 0)) != null)
+            {
+                NeighbouringTiles.Add(gridManager.GetTile(transform.position + new Vector3(-1, 0, 0)));
+            }
 
             foreach (BaseTile neighbouringTile in NeighbouringTiles)
             {
