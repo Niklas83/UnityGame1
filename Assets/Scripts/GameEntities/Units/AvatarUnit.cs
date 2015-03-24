@@ -237,4 +237,9 @@ public partial class AvatarUnit : BaseUnit
     {
         _isFalling = true;
     }
+
+    public void EmptyMoveQueue()
+    {
+        _moveQueue.Clear();
+    }
 }

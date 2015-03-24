@@ -24,5 +24,10 @@ public class PortalTile : BaseTile
 			return;
 
 		BaseTile.TeleportTo(unit, this, DestinationTile);
+	    if (unit is AvatarUnit)
+	    {
+	        AvatarUnit avatar = (AvatarUnit) unit;
+            avatar.EmptyMoveQueue();
+	    }
 	}
 }
