@@ -9,6 +9,11 @@ public class SoundEffects : MonoBehaviour
 	public float idleVolume = 1.0f;
 	
     public List<AudioClip> movementAudio;
+    public List<AudioClip> movementAudioGrass;
+    public List<AudioClip> movementAudioSnow;
+    public List<AudioClip> movementAudioSand;
+    public List<AudioClip> movementAudioDirt;
+    public List<AudioClip> movementAudioSneakDirt;
     public float movmentVolume = 1.0f;
 
     public List<AudioClip> avatarSelectedAudio;

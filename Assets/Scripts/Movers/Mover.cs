@@ -28,9 +28,6 @@ public class Mover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
-	    if (soundEffectPLayer != null) // Reactivated this code as it was not working properly in the AvatarStates script
-			soundEffectPLayer.PlayWalkingSound();
-			
 	    DebugAux.Assert(!isMoving, "Can't move a unit while it is moving!");
 		
 		isMoving = true;
@@ -41,6 +38,10 @@ public class Mover : BaseMover {
 
 		BaseTile sourceTile = gridManager.GetTile(startPosition);
 		BaseTile destinationTile = gridManager.GetTile(endPosition);
+
+        if (soundEffectPLayer != null) // Reactivated this code as it was not working properly in the AvatarStates script
+            soundEffectPLayer.PlayWalkingSound(destinationTile.tag);
+
 		BaseTile.HandleOccupy(unit, sourceTile, destinationTile);
 		
 		while (t < 1f)

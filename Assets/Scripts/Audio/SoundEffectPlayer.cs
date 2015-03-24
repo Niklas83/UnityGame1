@@ -48,9 +48,36 @@ public class SoundEffectPlayer : MonoBehaviour
 	{
 		PlaySound(soundEffects.idleAudio, soundEffects.idleVolume);
 	}
-    public void PlayWalkingSound()
+    public void PlayWalkingSound(string groundTag)
     {
-		PlaySound(soundEffects.movementAudio, soundEffects.movmentVolume);
+        if (groundTag == "Untagged")
+        {
+            PlaySound(soundEffects.movementAudio, soundEffects.movmentVolume);  //Currently pavement
+        }
+        else if (groundTag == "GroundGrass")
+        {
+            PlaySound(soundEffects.movementAudioGrass, soundEffects.movmentVolume);
+        }
+        else if (groundTag == "GroundSnow")
+        {
+            PlaySound(soundEffects.movementAudioSnow, soundEffects.movmentVolume);
+        }
+        else if (groundTag == "GroundSand")
+        {
+            PlaySound(soundEffects.movementAudioSand, soundEffects.movmentVolume);
+        }
+        else if (groundTag == "GroundSneakDirt")
+        {
+            PlaySound(soundEffects.movementAudioSneakDirt, soundEffects.movmentVolume);
+        }
+        else if (groundTag == "GroundDirt")
+        {
+            PlaySound(soundEffects.movementAudioDirt, soundEffects.movmentVolume);
+        }
+        else if (groundTag == "GroundPavemet")
+        {
+            PlaySound(soundEffects.movementAudio, soundEffects.movmentVolume);  //Currently pavement
+        }
     }
     public void PlayAvatarSelectedSound()
     {
