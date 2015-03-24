@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour {
 
     public List<GameObject> ListOfAllLevels;
     private List<Level> ListOfAllLevelScriptInstances;
-    private List<LevelJSON> ListOfAllLevelJSON;
+    public List<LevelJSON> ListOfAllLevelJSON;
 
     private bool JsonCopyHasValues;
 
@@ -29,6 +29,15 @@ public class LevelManager : MonoBehaviour {
         LoadAllLevelScriptInstances();
         LoadAllLevelGameObjects();
     }
+
+    //  When commin back from a level to the start scene we wanna show the level selection page.
+    void OnLevelWasLoaded()
+    {
+        GameObject levelSelection = GameObject.Find("LevelSelection");
+
+        levelSelection.transform.SetAsLastSibling();
+    }
+
 
     //used when saving
     private void SetAllLevelScriptInstances()
@@ -191,6 +200,7 @@ public class LevelManager : MonoBehaviour {
 
         levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -totalHeightOfScrollList);
         levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
+        
     }
 
 
@@ -219,7 +229,7 @@ public class LevelManager : MonoBehaviour {
 
 
     //Saves LevelJSON (nonunity c# files)
-    void SaveToJson()
+    public void SaveToJson()
     {
 
         string serialized = JsonConvert.SerializeObject(ListOfAllLevelJSON, Formatting.Indented,
@@ -246,7 +256,7 @@ public class LevelManager : MonoBehaviour {
 
 
     //Loads LevelJSON (nonunity c# files)
-    void LoadFromJson()
+    public void LoadFromJson()
     {
         //Ladda från fil
 

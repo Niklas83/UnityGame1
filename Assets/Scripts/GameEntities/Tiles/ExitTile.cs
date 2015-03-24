@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using System.Collections;
 
 public class ExitTile : BaseTile {
@@ -13,20 +14,39 @@ public class ExitTile : BaseTile {
 	
 	public bool debugOpen = false;
 
+    private LevelManager LevelSelectionAndUILogic;          //save on
+    
     //Trainunits check if this is true, if so it may move on it
     public override bool TrainTile { get { return IsTrainTile; } }
     public bool IsTrainTile = false;
 
 	void Start() {
 		_sceneTransition = Helper.Find<SceneTransition>("SceneTransition");
+
+        LevelSelectionAndUILogic = new LevelManager();
+        LevelSelectionAndUILogic.LoadFromJson();
 	}
+
 
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
 	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) 
 	{
         base.OnArrived(unit, previousTile);
-		if ((_opened || debugOpen) && unit is AvatarUnit)
-			_sceneTransition.NextScene();
+	    if ((_opened || debugOpen) && unit is AvatarUnit)
+	    {
+	        for (int i = 0; i < LevelSelectionAndUILogic.ListOfAllLevelJSON.Count; i++)
+	        {
+                if (LevelSelectionAndUILogic.ListOfAllLevelJSON[i].Name.Equals(Application.loadedLevelName))
+	            {
+                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i].HasPassed = true;
+                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i].IsActive = true;          //its sufficient with just setting the current map to "haspassed" true, as its just first the first level that uses is active, but if future changes need em its here...
+                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i + 1].IsActive = true;      //same comment as above.
+	            }
+	        }
+
+	        LevelSelectionAndUILogic.SaveToJson();          //saves the level progression
+            StartCoroutine(_sceneTransition.LoadLevelWithDelay(0.1f, "GameStartScene"));
+	    }
 	}
 
 	public void Register() 
