@@ -78,6 +78,10 @@ public class SoundEffectPlayer : MonoBehaviour
         {
             PlaySound(soundEffects.movementAudio, soundEffects.movmentVolume);  //Currently pavement
         }
+        else
+        {
+            PlaySound(soundEffects.movementAudio, soundEffects.movmentVolume);  //Currently pavement
+        }
     }
     public void PlayAvatarSelectedSound()
     {
