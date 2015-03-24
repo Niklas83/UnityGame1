@@ -240,6 +240,7 @@ public partial class AvatarUnit : BaseUnit
 
     public void EmptyMoveQueue()
     {
+        if (_moveQueue != null)
         _moveQueue.Clear();
     }
 }
