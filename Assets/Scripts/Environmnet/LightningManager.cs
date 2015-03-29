@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnvironmentManager : MonoBehaviour
+public class LightningManager : MonoBehaviour
 {
     public bool LightningOn;
 
@@ -15,6 +15,13 @@ public class EnvironmentManager : MonoBehaviour
 
     public int PercentChanceForExtraLightning = 80;
 
+    public float MaxLightningIntensity = 2f;
+
+    public float MinLightningIntensity = 1f;
+
+    public float FadeOutMaxSpeed = 0.7f;
+
+    public float FadeOutMinSpeed = 0.95f;
 
     private Light _lightning;
 
@@ -71,13 +78,19 @@ public class EnvironmentManager : MonoBehaviour
     private IEnumerator TurnLightOn()
     {
         float randomShowTimer = Random.Range(MinTimeShowingLight, MaxTimeShowingLight);
+
+        _lightning.intensity = Random.Range(MinLightningIntensity, MaxLightningIntensity);
+
         _lightning.enabled = true;
         if (!_audioSrc.isPlaying)
         {
             _audioSrc.Play();
         }
+
+        StartCoroutine(FadeOutLightning());
+
         yield return new WaitForSeconds(randomShowTimer);
-        _lightning.enabled = false;
+        //_lightning.enabled = false;
 
         //Kör extra lightning test
         if (PercentChanceForExtraLightning > Random.Range(0, 100) && _extraLightningChanceTested == false && _justRanExtraLightning == false)
@@ -91,5 +104,27 @@ public class EnvironmentManager : MonoBehaviour
             _justRanExtraLightning = false;
         }
         _extraLightningChanceTested = true;
+    }
+
+
+    private IEnumerator FadeOutLightning()
+    {
+        float fadeOutSpeed = Random.Range(FadeOutMinSpeed, FadeOutMaxSpeed);
+
+        //float t = 0f;
+        //while (t < 1f && _lightning.intensity> 0.1f)
+        //{
+        //    t += Time.deltaTime;
+        //    _lightning.intensity = _lightning.intensity * fadeOutSpeed;
+        //    yield return null;
+        //}
+
+        
+        while (_lightning.intensity > 0.01f)
+        {
+            _lightning.intensity = _lightning.intensity * fadeOutSpeed;
+            yield return null;
+        }
+        _lightning.enabled = false;
     }
 }
