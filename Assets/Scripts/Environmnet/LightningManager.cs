@@ -7,11 +7,11 @@ public class LightningManager : MonoBehaviour
 
     public float MinTimeBetweenLightnings = 5f;
 
-    public float MaxTimeBetweenLightnings = 15f;
+    public float MaxTimeBetweenLightnings = 12f;
 
     public float MinTimeShowingLight = 0.2f;
 
-    public float MaxTimeShowingLight = 0.4f;
+    public float MaxTimeShowingLight = 0.8f;
 
     public int PercentChanceForExtraLightning = 80;
 
@@ -19,9 +19,9 @@ public class LightningManager : MonoBehaviour
 
     public float MinLightningIntensity = 1f;
 
-    public float FadeOutMaxSpeed = 0.7f;
+    public float FadeOutMaxSpeed = 0.8f;
 
-    public float FadeOutMinSpeed = 0.95f;
+    public float FadeOutMinSpeed = 0.98f;
 
     private Light _lightning;
 
