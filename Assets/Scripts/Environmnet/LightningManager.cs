@@ -6,15 +6,15 @@ public class LightningManager : MonoBehaviour
 {
     public bool LightningOn;
 
-    public float MinTimeBetweenLightnings = 5f;
+    public float MinTimeBetweenLightnings = 8f;
 
-    public float MaxTimeBetweenLightnings = 12f;
+    public float MaxTimeBetweenLightnings = 30f;
 
     public float MinTimeShowingLight = 0.2f;
 
     public float MaxTimeShowingLight = 0.8f;
 
-    public int PercentChanceForExtraLightning = 80;
+    public int PercentChanceForExtraLightning = 25;
 
     public float MaxLightningIntensity = 2f;
 
@@ -24,7 +24,11 @@ public class LightningManager : MonoBehaviour
 
     public float FadeOutMinSpeed = 0.98f;
 
-    public bool WaitForAudioToFinishBeforeNew = false;
+    public bool AudioClipLengthAddsToTimeBetweenLightnings = true;
+
+    public float MinTimeForExtraLightning = 0.2f;
+
+    public float MaxTimeForExtraLightning = 3f;
 
     public List<AudioClip> LightningAudio;
 
@@ -39,6 +43,8 @@ public class LightningManager : MonoBehaviour
     private float _currentLightningTimer;
 
     private bool _isDoingLightning;
+
+    private AudioClip _currentAudioClip;
 
     // Use this for initialization
     void Start()
@@ -87,12 +93,22 @@ public class LightningManager : MonoBehaviour
         _lightning.intensity = Random.Range(MinLightningIntensity, MaxLightningIntensity);
 
         _lightning.enabled = true;
+        // *** avmarkerade koden var aktuell innan _currentAudioClip.length vart en del av _currentLightningTimer **** 
 
-        if (!_audioSrc.isPlaying || !WaitForAudioToFinishBeforeNew)         //Check if the audio component shall wait for the audio to finish before starting a new audio clip
-        {
-            _audioSrc.clip = LightningAudio[Random.Range(0, LightningAudio.Count)];
-            _audioSrc.Play();
-        }
+        //if (!_audioSrc.isPlaying || !WaitForAudioToFinishBeforeNew)         //Check if the audio component shall wait for the audio to finish before starting a new audio clip
+        //{
+        //    //_audioSrc.clip = LightningAudio[Random.Range(0, LightningAudio.Count)];
+        //    //_audioSrc.Play();
+
+        //    _currentAudioClip = LightningAudio[Random.Range(0, LightningAudio.Count)];
+
+        //    _audioSrc.PlayOneShot(_currentAudioClip);
+        //}
+        //else if (_justRanExtraLightning)
+        //{
+            _currentAudioClip = LightningAudio[Random.Range(0, LightningAudio.Count)];
+            _audioSrc.PlayOneShot(_currentAudioClip);
+     //   }
 
         StartCoroutine(FadeOutLightning());
 
@@ -102,13 +118,22 @@ public class LightningManager : MonoBehaviour
         //Kör extra lightning test
         if (PercentChanceForExtraLightning > Random.Range(0, 100) && _extraLightningChanceTested == false && _justRanExtraLightning == false)
         {
-            _currentLightningTimer = randomShowTimer + 0.2f;
+            _currentLightningTimer = randomShowTimer + Random.Range(MinTimeForExtraLightning,MaxTimeForExtraLightning);
             _justRanExtraLightning = true;
         }
         else if (_extraLightningChanceTested == false)
         {
-            _currentLightningTimer = Random.Range(MinTimeBetweenLightnings, MaxTimeBetweenLightnings);
-            _justRanExtraLightning = false;
+            if (AudioClipLengthAddsToTimeBetweenLightnings)
+            {
+                _currentLightningTimer = Random.Range(MinTimeBetweenLightnings, MaxTimeBetweenLightnings) +
+                                         _currentAudioClip.length;
+                _justRanExtraLightning = false;
+            }
+            else
+            {
+                _currentLightningTimer = Random.Range(MinTimeBetweenLightnings, MaxTimeBetweenLightnings);
+                _justRanExtraLightning = false;
+            }
         }
         _extraLightningChanceTested = true;
     }
