@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LightningManager : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class LightningManager : MonoBehaviour
     public float FadeOutMaxSpeed = 0.8f;
 
     public float FadeOutMinSpeed = 0.98f;
+
+    public bool WaitForAudioToFinishBeforeNew = false;
+
+    public List<AudioClip> LightningAudio;
 
     private Light _lightning;
 
@@ -82,8 +87,10 @@ public class LightningManager : MonoBehaviour
         _lightning.intensity = Random.Range(MinLightningIntensity, MaxLightningIntensity);
 
         _lightning.enabled = true;
-        if (!_audioSrc.isPlaying)
+
+        if (!_audioSrc.isPlaying || !WaitForAudioToFinishBeforeNew)         //Check if the audio component shall wait for the audio to finish before starting a new audio clip
         {
+            _audioSrc.clip = LightningAudio[Random.Range(0, LightningAudio.Count)];
             _audioSrc.Play();
         }
 
