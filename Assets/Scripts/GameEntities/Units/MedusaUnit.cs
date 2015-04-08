@@ -106,6 +106,10 @@ public class MedusaUnit : BaseUnit
             instantiationPosition += new Vector3(0f, 0f, 0.5f);
         }
 
+    //    PlaygroundPresetLaserC beamSettings = DeathBeamEffect.GetComponent<PlaygroundPresetLaserC>();
+
+    //    beamSettings.particleCount = 300;
+
         Instantiate(DeathBeamEffect, instantiationPosition, Quaternion.LookRotation(hitLocation - shootLocation));
     }
 }
