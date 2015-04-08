@@ -28,10 +28,17 @@ public class MedusaUnit : BaseUnit
 	    return CanWalkOver;
 	}
 
+    public GameObject DeathBeamEffect;
+    private bool _deathBeamHasBeenInitialized;
+
+ //   private PlaygroundPresetLaserC ;
+
 	private List<MedusaRay> _rays = new List<MedusaRay>();
 
     public void Start()
     {
+        _deathBeamHasBeenInitialized = false;
+
     	if (shootRight)
 			_rays.Add(new MedusaRay(Vector3.right, beamPrefab, this));
 		if (shootLeft)
@@ -44,21 +51,61 @@ public class MedusaUnit : BaseUnit
 	
 	void Update () 
 	{
-		for (int i = 0; i < _rays.Count; i++) {
-			GameObject hitObject = _rays[i].Blast();
-			Hit(hitObject);
+        if (_deathBeamHasBeenInitialized == false)
+		{
+		    for (int i = 0; i < _rays.Count; i++) 
+            {
+			    GameObject hitObject = _rays[i].Blast();
+			    Hit(hitObject);
+            }
 		}
 	}
 	
 	public void Hit(GameObject hitObject) 
 	{
-		if (hitObject != null && hitObject.GetComponent<AvatarUnit>() != null) {
-			hitObject.SendMessage("KillAvatar", SendMessageOptions.DontRequireReceiver);
+		if (hitObject != null && hitObject.GetComponent<AvatarUnit>() != null)
+		{
+		    InstantiateBeam(hitObject);
+            hitObject.SendMessage("KillAvatar", SendMessageOptions.DontRequireReceiver);		        
 		}
 
+	    
         if (hitObject != null && hitObject.GetComponent<BaseUnit>() != null && hitObject.GetComponent<BaseUnit>().BreaksByProjectileAndMedusa)
         {
+            // InstantiateBeam(hitObject);       TODO: måste lägga till så att beamen försvinner efter den förstört ett object samt göra så att _deathBeamHasBeenInitialized blir false igen
             hitObject.GetComponent<BaseUnit>().DestroyUnit();
         }
 	}
+
+    private void InstantiateBeam(GameObject hitObject)
+    {
+        _deathBeamHasBeenInitialized = true;
+
+        Vector3 hitLocation = new Vector3((float)Math.Round((decimal)hitObject.transform.position.x), 1f, (float)Math.Round((decimal)hitObject.transform.position.z));
+
+        Vector3 shootLocation = new Vector3(transform.position.x, 1f, transform.position.z);
+
+        Vector3 instantiationPosition = new Vector3(transform.position.x, 1.5f, transform.position.z);
+
+        Vector3 RelativePosition = hitLocation - shootLocation;
+
+        if (RelativePosition.x < 0)
+        {
+            instantiationPosition += new Vector3(-0.5f, 0f, 0f);
+        }
+        else if (RelativePosition.x > 0)
+        {
+            instantiationPosition += new Vector3(0.5f, 0f, 0f);
+        }
+        else if (RelativePosition.z < 0)
+        {
+            instantiationPosition += new Vector3(0f, 0f, -0.5f);
+        }
+        else if (RelativePosition.z > 0)
+        {
+            instantiationPosition += new Vector3(0f, 0f, 0.5f);
+        }
+
+        Instantiate(DeathBeamEffect, instantiationPosition, Quaternion.LookRotation(hitLocation - shootLocation));
+    }
 }
