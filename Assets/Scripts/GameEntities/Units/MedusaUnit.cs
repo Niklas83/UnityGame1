@@ -1,4 +1,5 @@
 using System;
+using ParticlePlayground;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ public class MedusaUnit : BaseUnit
 	}
 
     public GameObject DeathBeamEffect;
+    public int ParticlesToShootPerTile;
     private bool _deathBeamHasBeenInitialized;
 
  //   private PlaygroundPresetLaserC ;
@@ -89,26 +91,37 @@ public class MedusaUnit : BaseUnit
 
         Vector3 RelativePosition = hitLocation - shootLocation;
 
+        int numberOfParticlesBasedOnRange = 100;
+
         if (RelativePosition.x < 0)
         {
             instantiationPosition += new Vector3(-0.5f, 0f, 0f);
+
+            numberOfParticlesBasedOnRange = Math.Abs((int)RelativePosition.x * ParticlesToShootPerTile);
         }
         else if (RelativePosition.x > 0)
         {
             instantiationPosition += new Vector3(0.5f, 0f, 0f);
+
+            numberOfParticlesBasedOnRange = Math.Abs((int)RelativePosition.x * ParticlesToShootPerTile);
         }
         else if (RelativePosition.z < 0)
         {
             instantiationPosition += new Vector3(0f, 0f, -0.5f);
+            numberOfParticlesBasedOnRange = Math.Abs((int)RelativePosition.z * ParticlesToShootPerTile);
         }
         else if (RelativePosition.z > 0)
         {
             instantiationPosition += new Vector3(0f, 0f, 0.5f);
+            numberOfParticlesBasedOnRange = Math.Abs((int)RelativePosition.z * ParticlesToShootPerTile);
         }
 
-    //    PlaygroundPresetLaserC beamSettings = DeathBeamEffect.GetComponent<PlaygroundPresetLaserC>();
+        PlaygroundParticlesC particPlaygroundComponent = DeathBeamEffect.GetComponent<PlaygroundParticlesC>();
 
-    //    beamSettings.particleCount = 300;
+        particPlaygroundComponent.prewarm = true;
+
+        particPlaygroundComponent.particleCount = numberOfParticlesBasedOnRange;
+
 
         Instantiate(DeathBeamEffect, instantiationPosition, Quaternion.LookRotation(hitLocation - shootLocation));
     }

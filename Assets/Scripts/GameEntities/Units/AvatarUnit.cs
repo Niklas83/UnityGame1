@@ -75,7 +75,7 @@ public partial class AvatarUnit : BaseUnit
 	    }
         
 		_mover = GetComponent<Mover>();
-		_rotation = GetComponent<Rotation>();
+		_rotation = GetComponentInChildren<Rotation>();
 
 		Floor floor = Helper.Find<Floor>("Floor");
 		_gridManager = floor.GridManager;
@@ -86,8 +86,25 @@ public partial class AvatarUnit : BaseUnit
 	    _audioComponent = this.gameObject.transform.FindChild("AudioComponent").gameObject;
         _avatarSoul = GameObject.Find("AvatarSoul");
 
-		_soulMover = _avatarSoul.GetComponentInChildren<SoulMover>();
-		_soundEffectPlayer = GetComponentInChildren<SoundEffectPlayer>();
+	    if (_avatarSoul != null)        //ADD soul if it is multiple characters
+	    {
+	        _soulMover = _avatarSoul.GetComponentInChildren<SoulMover>();
+
+            //Om det finns en soul ta bort audio listener och ljus på avatar
+            AudioListener audioList = GetComponent<AudioListener>();
+	        Light lightOnChar = GetComponentInChildren<Light>();
+
+	        if (audioList != null)
+	        {
+	            audioList.enabled = false;
+	        }
+	        if (lightOnChar != null)
+	        {
+	            lightOnChar.enabled = false;
+	        }
+	    }
+
+	    _soundEffectPlayer = GetComponentInChildren<SoundEffectPlayer>();
         
 		AvatarStates avatarStates = new AvatarStates(gameObject);
 		_stateMachine = avatarStates.GetStateMachine();
@@ -183,10 +200,12 @@ public partial class AvatarUnit : BaseUnit
 			if(hit.transform.gameObject == this.gameObject)
 			{
 				_isActive = true;
-				
-				_soulMover.MoveToAvatar(this.gameObject);
-				
-				_soundEffectPlayer.SetIdleTimeBool(false);
+
+			    if (_soulMover != null)
+			    {
+			        _soulMover.MoveToAvatar(this.gameObject);
+			    }
+			    _soundEffectPlayer.SetIdleTimeBool(false);
 				_soundEffectPlayer.PlayAvatarSelectedSound();
 			}
 			else if (hit.transform.gameObject.tag == UnitTypesEnum.Player.ToString())
@@ -195,6 +214,13 @@ public partial class AvatarUnit : BaseUnit
 				_isActive = false;
 			}
 		}
+        else if (_avatarSoul == null)
+        {
+            _isActive = true;
+
+         //   _soundEffectPlayer.SetIdleTimeBool(false);
+          //  _soundEffectPlayer.PlayAvatarSelectedSound();
+        }
 	}
 
 	private void Move(int x, int z) {
