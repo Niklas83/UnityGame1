@@ -12,12 +12,45 @@ public class ButtonTile : BaseTile
     public bool IsTrainTile = false;
 
 	public EventListener[] objectsToNotify;
-	public EventMessage message;
 	
-	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
+    public EventMessage ArriveMessage;
+
+    public EventMessage LeaveMessage;
+
+    //sätt denna till true
+    public bool UseStaticEventMethods = true;
+
+    public StaticEventMethods StaticArriveMethod;
+    public StaticEventMethods StaticLeaveMethod;
+
+    protected override void OnLeaved(BaseUnit unit, BaseTile nextTile)
+    {
+        if (UseStaticEventMethods)
+        {
+            foreach (EventListener el in objectsToNotify)
+                el.ReceiveEventMethod(StaticLeaveMethod);
+        }
+
+        else
+        {
+            foreach (EventListener el in objectsToNotify)
+                el.ReceiveEvent(LeaveMessage);
+        }
+    }
+
+
 	protected override void OnArrived(BaseUnit unit, BaseTile previousTile) {
         base.OnArrived(unit, previousTile);
-		foreach (EventListener el in objectsToNotify)
-			el.ReceiveEvent(message);
+
+	    if (UseStaticEventMethods)
+	    {
+            foreach (EventListener el in objectsToNotify)
+                el.ReceiveEventMethod(StaticArriveMethod);
+	    }
+	    else
+	    {
+            foreach (EventListener el in objectsToNotify)
+                el.ReceiveEvent(ArriveMessage);
+	    }
 	}
 }

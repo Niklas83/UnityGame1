@@ -12,6 +12,18 @@ public enum EventMessage {
     ToggleColor
 }
 
+public enum StaticEventMethods
+{
+    None,
+    HideAndDisableObject,
+    MakeVisibleAndActive,
+    ToggleHideDisableAndActiveVisibleObject,
+    TurnOffProjectileAndMedusa,
+    TurnOnProjectileAndMedusa,
+    ToggleTurnOffProjectileAndMedusa   
+}
+
+
 public class EventListener : MonoBehaviour {
 
 	public void ReceiveEvent(EventMessage eventMessage) {
@@ -49,4 +61,200 @@ public class EventListener : MonoBehaviour {
             break;
 		}
 	}
+
+
+
+
+    public void ReceiveEventMethod(StaticEventMethods eventMessage)
+    {
+        switch (eventMessage)
+        {
+            case StaticEventMethods.None:
+                break;
+
+            case StaticEventMethods.HideAndDisableObject:
+                HideAndDisableObject();
+                break;
+
+            case StaticEventMethods.ToggleHideDisableAndActiveVisibleObject:
+                ToggleHideAndDisableObject();
+                break;
+
+            case StaticEventMethods.TurnOffProjectileAndMedusa:
+                TurnOffProjectileAndMedusa();
+                break;
+
+            case StaticEventMethods.ToggleTurnOffProjectileAndMedusa:
+                ToggleTurnOffProjectileAndMedusa();
+                break;
+
+            case StaticEventMethods.MakeVisibleAndActive:
+                MakeVisibleAndActive();
+                break;
+
+            case StaticEventMethods.TurnOnProjectileAndMedusa:
+                TurnOnProjectileAndMedusa();
+                break;
+        }
+    }
+
+
+    //Kan finnas smartare lösning än att ha generella metoder här... men de ska vara något som kan nyttjas av alla med en eventlistener..
+
+    private void ToggleHideAndDisableObject()
+    {
+        BaseUnit bUnit= gameObject.GetComponent<BaseUnit>();
+
+        BaseTile bTile = gameObject.GetComponent<BaseTile>();
+       
+        if (gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+
+            //Units logic
+            if (bUnit != null)
+            {
+                bUnit.EventCallOnDeactivated();
+            }
+
+            //Tile logic
+            if (bTile != null)
+            {
+                GridManager gridManager = bTile.EventGetGridManager();
+                gridManager.RemoveTile(bTile);
+            }
+        }
+        else
+        {
+            gameObject.SetActive(true);
+
+            //Units logic
+            if (bUnit != null)
+            {
+                bUnit.EventCallOnActivated();       
+            }
+
+            //Tile logic
+            if (bTile != null)
+            {
+                GridManager gridManager = bTile.EventGetGridManager();
+                gridManager.AddTile(bTile);
+            }
+        }     
+    }
+
+    private void HideAndDisableObject()
+    {
+        gameObject.SetActive(false);
+
+        BaseUnit bUnit = gameObject.GetComponent<BaseUnit>();
+        BaseTile bTile = gameObject.GetComponent<BaseTile>();
+
+        //Units logic
+        if (bUnit != null)
+        {
+            bUnit.EventCallOnDeactivated();
+        }
+
+        //Tile logic
+        if (bTile != null)
+        {
+            GridManager gridManager = bTile.EventGetGridManager();
+            gridManager.RemoveTile(bTile);
+        }
+    }
+
+    private void TurnOffProjectileAndMedusa()
+    {
+        //Medusa logic
+        MedusaUnit medusaUnit;
+        medusaUnit = gameObject.GetComponent<MedusaUnit>();
+
+        if (medusaUnit != null)
+        {
+            medusaUnit.SetActive(false);
+        }
+
+
+        //Projectile logic
+
+        ProjectileShooterUnit projectileUnit;
+        projectileUnit = gameObject.GetComponent<ProjectileShooterUnit>();
+
+        if (projectileUnit != null)
+        {
+            projectileUnit.SetActive(false);
+        }
+
+    }
+
+    private void TurnOnProjectileAndMedusa()
+    {
+        //Medusa logic
+        MedusaUnit medusaUnit;
+        medusaUnit = gameObject.GetComponent<MedusaUnit>();
+
+        if (medusaUnit != null)
+        {
+            medusaUnit.SetActive(true);
+        }
+
+
+        //Projectile logic
+
+        ProjectileShooterUnit projectileUnit;
+        projectileUnit = gameObject.GetComponent<ProjectileShooterUnit>();
+
+        if (projectileUnit != null)
+        {
+            projectileUnit.SetActive(true);
+        }
+
+    }
+
+    private void ToggleTurnOffProjectileAndMedusa()
+    {
+        //Medusa logic
+        MedusaUnit medusaUnit;
+        medusaUnit = gameObject.GetComponent<MedusaUnit>();
+
+        if (medusaUnit != null)
+        {
+            medusaUnit.SetActive(!medusaUnit.IsActive());
+        }
+
+
+        //Projectile logic
+
+        ProjectileShooterUnit projectileUnit;
+        projectileUnit = gameObject.GetComponent<ProjectileShooterUnit>();
+
+        if (projectileUnit != null)
+        {
+            projectileUnit.SetActive(!projectileUnit.IsActive());
+        }
+
+    }
+
+    private void MakeVisibleAndActive()
+    {
+        gameObject.SetActive(true);
+
+        BaseUnit bUnit = gameObject.GetComponent<BaseUnit>();
+        BaseTile bTile = gameObject.GetComponent<BaseTile>();
+
+        //Units logic
+        if (bUnit != null)
+        {
+            bUnit.EventCallOnActivated();
+        }
+
+        //Tile logic
+        if (bTile != null)
+        {
+            GridManager gridManager = bTile.EventGetGridManager();
+            gridManager.AddTile(bTile);
+        }
+    }
+
 }

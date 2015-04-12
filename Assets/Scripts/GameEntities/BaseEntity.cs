@@ -28,4 +28,10 @@ public abstract class BaseEntity : MonoBehaviour, IActivatable
 
 	protected virtual void OnActivated() {}
 	protected virtual void OnDeactivated() {}
+
+
+    public GridManager EventGetGridManager()
+    {
+        return GridManager;
+    }
 }

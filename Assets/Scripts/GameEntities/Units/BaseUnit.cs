@@ -76,4 +76,15 @@ public abstract class BaseUnit : BaseEntity
         
         yield return 0;
     }
+
+
+    public void EventCallOnActivated()
+    {
+        OnActivated();
+    }
+
+    public void EventCallOnDeactivated()
+    {
+        OnDeactivated();
+    }
 }
