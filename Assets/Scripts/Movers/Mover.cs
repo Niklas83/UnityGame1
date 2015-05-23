@@ -56,7 +56,20 @@ public class Mover : BaseMover {
 
 		isMoving = false;
 		
-		if (PROTOTYPE_IceFriction && destinationTile.PROTOTYPE_UseIceFriction) {
+		//Sätt in ice logic here!!
+	    if (SlidesOnIce && destinationTile.IceTile)
+	    {
+            Vector3 nextPosition = new Vector3(xDir,0,zDir);
+
+
+	        if (gridManager.GetTile(destinationTile.transform.position + nextPosition).IceTile)
+	        {
+	            TryMove(xDir, zDir);
+	        }
+	    }
+        
+        
+        if (PROTOTYPE_IceFriction && destinationTile.PROTOTYPE_UseIceFriction) {
 			TryMove(xDir, zDir);
 		}
 		

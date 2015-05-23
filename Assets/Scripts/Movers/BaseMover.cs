@@ -9,6 +9,8 @@ public abstract class BaseMover : MonoBehaviour
 
     public bool canBePushed = true;             //Bool that can be set to make pushing possible of current unit
 
+    public bool SlidesOnIce = false;
+
 	public SoundEffectPlayer soundEffectPLayer;
 
 	// Public properties

@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <products>
   <item>
+    <title>Sparkler - Spawn Particles Anywhere</title>
+    <id>35483</id>
+    <url>https://www.assetstore.unity3d.com/en/#!/content/35483</url>
+    <icon>http://www.polyfied.com/products/playground/extensions/icons/35483.png</icon>
+    <iconid>35483</iconid>
+    <category>Scripting</category>
+    <publisher>Cardboard Keep</publisher>
+    <publisherurl>https://www.assetstore.unity3d.com/en/#!/publisher/9914</publisherurl>
+  </item>
+  <item>
     <title>FT Magic Effects Volume02</title>
     <id>3299</id>
     <url>https://www.assetstore.unity3d.com/en/#!/content/3299</url>

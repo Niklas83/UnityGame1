@@ -11,6 +11,10 @@ public class ButtonTile : BaseTile
     public override bool TrainTile { get { return IsTrainTile; } }
     public bool IsTrainTile = false;
 
+    //If this is true objects being pushed on this tile from another tile will keep sliding towards the direction it was pushed
+    public override bool IceTile { get { return IsIceTile; } }
+    public bool IsIceTile = false;
+
 	public EventListener[] objectsToNotify;
 	
     public EventMessage ArriveMessage;
