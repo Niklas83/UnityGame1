@@ -24,7 +24,10 @@ public enum StaticEventMethods
 }
 
 
-public class EventListener : MonoBehaviour {
+public class EventListener : MonoBehaviour
+{
+
+    private GridManager gridManager;
 
 	public void ReceiveEvent(EventMessage eventMessage) {
 		switch (eventMessage) {
@@ -65,8 +68,10 @@ public class EventListener : MonoBehaviour {
 
 
 
-    public void ReceiveEventMethod(StaticEventMethods eventMessage)
+    public void ReceiveEventMethod(StaticEventMethods eventMessage, GridManager gridmanager)
     {
+        gridManager = gridmanager;
+
         switch (eventMessage)
         {
             case StaticEventMethods.None:
@@ -131,6 +136,10 @@ public class EventListener : MonoBehaviour {
             //Units logic
             if (bUnit != null)
             {
+                if (bUnit.OccupiedTile == null)
+                {
+                    bUnit.OccupiedTile = gridManager.GetTile(bUnit.transform.position);
+                }
                 bUnit.EventCallOnActivated();       
             }
 

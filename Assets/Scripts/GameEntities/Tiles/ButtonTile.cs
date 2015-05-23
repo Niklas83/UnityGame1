@@ -32,7 +32,7 @@ public class ButtonTile : BaseTile
         if (UseStaticEventMethods)
         {
             foreach (EventListener el in objectsToNotify)
-                el.ReceiveEventMethod(StaticLeaveMethod);
+                el.ReceiveEventMethod(StaticLeaveMethod, this.EventGetGridManager());   //Sends the gridmanager for objects who was not active at game start
         }
 
         else
@@ -49,7 +49,7 @@ public class ButtonTile : BaseTile
 	    if (UseStaticEventMethods)
 	    {
             foreach (EventListener el in objectsToNotify)
-                el.ReceiveEventMethod(StaticArriveMethod);
+                el.ReceiveEventMethod(StaticArriveMethod, this.EventGetGridManager());   //Sends the gridmanager for objects who was not active at game start
 	    }
 	    else
 	    {
