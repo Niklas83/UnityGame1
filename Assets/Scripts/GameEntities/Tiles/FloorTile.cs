@@ -31,45 +31,6 @@ public class FloorTile : BaseTile
         if (IsPortalTile)
         {
             TeleportUnit(unit, previousTile, DestinationTeleportTile);
-            //if (previousTile == DestinationTeleportTile || DestinationTeleportTile == null)// Came from the other portal
-            //{
-            //    return;
-            //}
-
-            //if (!DestinationTeleportTile.CanWalkOn(unit))
-            //{
-            //    return;
-            //}
-
-            //BaseTile.TeleportTo(unit, this, DestinationTeleportTile);
-
-            //if (unit is AvatarUnit)
-            //{
-            //    AvatarUnit avatar = (AvatarUnit) unit;
-            //    avatar.EmptyMoveQueue();
-            //}
         }
     }
-
-
-    //private void TeleportUnit(BaseUnit unit, BaseTile previousTile, BaseTile destinationTeleportTile)
-    //{
-    //    if (previousTile == destinationTeleportTile || destinationTeleportTile == null)// Came from the other portal
-    //    {
-    //        return;
-    //    }
-
-    //    if (!destinationTeleportTile.CanWalkOn(unit))
-    //    {
-    //        return;
-    //    }
-
-    //    BaseTile.TeleportTo(unit, this, destinationTeleportTile);
-
-    //    if (unit is AvatarUnit)
-    //    {
-    //        AvatarUnit avatar = (AvatarUnit)unit;
-    //        avatar.EmptyMoveQueue();
-    //    }
-    //}
 }
