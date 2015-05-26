@@ -10,13 +10,15 @@ public enum Layer {
 
 public abstract class BaseTile : BaseEntity
 {
-    public abstract int Durability { get; }
+   public abstract int Durability { get; }
 
     public abstract bool TrainTile { get; }
 
     public abstract bool IceTile { get; }
 
     public abstract bool TeleporterTile { get; }
+    public GameObject TeleportGraphicsPrefab;
+    protected GameObject InstantiatedPortal;
 
     public abstract BaseTile TeleportDestinationTile { get; }
 
@@ -173,6 +175,42 @@ public abstract class BaseTile : BaseEntity
         {
             AvatarUnit avatar = (AvatarUnit)unit;
             avatar.EmptyMoveQueue();
+        }
+    }
+    
+    //Currently just used for teleporter and its graphical gameobject
+    public void OnEnable()
+    {
+        if (TeleporterTile && TeleportGraphicsPrefab != null)
+        {
+            if (InstantiatedPortal == null)
+            {
+                InstantiatedPortal = GameObject.Instantiate(TeleportGraphicsPrefab) as GameObject;
+            }
+            else
+            {
+                if (!InstantiatedPortal.activeSelf)
+                {
+                    InstantiatedPortal.SetActive(true);
+                }
+            }
+            InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+        }
+    }
+
+    //Currently just used for teleporter and its graphical gameobject
+    public void OnDisable()
+    {
+        if (TeleporterTile && TeleportGraphicsPrefab != null)
+        {
+            if (InstantiatedPortal != null)
+            {
+                if (InstantiatedPortal.activeSelf)
+                {
+                    InstantiatedPortal.SetActive(false);
+                }
+            }
+            
         }
     }
 }
