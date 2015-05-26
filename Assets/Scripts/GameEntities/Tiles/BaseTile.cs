@@ -16,6 +16,10 @@ public abstract class BaseTile : BaseEntity
 
     public abstract bool IceTile { get; }
 
+    public abstract bool TeleporterTile { get; }
+
+    public abstract BaseTile TeleportDestinationTile { get; }
+
 	private Dictionary<Layer, BaseUnit> _occupyingUnits;
 	private List<BaseUnit> _previousUnits;
 	
@@ -149,4 +153,26 @@ public abstract class BaseTile : BaseEntity
 			}
 		}
 	}
+
+    //Used by the teleport of portal tiles
+    protected void TeleportUnit(BaseUnit unit, BaseTile previousTile, BaseTile destinationTeleportTile)
+    {
+        if (previousTile == destinationTeleportTile || destinationTeleportTile == null)// Came from the other portal
+        {
+            return;
+        }
+
+        if (!destinationTeleportTile.CanWalkOn(unit))
+        {
+            return;
+        }
+
+        BaseTile.TeleportTo(unit, this, destinationTeleportTile);
+
+        if (unit is AvatarUnit)
+        {
+            AvatarUnit avatar = (AvatarUnit)unit;
+            avatar.EmptyMoveQueue();
+        }
+    }
 }

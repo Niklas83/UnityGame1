@@ -23,6 +23,12 @@ public class ExitTile : BaseTile {
     public override bool IceTile { get { return IsIceTile; } }
     public bool IsIceTile = false;
 
+    //This tile is a portal if this is true
+    public override bool TeleporterTile { get { return IsPortalTile; } }
+    public bool IsPortalTile = false;
+    public override BaseTile TeleportDestinationTile { get { return DestinationTeleportTile; }}
+    public BaseTile DestinationTeleportTile;
+
 	void Start() {
 		_sceneTransition = Helper.Find<SceneTransition>("SceneTransition");
 
@@ -50,6 +56,11 @@ public class ExitTile : BaseTile {
 	        LevelSelectionAndUILogic.SaveToJson();          //saves the level progression
             StartCoroutine(_sceneTransition.LoadLevelWithDelay(0.1f, "GameStartScene"));
 	    }
+
+        if (IsPortalTile && !_opened)
+        {
+            TeleportUnit(unit, previousTile, DestinationTeleportTile);
+        }
 	}
 
 	public void Register() 

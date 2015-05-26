@@ -16,10 +16,60 @@ public class FloorTile : BaseTile
     public override bool IceTile { get { return IsIceTile; } }
     public bool IsIceTile = false;
 
+    //This tile is a portal if this is true
+    public override bool TeleporterTile { get { return IsPortalTile; } }
+    public bool IsPortalTile = false;
+    public override BaseTile TeleportDestinationTile { get { return DestinationTeleportTile; }}
+    public BaseTile DestinationTeleportTile;
+
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {}
 
     protected override void OnArrived(BaseUnit unit, BaseTile previousTile)
     {   
         base.OnArrived(unit,  previousTile);
+        
+        if (IsPortalTile)
+        {
+            TeleportUnit(unit, previousTile, DestinationTeleportTile);
+            //if (previousTile == DestinationTeleportTile || DestinationTeleportTile == null)// Came from the other portal
+            //{
+            //    return;
+            //}
+
+            //if (!DestinationTeleportTile.CanWalkOn(unit))
+            //{
+            //    return;
+            //}
+
+            //BaseTile.TeleportTo(unit, this, DestinationTeleportTile);
+
+            //if (unit is AvatarUnit)
+            //{
+            //    AvatarUnit avatar = (AvatarUnit) unit;
+            //    avatar.EmptyMoveQueue();
+            //}
+        }
     }
+
+
+    //private void TeleportUnit(BaseUnit unit, BaseTile previousTile, BaseTile destinationTeleportTile)
+    //{
+    //    if (previousTile == destinationTeleportTile || destinationTeleportTile == null)// Came from the other portal
+    //    {
+    //        return;
+    //    }
+
+    //    if (!destinationTeleportTile.CanWalkOn(unit))
+    //    {
+    //        return;
+    //    }
+
+    //    BaseTile.TeleportTo(unit, this, destinationTeleportTile);
+
+    //    if (unit is AvatarUnit)
+    //    {
+    //        AvatarUnit avatar = (AvatarUnit)unit;
+    //        avatar.EmptyMoveQueue();
+    //    }
+    //}
 }

@@ -19,6 +19,12 @@ public class RedBlueButtonTile : BaseTile {
     public override bool IceTile { get { return IsIceTile; } }
     public bool IsIceTile = false;
 
+    //This tile is a portal if this is true
+    public override bool TeleporterTile { get { return IsPortalTile; } }
+    public bool IsPortalTile = false;
+    public override BaseTile TeleportDestinationTile { get { return DestinationTeleportTile; }}
+    public BaseTile DestinationTeleportTile;
+
     public GameObject redBox;           //One of the types to be lowered/raised
 
     public GameObject blueBox;          //One of the types to be lowered/raised
@@ -65,8 +71,12 @@ public class RedBlueButtonTile : BaseTile {
         {
             Debug.Log("redObjectsToNotify has not been set");
         }
-    }
 
+        if (IsPortalTile)
+        {
+            TeleportUnit(unit, previousTile, DestinationTeleportTile);
+        }
+    }
 
     // Use this for initialization
     void Start()

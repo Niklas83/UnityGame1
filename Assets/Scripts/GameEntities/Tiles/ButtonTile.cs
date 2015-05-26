@@ -15,6 +15,12 @@ public class ButtonTile : BaseTile
     public override bool IceTile { get { return IsIceTile; } }
     public bool IsIceTile = false;
 
+    //This tile is a portal if this is true
+    public override bool TeleporterTile { get { return IsPortalTile; } }
+    public bool IsPortalTile = false;
+    public override BaseTile TeleportDestinationTile { get { return DestinationTeleportTile; }}
+    public BaseTile DestinationTeleportTile;
+
 	public EventListener[] objectsToNotify;
 	
     public EventMessage ArriveMessage;

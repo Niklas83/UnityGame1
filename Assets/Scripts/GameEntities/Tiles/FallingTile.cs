@@ -16,6 +16,12 @@ public class FallingTile : BaseTile
     public override bool IceTile { get { return IsIceTile; } }
     public bool IsIceTile = false;
 
+    //This tile is a portal if this is true
+    public override bool TeleporterTile { get { return IsPortalTile; } }
+    public bool IsPortalTile = false;
+    public override BaseTile TeleportDestinationTile { get { return DestinationTeleportTile; }}
+    public BaseTile DestinationTeleportTile;
+
 	protected override void OnLeaved(BaseUnit unit, BaseTile nextTile) {
 		if (unit is AvatarUnit) {
 			GridManager.RemoveTile(this);
@@ -26,5 +32,10 @@ public class FallingTile : BaseTile
     protected override void OnArrived(BaseUnit unit, BaseTile previousTile)
     {
         base.OnArrived(unit, previousTile);
+
+        if (IsPortalTile)
+        {
+            TeleportUnit(unit, previousTile, DestinationTeleportTile);
+        }
     }
 }
