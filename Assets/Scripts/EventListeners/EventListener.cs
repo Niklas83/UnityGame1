@@ -20,7 +20,10 @@ public enum StaticEventMethods
     ToggleHideDisableAndActiveVisibleObject,
     TurnOffProjectileAndMedusa,
     TurnOnProjectileAndMedusa,
-    ToggleTurnOffProjectileAndMedusa   
+    ToggleTurnOffProjectileAndMedusa,
+    PortalActivateAndMakeTileActive,
+    PortalDeactivate,
+    PortalToggleActivate
 }
 
 
@@ -100,6 +103,19 @@ public class EventListener : MonoBehaviour
             case StaticEventMethods.TurnOnProjectileAndMedusa:
                 TurnOnProjectileAndMedusa();
                 break;
+
+            case StaticEventMethods.PortalActivateAndMakeTileActive:
+                PortalActivateAndMakeTileActive();
+                break;
+
+            case StaticEventMethods.PortalDeactivate:
+                PortalDeactivate();
+                break;
+
+            case StaticEventMethods.PortalToggleActivate:
+                PortalToggleActivate();
+                break;
+
         }
     }
 
@@ -266,4 +282,51 @@ public class EventListener : MonoBehaviour
         }
     }
 
+    private void PortalActivateAndMakeTileActive()
+    {
+        //Activates the Tile if its inactive
+        MakeVisibleAndActive();
+
+        FloorTile floorTile;
+        floorTile = gameObject.GetComponent<FloorTile>();
+
+        if (floorTile != null)
+        {
+            floorTile.IsPortalTile = true;
+            floorTile.OnEnable();
+        }
+    }
+
+    private void PortalDeactivate()
+    {
+        FloorTile floorTile;
+        floorTile = gameObject.GetComponent<FloorTile>();
+
+        if (floorTile != null)
+        {
+            floorTile.OnDisable();
+            floorTile.IsPortalTile = false;
+        }
+    }
+
+    private void PortalToggleActivate()
+    {
+        FloorTile floorTile;
+        floorTile = gameObject.GetComponent<FloorTile>();
+
+        if (floorTile != null)
+        {
+            if (floorTile.IsPortalTile)
+            {
+                floorTile.OnDisable();
+                floorTile.IsPortalTile = false;
+            }
+            else
+            {
+                floorTile.IsPortalTile = true;
+                floorTile.OnEnable();
+            }
+            
+        }
+    }
 }
