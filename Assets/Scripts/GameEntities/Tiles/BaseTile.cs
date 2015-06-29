@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ public abstract class BaseTile : BaseEntity
     public abstract bool IceTile { get; }
 
     public abstract bool TeleporterTile { get; }
-    public GameObject TeleportGraphicsPrefab;
+    public PortalColorTypes TeleportColor;
+    private GameObject _teleportGraphicsPrefab;
     protected GameObject InstantiatedPortal;
 
     public abstract BaseTile TeleportDestinationTile { get; }
@@ -181,11 +183,13 @@ public abstract class BaseTile : BaseEntity
     //Currently just used for teleporter and its graphical gameobject
     public void OnEnable()
     {
-        if (TeleporterTile && TeleportGraphicsPrefab != null)
+        GetPortalGraphicsPrefab(); //Tar fram den aktuella grafik prefaben
+
+        if (TeleporterTile && _teleportGraphicsPrefab != null)
         {
             if (InstantiatedPortal == null)
             {
-                InstantiatedPortal = GameObject.Instantiate(TeleportGraphicsPrefab) as GameObject;
+                InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;
             }
             else
             {
@@ -201,7 +205,7 @@ public abstract class BaseTile : BaseEntity
     //Currently just used for teleporter and its graphical gameobject
     public void OnDisable()
     {
-        if (TeleporterTile && TeleportGraphicsPrefab != null)
+        if (TeleporterTile && _teleportGraphicsPrefab != null)
         {
             if (InstantiatedPortal != null)
             {
@@ -211,6 +215,28 @@ public abstract class BaseTile : BaseEntity
                 }
             }
             
+        }
+    }
+
+    private void GetPortalGraphicsPrefab()
+    {
+        switch (TeleportColor)
+        {
+            case PortalColorTypes.Blue:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalBlue") as GameObject;
+                break;
+            case PortalColorTypes.Green:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalGreen") as GameObject;
+                break;
+            case PortalColorTypes.Pink:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalPink") as GameObject;
+                break;
+            case PortalColorTypes.Red:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalRed") as GameObject;
+                break;
+            case PortalColorTypes.Yellow:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalYellow") as GameObject;
+                break;
         }
     }
 }
