@@ -112,8 +112,11 @@ public class AxisRotateMover : BaseMover
 
 		for (int i = 0; i < transform.childCount; i++) {
 			Transform child = transform.GetChild(i);
-			BaseUnit u = child.gameObject.GetComponent<BaseUnit>();
-			BaseTile.HandleOccupy(u, _sources[i], _destinations[i]);
+		    if (child.tag != "RotationAxis")
+		    {
+		        BaseUnit u = child.gameObject.GetComponent<BaseUnit>();
+		        BaseTile.HandleOccupy(u, _sources[i], _destinations[i]);
+		    }
 		}
 
 		int direction = (int) Mathf.Sign(_rotationDegrees);
@@ -124,8 +127,11 @@ public class AxisRotateMover : BaseMover
 
 		for (int i = 0; i < transform.childCount; i++) {
 			Transform child = transform.GetChild(i);
-			BaseUnit u = child.gameObject.GetComponent<BaseUnit>();
-			BaseTile.HandleArrive(u, _sources[i], _destinations[i]);
+		    if (child.tag != "RotationAxis")
+		    {
+		        BaseUnit u = child.gameObject.GetComponent<BaseUnit>();
+		        BaseTile.HandleArrive(u, _sources[i], _destinations[i]);
+		    }
 		}
 
 		isMoving = false;
