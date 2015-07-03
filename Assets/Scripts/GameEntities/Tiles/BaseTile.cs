@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Serialization;
+using ParticlePlayground;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -189,7 +190,9 @@ public abstract class BaseTile : BaseEntity
         {
             if (InstantiatedPortal == null)
             {
-                InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;
+                InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;           
+
+                InstantiatedPortal.transform.parent = this.transform;
             }
             else
             {
@@ -197,8 +200,10 @@ public abstract class BaseTile : BaseEntity
                 {
                     InstantiatedPortal.SetActive(true);
                 }
+                PlaygroundParticlesC particles = GetComponentInChildren<PlaygroundParticlesC>();
+                particles.emit = true;
             }
-            InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z);
         }
     }
 
@@ -211,10 +216,14 @@ public abstract class BaseTile : BaseEntity
             {
                 if (InstantiatedPortal.activeSelf)
                 {
-                    InstantiatedPortal.SetActive(false);
+                    PlaygroundParticlesC particles = GetComponentInChildren<PlaygroundParticlesC>();
+
+                    if (particles != null)
+                    {
+                        particles.emit = false;
+                    }
                 }
-            }
-            
+            }   
         }
     }
 
