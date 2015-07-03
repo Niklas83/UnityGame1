@@ -246,6 +246,9 @@ public abstract class BaseTile : BaseEntity
             case PortalColorTypes.Yellow:
                 _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalYellow") as GameObject;
                 break;
+            case PortalColorTypes.Dark:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalDark") as GameObject;
+                break;
         }
     }
 }
