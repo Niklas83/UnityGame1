@@ -1,3 +1,4 @@
+using System.Collections;
 using Newtonsoft.Json.Serialization;
 using ParticlePlayground;
 using UnityEngine;
@@ -22,6 +23,7 @@ public abstract class BaseTile : BaseEntity
     public PortalColorTypes TeleportColor;
     private GameObject _teleportGraphicsPrefab;
     protected GameObject InstantiatedPortal;
+    private Light _portalLight;
 
     public abstract BaseTile TeleportDestinationTile { get; }
 
@@ -193,6 +195,7 @@ public abstract class BaseTile : BaseEntity
                 InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;           
 
                 InstantiatedPortal.transform.parent = this.transform;
+                _portalLight = GetComponentInChildren<Light>();
             }
             else
             {
@@ -203,7 +206,10 @@ public abstract class BaseTile : BaseEntity
                 PlaygroundParticlesC particles = GetComponentInChildren<PlaygroundParticlesC>();
                 particles.emit = true;
             }
+
             InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z);
+
+            StartCoroutine(FadeInTeleporterLight(true));    //fade in light
         }
     }
 
@@ -221,6 +227,8 @@ public abstract class BaseTile : BaseEntity
                     if (particles != null)
                     {
                         particles.emit = false;
+
+                        StartCoroutine(FadeInTeleporterLight(false)); //fade out light
                     }
                 }
             }   
@@ -250,5 +258,37 @@ public abstract class BaseTile : BaseEntity
                 _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalDark") as GameObject;
                 break;
         }
+    }
+
+
+    private IEnumerator FadeInTeleporterLight(bool fadeIn)
+    {
+        if (fadeIn)
+        {
+            bool firstRun = true;
+            float t = 0;
+            while (_portalLight.intensity < 1.6f)
+            {
+                if (firstRun)
+                {
+                    firstRun = false;
+                    yield return new WaitForSeconds(0.75f); //Delay då det tar en stund för portalen att initieras visuellt
+                }
+
+                _portalLight.intensity = _portalLight.intensity + 0.10f;
+                yield return new WaitForSeconds(0.075f);
+            }
+        }
+
+        else
+        {
+            float t = 0;
+            while (_portalLight.intensity > 0f)
+            {
+                _portalLight.intensity = _portalLight.intensity - 0.10f;
+                yield return new WaitForSeconds(0.06f);
+            }
+        }
+
     }
 }
