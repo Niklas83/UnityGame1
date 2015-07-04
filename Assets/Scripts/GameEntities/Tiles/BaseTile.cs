@@ -263,6 +263,8 @@ public abstract class BaseTile : BaseEntity
 
     private IEnumerator FadeInTeleporterLight(bool fadeIn)
     {
+        //TODO fixa så att ljuset slutar fadea in om spelaren lämnar den (Gäller för toggle)
+
         if (fadeIn)
         {
             bool firstRun = true;
