@@ -1,4 +1,6 @@
+using System.Collections;
 using Newtonsoft.Json.Serialization;
+using ParticlePlayground;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ public abstract class BaseTile : BaseEntity
     public PortalColorTypes TeleportColor;
     private GameObject _teleportGraphicsPrefab;
     protected GameObject InstantiatedPortal;
+    private Light _portalLight;
 
     public abstract BaseTile TeleportDestinationTile { get; }
 
@@ -189,7 +192,10 @@ public abstract class BaseTile : BaseEntity
         {
             if (InstantiatedPortal == null)
             {
-                InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;
+                InstantiatedPortal = GameObject.Instantiate(_teleportGraphicsPrefab) as GameObject;           
+
+                InstantiatedPortal.transform.parent = this.transform;
+                _portalLight = GetComponentInChildren<Light>();
             }
             else
             {
@@ -197,8 +203,13 @@ public abstract class BaseTile : BaseEntity
                 {
                     InstantiatedPortal.SetActive(true);
                 }
+                PlaygroundParticlesC particles = GetComponentInChildren<PlaygroundParticlesC>();
+                particles.emit = true;
             }
-            InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+
+            InstantiatedPortal.transform.position = new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z);
+
+            StartCoroutine(FadeInTeleporterLight(true));    //fade in light
         }
     }
 
@@ -211,10 +222,16 @@ public abstract class BaseTile : BaseEntity
             {
                 if (InstantiatedPortal.activeSelf)
                 {
-                    InstantiatedPortal.SetActive(false);
+                    PlaygroundParticlesC particles = GetComponentInChildren<PlaygroundParticlesC>();
+
+                    if (particles != null)
+                    {
+                        particles.emit = false;
+
+                        StartCoroutine(FadeInTeleporterLight(false)); //fade out light
+                    }
                 }
-            }
-            
+            }   
         }
     }
 
@@ -237,6 +254,43 @@ public abstract class BaseTile : BaseEntity
             case PortalColorTypes.Yellow:
                 _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalYellow") as GameObject;
                 break;
+            case PortalColorTypes.Dark:
+                _teleportGraphicsPrefab = Resources.Load("ParticleEffects/PortalDark") as GameObject;
+                break;
         }
+    }
+
+
+    private IEnumerator FadeInTeleporterLight(bool fadeIn)
+    {
+        //TODO fixa så att ljuset slutar fadea in om spelaren lämnar den (Gäller för toggle)
+
+        if (fadeIn)
+        {
+            bool firstRun = true;
+            float t = 0;
+            while (_portalLight.intensity < 1.6f)
+            {
+                if (firstRun)
+                {
+                    firstRun = false;
+                    yield return new WaitForSeconds(0.75f); //Delay då det tar en stund för portalen att initieras visuellt
+                }
+
+                _portalLight.intensity = _portalLight.intensity + 0.10f;
+                yield return new WaitForSeconds(0.075f);
+            }
+        }
+
+        else
+        {
+            float t = 0;
+            while (_portalLight.intensity > 0f)
+            {
+                _portalLight.intensity = _portalLight.intensity - 0.10f;
+                yield return new WaitForSeconds(0.06f);
+            }
+        }
+
     }
 }

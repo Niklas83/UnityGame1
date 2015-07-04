@@ -7,5 +7,6 @@ public enum PortalColorTypes
     Red,
     Green,
     Yellow,
-    Pink
+    Pink,
+    Dark
 }
