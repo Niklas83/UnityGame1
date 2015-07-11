@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 73ace13d6c2d0c4468ea304d6f369da6
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 18
   fileIDToRecycleName:
     100000: Character1_Head
     100002: Character1_Hips
@@ -105,6 +105,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
+    motionNodeName: 
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -149,11 +150,13 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -192,8 +195,8 @@ ModelImporter:
       limit:
         min: {x: -90, y: 0, z: -80}
         max: {x: 90, y: 0, z: 80}
-        value: {x: .152122542, y: 0, z: .0760612711}
-        length: .190153241
+        value: {x: .152122557, y: 0, z: .0760612786}
+        length: .190153271
         modified: 1
     - boneName: Character1_RightLeg
       humanName: RightLowerLeg
@@ -208,8 +211,8 @@ ModelImporter:
       limit:
         min: {x: 0, y: -30.0000019, z: -50}
         max: {x: 0, y: 30.0000019, z: 50}
-        value: {x: .0511741973, y: 0, z: .0255870987}
-        length: .0639677644
+        value: {x: .0511741862, y: 0, z: .0255870931}
+        length: .0639677495
         modified: 1
     - boneName: Character1_RightFoot
       humanName: RightFoot
@@ -450,7 +453,7 @@ ModelImporter:
       transformModified: 1
     - name: Character1_LeftLeg
       position: {x: .215328783, y: .0142181246, z: .0586620606}
-      rotation: {x: .0109911188, y: .902644575, z: -.424342483, w: .0710317641}
+      rotation: {x: .0109911179, y: .902644515, z: -.424342453, w: .0710317567}
       scale: {x: .999999702, y: .999999523, z: .999999642}
       transformModified: 1
     - name: Character1_LeftFoot
@@ -560,7 +563,7 @@ ModelImporter:
       transformModified: 1
     - name: Character1_LeftHandRing3
       position: {x: .0446599983, y: .029262526, z: -.0201801937}
-      rotation: {x: -.0882381648, y: -.13312988, z: .48034361, w: .862415314}
+      rotation: {x: -.0882381499, y: -.13312985, z: .48034367, w: .862415433}
       scale: {x: 1, y: .999999762, z: 1}
       transformModified: 1
     - name: Character1_LeftHandThumb1
@@ -575,7 +578,7 @@ ModelImporter:
       transformModified: 1
     - name: Character1_LeftHandThumb3
       position: {x: -.0117333764, y: -.0034823576, z: .044680763}
-      rotation: {x: -.68622458, y: .504779041, z: -.0605282113, w: .520221174}
+      rotation: {x: -.68622458, y: .504779041, z: -.0605282336, w: .520221174}
       scale: {x: .999999881, y: .999999702, z: .999999821}
       transformModified: 1
     - name: Character1_Neck
@@ -674,4 +677,7 @@ ModelImporter:
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 08ab3d3d1cd2f224fbc9b0d8baf28d42,
     type: 3}
   animationType: 3
+  additionalBone: 0
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
