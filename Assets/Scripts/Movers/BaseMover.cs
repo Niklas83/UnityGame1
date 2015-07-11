@@ -69,9 +69,10 @@ public abstract class BaseMover : MonoBehaviour
                         if (currentAvatarUnit.Strength >= u.Weight)
                         {
                             // If not a walkable, check if you are a 'Pusher' and it can be moved.
+                            currentAvatarUnit._stateMachine.ChangeState((int)AvatarUnit.AvatarState.Pushing);   //Starts push animation
                             BaseMover mover = u.GetComponent<BaseMover>();
                             if (mover != null && mover.canBePushed)
-                            {
+                            {                              
                                 canMove = mover.TryMove(xDir, zDir);
                             }
                         }                        

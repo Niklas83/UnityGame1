@@ -11,6 +11,7 @@ public partial class AvatarUnit
 		Running,
 		Dead,
 		Incapacitated,
+        Pushing
 	}
 	
 	public class AvatarStates 
@@ -25,6 +26,7 @@ public partial class AvatarUnit
 			_allStates[(int) AvatarState.Walking] = new AvatarWalk(avatar);
 			_allStates[(int) AvatarState.Running] = new AvatarRun(avatar);
 			_allStates[(int) AvatarState.Dead] = new AvatarDead(avatar);
+            _allStates[(int) AvatarState.Pushing] = new AvatarPush(avatar);
 			
 			_stateMachine = new StateMachine();
 			_stateMachine.Setup((int) AvatarState.Idling, _allStates);
@@ -68,8 +70,12 @@ public partial class AvatarUnit
 		public AvatarIdle(GameObject avatar) : base(avatar, "idle") {}
 		public override void OnEnter() { base.OnEnter(); }
 		public override void Update() {
-			if (_avatarUnit.IsMoving()) {
-				if (_avatarUnit._moveQueue != null && _avatarUnit._moveQueue.Count > 1)
+		    if (_avatarUnit.IsMoving()) {
+                //if (_avatarUnit._isPushing)           //Not in use, this is called from BaseMover.cs, animation works best that way
+                //{
+                //    ChangeState(AvatarState.Pushing);
+                //}
+                if (_avatarUnit._moveQueue != null && _avatarUnit._moveQueue.Count > 1)
 					ChangeState(AvatarState.Running);
 				else
 					ChangeState(AvatarState.Walking);
@@ -88,7 +94,7 @@ public partial class AvatarUnit
 		//		_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
 		}
 		public override void Update() {
-			if (!_avatarUnit.IsMoving()) {
+            if (!_avatarUnit.IsMoving()) {
 				ChangeState(AvatarState.Idling);
 			}
 		}
@@ -111,6 +117,26 @@ public partial class AvatarUnit
 		}
 		public override void OnExit() {}
 	}
+
+    public class AvatarPush : AvatarBaseState
+    {
+        public AvatarPush(GameObject avatar) : base(avatar, "push") { }
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            _avatarUnit._mover.moveSpeed = 3f;
+            // if (Random.value < 0.25f)                 //Kördes bara en gång och vilket bara gav ett steg (i bästa fall, då det var en slump om den kördes)
+            //			_avatarUnit._soundEffectPlayer.PlayWalkingSound(); 
+        }
+        public override void Update()
+        {
+            if (!_avatarUnit.IsMoving())
+            {
+                ChangeState(AvatarState.Idling);
+            }
+        }
+        public override void OnExit() { }
+    }
 	
 	public class AvatarDead : AvatarBaseState
 	{

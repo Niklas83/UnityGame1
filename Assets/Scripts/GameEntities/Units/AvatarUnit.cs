@@ -51,10 +51,9 @@ public partial class AvatarUnit : BaseUnit
     private Quaternion _lockAudioSourceLocation;			// Sets the rotation of the character to "north" every update
     private SoundEffectPlayer _soundEffectPlayer;
     
-	private StateMachine _stateMachine;
+	public StateMachine _stateMachine;
 
     private bool _isFalling = false;                    //This is set when a player is falling to his death
-
 
     //Pause function added to the move to avoid move (Start)
     private RectTransform _pauseMenuPanel;
@@ -165,6 +164,7 @@ public partial class AvatarUnit : BaseUnit
 	                else
 	                {
 	                    // Couldn't get there, try pushing instead..
+
 	                    Vector3 dir = wp - startPosition;
 	                    int x = (int) Mathf.Sign(dir.x);
 	                    int z = (int) Mathf.Sign(dir.z);
