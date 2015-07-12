@@ -271,6 +271,7 @@ public class EventListener : MonoBehaviour
         //Units logic
         if (bUnit != null)
         {
+            bUnit.OccupiedTile = gridManager.GetTile(transform.position);
             bUnit.EventCallOnActivated();
         }
 
