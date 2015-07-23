@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -36,6 +37,24 @@ public class GUILogic : MonoBehaviour
     {
 
     }
+
+    public void QuitGame()
+    {
+        if (Application.isEditor)       //Om i editor
+        {
+            EditorApplication.isPlaying = false;
+        }
+        else                        //Om build      //TODO Kan måsta lägga till lite mer finmaskig quit för mobile
+        {
+            Application.Quit();
+        }
+        
+    }
+
+
+
+
+
 
 
 
