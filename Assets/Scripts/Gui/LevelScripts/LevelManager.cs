@@ -19,15 +19,23 @@ public class LevelManager : MonoBehaviour {
 
     public GameObject levelGameObject;      //being instantiated on load from json
 
+    //TEMP fix to keep the levels logic and not having them all over the screen
+    private bool LoadLevelsFromJSON = false;
+
+
     // Use this for initialization
     void Start()
     {
   
     //    SetAllLevelScriptInstances();
       //  SaveToJson();
-        LoadFromJson();
-        LoadAllLevelScriptInstances();
-        LoadAllLevelGameObjects();
+
+        if (LoadLevelsFromJSON)
+        {
+            LoadFromJson();
+            LoadAllLevelScriptInstances();
+            LoadAllLevelGameObjects();
+        }
     }
 
     //  When commin back from a level to the start scene we wanna show the level selection page.
