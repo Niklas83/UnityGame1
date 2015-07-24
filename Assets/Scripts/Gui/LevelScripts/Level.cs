@@ -48,7 +48,8 @@ public class Level : MonoBehaviour {
 
     private void SetLevelNameInUI()
     {
-        GetComponentInChildren<Text>().text = Name;
+        //GetComponentInChildren<Text>().text = Name; //OLD
+        GetComponentInChildren<Text>().text = SceneNr.ToString();
     }
 
 
