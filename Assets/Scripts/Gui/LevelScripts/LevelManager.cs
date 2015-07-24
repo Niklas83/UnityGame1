@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject levelGameObject;      //being instantiated on load from json
 
     //TEMP fix to keep the levels logic and not having them all over the screen
-    private bool LoadLevelsFromJSON = false;
+    public bool LoadLevelsFromJSON = false;
 
 
     // Use this for initialization
@@ -34,7 +34,8 @@ public class LevelManager : MonoBehaviour {
         {
             LoadFromJson();
             LoadAllLevelScriptInstances();
-            LoadAllLevelGameObjects();
+            NEWLoadAllLevelGameObjects();
+            //LoadAllLevelGameObjects();
         }
     }
 
@@ -121,7 +122,68 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
-    //used when loading
+
+    private void NEWLoadAllLevelGameObjects()
+    {
+        //This iteration is needed to access the levelgrid cuz the main parent object is inactive
+        GameObject parent = GameObject.Find("Background");
+        GameObject LevelPage = MiscHelperMethods.FindObject(parent,"LevelsPage");
+        GameObject WindowsLevels = MiscHelperMethods.FindObject(LevelPage,"WindowLevels");
+        GameObject Content = MiscHelperMethods.FindObject(WindowsLevels,"Content");
+        GameObject ScrollView = MiscHelperMethods.FindObject(Content,"ScrollView");
+        GameObject LevelsGrid = MiscHelperMethods.FindObject(ScrollView,"LevelsGrid");
+
+        bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
+        for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
+        {
+            GameObject newLevelToGUI = Instantiate(levelGameObject);
+            Level newLevelToGUIScript = newLevelToGUI.GetComponent<Level>();
+
+
+            newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
+            newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
+            newLevelToGUIScript.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
+            if (i > 0)
+            {
+                newLevelToGUIScript.IsActive = previousMapWasPassed;
+            }
+            else
+            {
+                newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
+            }
+            newLevelToGUIScript.Star1 = ListOfAllLevelScriptInstances[i].Star1;
+            newLevelToGUIScript.Star2 = ListOfAllLevelScriptInstances[i].Star2;
+            newLevelToGUIScript.Star3 = ListOfAllLevelScriptInstances[i].Star3;
+            newLevelToGUIScript.MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
+            newLevelToGUIScript.MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
+            newLevelToGUIScript.MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
+            newLevelToGUIScript.NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
+            newLevelToGUIScript.NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
+            newLevelToGUIScript.NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
+            newLevelToGUIScript.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
+            newLevelToGUIScript.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
+
+            //newLevelToGUIScript.SetLevelToLoad();
+
+            newLevelToGUI.name = "LevelObject_" + i;
+
+            previousMapWasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
+
+            //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
+            newLevelToGUI.transform.SetParent(LevelsGrid.transform, false);
+
+            
+
+            SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
+            
+        }
+    }
+
+
+
+
+
+    //used when loading     (OLD)
     private void LoadAllLevelGameObjects()
     {
         //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet

@@ -53,6 +53,7 @@ public class Level : MonoBehaviour {
 
 
 
+    //OLD TO BE REMOVED
     //used when LOADING to set script to use on creation
     public void SetLevelToLoad()
     {
