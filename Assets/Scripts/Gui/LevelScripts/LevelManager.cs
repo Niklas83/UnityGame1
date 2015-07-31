@@ -22,7 +22,6 @@ public class LevelManager : MonoBehaviour {
     //TEMP fix to keep the levels logic and not having them all over the screen
     public bool LoadLevelsFromJSON = false;
 
-
     // Use this for initialization
     void Start()
     {
@@ -36,16 +35,17 @@ public class LevelManager : MonoBehaviour {
             LoadAllLevelScriptInstances();
             NEWLoadAllLevelGameObjects();
             //LoadAllLevelGameObjects();
-        }
+        } 
     }
 
-    //  When commin back from a level to the start scene we wanna show the level selection page.
-    void OnLevelWasLoaded()
-    {
-        GameObject levelSelection = GameObject.Find("LevelSelection");
-
-        levelSelection.transform.SetAsLastSibling();
-    }
+    ////  When commin back from a level to the start scene we wanna show the level selection page.
+    //void OnLevelWasLoaded()
+    //{
+    //    //GameObject levelSelection = GameObject.Find("LevelSelection");
+    //    //levelSelection.transform.SetAsLastSibling();
+    //    _guiLogic = transform.GetComponent<GUILogic>();
+    //    _guiLogic.LevelsPage();
+    //}
 
 
     //used when saving
@@ -173,7 +173,7 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUI.transform.SetParent(LevelsGrid.transform, false);
 
             
-
+            //TODO Byt till "SetIcon" för alla icke active 
             SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
             
         }
@@ -225,7 +225,7 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUIScript.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
             newLevelToGUIScript.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
 
-            newLevelToGUIScript.SetLevelToLoad();
+           // newLevelToGUIScript.SetLevelToLoad();
 
             newLevelToGUI.name = "LevelObject_" + i;
 

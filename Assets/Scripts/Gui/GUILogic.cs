@@ -29,6 +29,25 @@ public class GUILogic : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if(_listOfViews == null)
+        {
+            InitInternalLists();
+        }
+        
+    }
+
+    //  When commin back from a level to the start scene we wanna show the level selection page.
+    private void OnLevelWasLoaded()
+    {
+        if (_listOfViews == null)
+        {
+            InitInternalLists();
+            LevelsPage();
+        }
+    }
+
+    private void InitInternalLists()
+    {
         _listOfViews = new GameObject[20];       //Höftat värde
 
         GameObject parent = GameObject.Find("Background");

@@ -50,11 +50,12 @@ public class ExitTile : BaseTile {
                     LevelSelectionAndUILogic.ListOfAllLevelJSON[i].HasPassed = true;
                     LevelSelectionAndUILogic.ListOfAllLevelJSON[i].IsActive = true;          //its sufficient with just setting the current map to "haspassed" true, as its just first the first level that uses is active, but if future changes need em its here...
                     LevelSelectionAndUILogic.ListOfAllLevelJSON[i + 1].IsActive = true;      //same comment as above.
+	                break;
 	            }
 	        }
 
 	        LevelSelectionAndUILogic.SaveToJson();          //saves the level progression
-            StartCoroutine(_sceneTransition.LoadLevelWithDelay(0.1f, "GameStartScene"));
+            StartCoroutine(_sceneTransition.LoadLevelWithDelay(0.1f, "NEW_GameStartScene"));
 	    }
 
         if (IsPortalTile && !_opened)
