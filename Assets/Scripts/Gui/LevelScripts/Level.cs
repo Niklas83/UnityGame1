@@ -49,9 +49,33 @@ public class Level : MonoBehaviour {
     private void SetLevelNameInUI()
     {
         //GetComponentInChildren<Text>().text = Name; //OLD
-        GetComponentInChildren<Text>().text = SceneNr.ToString();
+        if (GetComponentInChildren<Text>() != null)
+        {
+            GetComponentInChildren<Text>().text = SceneNr.ToString();
+        }
     }
 
+
+
+    public void StartLevel()
+    {
+        Debug.Log("LoggarInneIKnappForLevel: " + Name);
+        if (IsActive)
+        {
+            SceneTransition st = Helper.Find<SceneTransition>("SceneTransition");
+
+            if (SceneNr != 0)
+            {
+                st.NextSceneString(Name);
+            }
+
+            //TODO: Add the avalility in SceneTransition that you can load a map from the scene name aswell
+            //else if (SceneName != null && SceneName != "")
+            //{
+            //    st.NextScene(SceneName);
+            //}
+        }
+    }
 
 
     //OLD TO BE REMOVED

@@ -19,12 +19,16 @@ public class GUILogic : MonoBehaviour
         MenuWithTitle,
         Credits,
         Options,
-        Levels
+        Levels,
+        LevelDialog
     }
 
     private GameObject[] _listOfViews;
     private int _previousView = 0;
     private int _currentView = 0;
+
+    private Level _selectedLevelDialog;
+
 
     // Use this for initialization
     void Start()
@@ -56,6 +60,9 @@ public class GUILogic : MonoBehaviour
         _listOfViews[(int)ViewEnums.MenuWithTitle] = MiscHelperMethods.FindObject(parent, "StartPage_TitleMenuWebLink");
         _listOfViews[(int)ViewEnums.Credits] = MiscHelperMethods.FindObject(parent, "Credits");
         _listOfViews[(int)ViewEnums.Levels] = MiscHelperMethods.FindObject(parent, "LevelsPage");
+
+        _listOfViews[(int)ViewEnums.LevelDialog] = MiscHelperMethods.FindObject(_listOfViews[(int)ViewEnums.Levels], "SelectedLevelDialog");
+
         //Sätter alla vyer inactive förutom title
         //for (int i = 1; i < _listOfViews.Count(); i++)
         //{
@@ -117,9 +124,41 @@ public class GUILogic : MonoBehaviour
     }
 
 
+    public void OpenLevelDialog(Level level)
+    {
+        if (level.IsActive)
+        {
+            _listOfViews[(int) ViewEnums.LevelDialog].SetActive(true);
+
+            GameObject child =
+                _listOfViews[(int) ViewEnums.LevelDialog].transform.FindChild("ResponsiveWindow(LevelDialog)")
+                    .gameObject;
+            GameObject banner = child.transform.FindChild("Header").gameObject;
+            GameObject textObj = banner.transform.FindChild("Text").gameObject;
+            textObj.GetComponent<Text>().text = level.Name;
+
+            //To make level loadable
+            _selectedLevelDialog = level;
+        }
+    }
+
+    public void CloseLevelDialog()
+    {
+        _listOfViews[(int)ViewEnums.LevelDialog].SetActive(false);
+    }
+
+    public void PlaySelectedLevelInDialog()
+    {
+        _selectedLevelDialog.StartLevel();
+    }
 
 
-    
+
+
+
+
+
+
 
 
 

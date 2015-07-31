@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour {
     private bool JsonCopyHasValues;
 
     public GameObject levelGameObject;      //being instantiated on load from json
+    public Sprite LockedGUIimage;
 
     //TEMP fix to keep the levels logic and not having them all over the screen
     public bool LoadLevelsFromJSON = false;
@@ -133,6 +134,10 @@ public class LevelManager : MonoBehaviour {
         GameObject ScrollView = MiscHelperMethods.FindObject(Content,"ScrollView");
         GameObject LevelsGrid = MiscHelperMethods.FindObject(ScrollView,"LevelsGrid");
 
+        //To add event listener
+        GUILogic _guiLogic = transform.GetComponent<GUILogic>();
+       
+
         bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
@@ -172,9 +177,21 @@ public class LevelManager : MonoBehaviour {
             //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
             newLevelToGUI.transform.SetParent(LevelsGrid.transform, false);
 
+            //Attaches the level to the grid
+            Toggle newLevelToggle = newLevelToGUI.GetComponent<Toggle>();
+            newLevelToggle.group = LevelsGrid.GetComponent<ToggleGroup>();
+
+            //Adds a method to the toggle in the gui
+            newLevelToggle.onValueChanged.AddListener(
+                delegate
+                {
+                    _guiLogic.OpenLevelDialog(newLevelToGUIScript);
+                }
+            );
             
-            //TODO Byt till "SetIcon" för alla icke active 
-            SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
+
+            //Sets lock icon on none unlocked levels
+            SetLockedIcons(newLevelToGUI, newLevelToGUIScript.IsActive);
             
         }
     }
@@ -236,7 +253,7 @@ public class LevelManager : MonoBehaviour {
 
             totalHeightOfScrollList += 85f;     //sätter varje knapp till 85f hög 
 
-            SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
+            //SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
             //levelPanelRect.rect.Set(0,0,0,-1300f);
 
 
@@ -274,26 +291,39 @@ public class LevelManager : MonoBehaviour {
     }
 
 
-    private void SetLevelColor(GameObject LevelObject, bool isActive)
+    //private void SetLevelColor(GameObject LevelObject, bool isActive)
+    //{
+    //   Image[] buttonImage = LevelObject.GetComponentsInChildren<Image>();
+
+    //   foreach (var imag in buttonImage)
+    //   {
+    //       if (imag.name == "LevelButton")
+    //       {
+    //           if (!isActive)
+    //           {
+    //               imag.color = new Color(255f, 0f, 0f, 255f);
+    //           }
+    //           else
+    //           {
+    //               imag.color = new Color(0f, 255f, 0f, 255f);
+    //           }
+    //       }
+    //   }  
+    //}
+
+    private void SetLockedIcons(GameObject LevelObject, bool isActive)
     {
-       Image[] buttonImage = LevelObject.GetComponentsInChildren<Image>();
+        if (!isActive)
+        {
+            Image guiImage = LevelObject.transform.GetComponent<Image>();
+            guiImage.sprite = LockedGUIimage;
 
-       foreach (var imag in buttonImage)
-       {
-           if (imag.name == "LevelButton")
-           {
-               if (!isActive)
-               {
-                   imag.color = new Color(255f, 0f, 0f, 255f);
-               }
-               else
-               {
-                   imag.color = new Color(0f, 255f, 0f, 255f);
-               }
-           }
-       }  
+            for (int i = 0; i < LevelObject.transform.childCount; i++)
+            {
+                LevelObject.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
     }
-
 
 
 
