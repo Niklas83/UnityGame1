@@ -126,7 +126,7 @@ public class GUILogic : MonoBehaviour
 
     public void OpenLevelDialog(Level level)
     {
-        if (level.IsActive)
+        if (level.IsActive && level.GetComponent<Toggle>().isOn)
         {
             _listOfViews[(int) ViewEnums.LevelDialog].SetActive(true);
 
