@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class RotateMover : BaseMover {
 
@@ -48,6 +50,11 @@ public class RotateMover : BaseMover {
 	public IEnumerator Move(int xDir, int zDir)
 	{
 		isMoving = true;
+        if (LeaveSound != null && LeaveSound.Any())
+        {
+            int trackNumber = Random.Range(0, LeaveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 		
 		Transform transform = gameObject.transform;
 		Transform parent = transform.parent;
@@ -75,6 +82,11 @@ public class RotateMover : BaseMover {
 		}
 
 		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
+        if (ArriveSound != null && ArriveSound.Any())
+        {
+            int trackNumber = Random.Range(0, ArriveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 		isMoving = false;
 		
 		yield return 0;

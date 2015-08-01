@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class AxisRotateMover : BaseMover
 {
@@ -109,6 +111,11 @@ public class AxisRotateMover : BaseMover
     public IEnumerator Move(int xDir, int zDir, Transform pushedChild)
     {
         isMoving = true;
+        if (LeaveSound != null && LeaveSound.Any())
+        {
+            int trackNumber = Random.Range(0, LeaveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 
 		for (int i = 0; i < transform.childCount; i++) {
 			Transform child = transform.GetChild(i);
@@ -134,6 +141,11 @@ public class AxisRotateMover : BaseMover
 		    }
 		}
 
+        if (ArriveSound != null && ArriveSound.Any())
+        {
+            int trackNumber = Random.Range(0, ArriveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 		isMoving = false;
         yield return 0;
     }

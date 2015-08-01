@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class ProjectileMover : Mover {
 
@@ -18,6 +20,11 @@ public class ProjectileMover : Mover {
     {
         if (isMoving)
 			return false;
+        if (LeaveSound != null && LeaveSound.Any())
+        {
+            int trackNumber = Random.Range(0, LeaveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 
         BaseTile tile = gridManager.GetTile(transform.position + new Vector3(xDir, 0, zDir));
 		if (tile == null || !tile.IsActive()) // Projectiles can move over null tiles

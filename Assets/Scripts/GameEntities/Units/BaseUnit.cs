@@ -8,6 +8,15 @@ public abstract class BaseUnit : BaseEntity
 {
     public abstract int Weight { get; }
 
+    //List of leave sounds (will only be played if a sound is set)
+    public AudioClip[] LeaveSound;
+
+    //List of arrive sounds (will only be played if a sound is set)
+    public AudioClip[] ArriveSound;
+
+    [Range(0.0f,1.0f)]
+    public float ArriveLeaveVolume = 1f;
+
     public abstract bool BreaksByProjectileAndMedusa { get; } 
 
     public abstract bool CanWalkOver { get; }

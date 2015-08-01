@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class Mover : BaseMover {
 
 	public float moveSpeed = 3f;
 	
 	public bool PROTOTYPE_IceFriction = false;
+
 
 	// Checks if this mover can move in the given direction.
 	public override bool TryMove(int xDir, int zDir) {
@@ -28,6 +31,12 @@ public class Mover : BaseMover {
 	
 	public IEnumerator Move(int xDir, int zDir)
 	{
+	    if (LeaveSound != null && LeaveSound.Any())
+	    {
+            int trackNumber = Random.Range(0,LeaveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+	    }
+
 	    DebugAux.Assert(!isMoving, "Can't move a unit while it is moving!");
 		
 		isMoving = true;
@@ -53,6 +62,12 @@ public class Mover : BaseMover {
 		
 		transform.position = endPosition;
 		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
+
+        if (ArriveSound != null && ArriveSound.Any())
+        {
+            int trackNumber = Random.Range(0, ArriveSound.Count());
+            LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
+        }
 
 		isMoving = false;
 		

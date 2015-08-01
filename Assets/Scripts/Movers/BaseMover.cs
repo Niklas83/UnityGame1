@@ -24,6 +24,9 @@ public abstract class BaseMover : MonoBehaviour
 	protected BaseUnit unit;
 	protected GridManager gridManager;
 	protected Queue<Vector2> moveQueue;
+    protected AudioClip[] LeaveSound;
+    protected AudioClip[] ArriveSound;
+    protected AudioSource LeaveArriveEffectPlayer;
 
     private bool isAvatarMover;
     private AvatarUnit currentAvatarUnit;
@@ -35,6 +38,10 @@ public abstract class BaseMover : MonoBehaviour
 
 		soundEffectPLayer = GetComponentInChildren<SoundEffectPlayer>();
 
+        AudioSource audioSrc = gameObject.AddComponent<AudioSource>();
+
+	    LeaveArriveEffectPlayer = gameObject.GetComponent<AudioSource>();
+	    
 	    if (unit is AvatarUnit)
 	    {
 	        isAvatarMover = true;
@@ -44,6 +51,9 @@ public abstract class BaseMover : MonoBehaviour
 	    {
 	        isAvatarMover = false;
 	    }
+
+        LeaveSound = unit.GetComponent<BaseUnit>().LeaveSound;
+        ArriveSound = unit.GetComponent<BaseUnit>().ArriveSound;
 	}
 
 	protected bool CanMove(BaseTile tile, int xDir, int zDir) 
