@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using System;
 
@@ -10,6 +11,7 @@ public abstract class BaseMover : MonoBehaviour
     public bool canBePushed = true;             //Bool that can be set to make pushing possible of current unit
 
     public bool SlidesOnIce = false;
+    protected bool IceKeepsGoin = false;
 
 	public SoundEffectPlayer soundEffectPLayer;
 
@@ -38,10 +40,15 @@ public abstract class BaseMover : MonoBehaviour
 
 		soundEffectPLayer = GetComponentInChildren<SoundEffectPlayer>();
 
-        AudioSource audioSrc = gameObject.AddComponent<AudioSource>();
+        LeaveSound = unit.GetComponent<BaseUnit>().LeaveSound;
+        ArriveSound = unit.GetComponent<BaseUnit>().ArriveSound;
 
-	    LeaveArriveEffectPlayer = gameObject.GetComponent<AudioSource>();
-	    
+        if (LeaveSound.Any() || ArriveSound.Any())
+	    {
+            AudioSource audioSrc = gameObject.AddComponent<AudioSource>();
+            LeaveArriveEffectPlayer = gameObject.GetComponent<AudioSource>();
+	    }
+        
 	    if (unit is AvatarUnit)
 	    {
 	        isAvatarMover = true;
@@ -51,9 +58,6 @@ public abstract class BaseMover : MonoBehaviour
 	    {
 	        isAvatarMover = false;
 	    }
-
-        LeaveSound = unit.GetComponent<BaseUnit>().LeaveSound;
-        ArriveSound = unit.GetComponent<BaseUnit>().ArriveSound;
 	}
 
 	protected bool CanMove(BaseTile tile, int xDir, int zDir) 

@@ -11,6 +11,7 @@ public class Mover : BaseMover {
 	
 	public bool PROTOTYPE_IceFriction = false;
 
+    private bool _initiatedMovment = false;     //Used to avoid multiple start move sounds for ice movement
 
 	// Checks if this mover can move in the given direction.
 	public override bool TryMove(int xDir, int zDir) {
@@ -33,8 +34,18 @@ public class Mover : BaseMover {
 	{
 	    if (LeaveSound != null && LeaveSound.Any())
 	    {
-            int trackNumber = Random.Range(0,LeaveSound.Count());
-            LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+            if (!SlidesOnIce)
+	        {
+                int trackNumber = Random.Range(0, LeaveSound.Count());
+                LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+	        }
+            else if (!IceKeepsGoin && !_initiatedMovment)
+            {
+                int trackNumber = Random.Range(0, LeaveSound.Count());
+                LeaveArriveEffectPlayer.PlayOneShot(LeaveSound[trackNumber], unit.ArriveLeaveVolume);
+                _initiatedMovment = true;
+            }
+            
 	    }
 
 	    DebugAux.Assert(!isMoving, "Can't move a unit while it is moving!");
@@ -63,12 +74,6 @@ public class Mover : BaseMover {
 		transform.position = endPosition;
 		BaseTile.HandleArrive(unit, sourceTile, destinationTile);
 
-        if (ArriveSound != null && ArriveSound.Any())
-        {
-            int trackNumber = Random.Range(0, ArriveSound.Count());
-            LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
-        }
-
 		isMoving = false;
 		
 		//Sätt in ice logic here!!
@@ -77,12 +82,34 @@ public class Mover : BaseMover {
             Vector3 nextPosition = new Vector3(xDir,0,zDir);
 
 
-	        if (gridManager.GetTile(destinationTile.transform.position + nextPosition).IceTile)
+	        if (gridManager.GetTile(destinationTile.transform.position + nextPosition) != null && gridManager.GetTile(destinationTile.transform.position + nextPosition).IceTile)
 	        {
-	            TryMove(xDir, zDir);
+	            if (TryMove(xDir, zDir))
+	            {
+	                IceKeepsGoin = true;
+	            }
+	            else
+	            {
+	                IceKeepsGoin = false;
+	            }
 	        }
 	    }
-        
+
+        if (ArriveSound != null && ArriveSound.Any())
+        {
+            if (!SlidesOnIce)
+            {
+                int trackNumber = Random.Range(0, ArriveSound.Count());
+                LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
+            }
+            else if (!IceKeepsGoin)
+            {
+                int trackNumber = Random.Range(0, ArriveSound.Count());
+                LeaveArriveEffectPlayer.PlayOneShot(ArriveSound[trackNumber], unit.ArriveLeaveVolume);
+                _initiatedMovment = false;
+            }
+        }
+
         
         if (PROTOTYPE_IceFriction && destinationTile.PROTOTYPE_UseIceFriction) {
 			TryMove(xDir, zDir);
