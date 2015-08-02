@@ -93,6 +93,10 @@ public class Mover : BaseMover {
 	                IceKeepsGoin = false;
 	            }
 	        }
+	        else
+	        {
+                IceKeepsGoin = false;
+	        }
 	    }
 
         if (ArriveSound != null && ArriveSound.Any())
