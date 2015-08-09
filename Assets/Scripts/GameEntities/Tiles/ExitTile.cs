@@ -47,9 +47,9 @@ public class ExitTile : BaseTile {
 	        {
                 if (LevelSelectionAndUILogic.ListOfAllLevelJSON[i].Name.Equals(Application.loadedLevelName))
 	            {
-                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i].HasPassed = true;
-                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i].IsActive = true;          //its sufficient with just setting the current map to "haspassed" true, as its just first the first level that uses is active, but if future changes need em its here...
-                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i + 1].IsActive = true;      //same comment as above.
+                    LevelSelectionAndUILogic.ListOfAllLevelJSON[i].IsPassed = true;
+                    //LevelSelectionAndUILogic.ListOfAllLevelJSON[i].IsActive = true;          //its sufficient with just setting the current map to "haspassed" true, as its just first the first level that uses is active, but if future changes need em its here...
+                    //LevelSelectionAndUILogic.ListOfAllLevelJSON[i + 1].IsActive = true;      //same comment as above.
 	                break;
 	            }
 	        }

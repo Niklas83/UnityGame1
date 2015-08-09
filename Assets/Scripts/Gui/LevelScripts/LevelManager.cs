@@ -27,8 +27,9 @@ public class LevelManager : MonoBehaviour {
     void Start()
     {
   
-    //    SetAllLevelScriptInstances();
-      //  SaveToJson();
+        //SetAllLevelScriptInstances();
+        //SetAllJSONLevelInstances();
+        //SaveToJson();
 
         if (LoadLevelsFromJSON)
         {
@@ -67,25 +68,19 @@ public class LevelManager : MonoBehaviour {
     private void SetAllJSONLevelInstances()
     {
         ListOfAllLevelJSON = new List<LevelJSON>();
-        LevelJSON levelJSONToAdd = new LevelJSON();
-
+        
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
+            LevelJSON levelJSONToAdd = new LevelJSON();
+
             levelJSONToAdd.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
             levelJSONToAdd.Name = ListOfAllLevelScriptInstances[i].Name;
-            levelJSONToAdd.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
+            levelJSONToAdd.IsBonusLevel = ListOfAllLevelScriptInstances[i].IsBonusLevel;
             levelJSONToAdd.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
-            levelJSONToAdd.Star1 = ListOfAllLevelScriptInstances[i].Star1;
-            levelJSONToAdd.Star2 = ListOfAllLevelScriptInstances[i].Star2;
-            levelJSONToAdd.Star3 = ListOfAllLevelScriptInstances[i].Star3;
-            levelJSONToAdd.MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
-            levelJSONToAdd.MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
-            levelJSONToAdd.MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
-            levelJSONToAdd.NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
-            levelJSONToAdd.NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
-            levelJSONToAdd.NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
-            levelJSONToAdd.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
-            levelJSONToAdd.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
+            levelJSONToAdd.IsPassed = ListOfAllLevelScriptInstances[i].IsPassed;
+            levelJSONToAdd.InformationList = ListOfAllLevelScriptInstances[i].InformationList;
+            levelJSONToAdd.StarValue = ListOfAllLevelScriptInstances[i].StarValue;
+            levelJSONToAdd.WorldPageNumber = ListOfAllLevelScriptInstances[i].WorldPageNumber;
 
             ListOfAllLevelJSON.Add(levelJSONToAdd);
         }
@@ -105,19 +100,13 @@ public class LevelManager : MonoBehaviour {
 
             levelScriptToAdd.SceneNr = ListOfAllLevelJSON[i].SceneNr;
             levelScriptToAdd.Name = ListOfAllLevelJSON[i].Name;
-            levelScriptToAdd.HasPassed = ListOfAllLevelJSON[i].HasPassed;
             levelScriptToAdd.IsActive = ListOfAllLevelJSON[i].IsActive;
-            levelScriptToAdd.Star1 = ListOfAllLevelJSON[i].Star1;
-            levelScriptToAdd.Star2 = ListOfAllLevelJSON[i].Star2;
-            levelScriptToAdd.Star3 = ListOfAllLevelJSON[i].Star3;
-            levelScriptToAdd.MaxStepsFor1Star = ListOfAllLevelJSON[i].MaxStepsFor1Star;
-            levelScriptToAdd.MaxStepsFor2Star = ListOfAllLevelJSON[i].MaxStepsFor2Star;
-            levelScriptToAdd.MaxStepsFor3Star = ListOfAllLevelJSON[i].MaxStepsFor3Star;
-            levelScriptToAdd.NumberOfSteps = ListOfAllLevelJSON[i].NumberOfSteps;
-            levelScriptToAdd.NumberOfExits = ListOfAllLevelJSON[i].NumberOfExits;
-            levelScriptToAdd.NumberOfExitsCleared = ListOfAllLevelJSON[i].NumberOfExitsCleared;
-            levelScriptToAdd.CoordinatesOfCleardExits = ListOfAllLevelJSON[i].CoordinatesOfCleardExits;
-            levelScriptToAdd.ObjectiveList = ListOfAllLevelJSON[i].ObjectiveList;
+            levelScriptToAdd.IsPassed = ListOfAllLevelJSON[i].IsPassed;
+            levelScriptToAdd.InformationList = ListOfAllLevelJSON[i].InformationList;
+            levelScriptToAdd.IsBonusLevel = ListOfAllLevelJSON[i].IsBonusLevel;
+            levelScriptToAdd.StarValue = ListOfAllLevelJSON[i].StarValue;
+            levelScriptToAdd.WorldPageNumber = ListOfAllLevelJSON[i].WorldPageNumber;
+
 
             ListOfAllLevelScriptInstances.Add(levelScriptToAdd);    
         }
@@ -141,58 +130,51 @@ public class LevelManager : MonoBehaviour {
         bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
         for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
         {
+            if (ListOfAllLevelScriptInstances[i].WorldPageNumber == 1)      //Laddar alla värld 1 till gridden på start up
+            {
             GameObject newLevelToGUI = Instantiate(levelGameObject);
             Level newLevelToGUIScript = newLevelToGUI.GetComponent<Level>();
 
 
             newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
             newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
-            newLevelToGUIScript.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
-            if (i > 0)
-            {
-                newLevelToGUIScript.IsActive = previousMapWasPassed;
-            }
-            else
-            {
-                newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
-            }
-            newLevelToGUIScript.Star1 = ListOfAllLevelScriptInstances[i].Star1;
-            newLevelToGUIScript.Star2 = ListOfAllLevelScriptInstances[i].Star2;
-            newLevelToGUIScript.Star3 = ListOfAllLevelScriptInstances[i].Star3;
-            newLevelToGUIScript.MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
-            newLevelToGUIScript.MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
-            newLevelToGUIScript.MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
-            newLevelToGUIScript.NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
-            newLevelToGUIScript.NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
-            newLevelToGUIScript.NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
-            newLevelToGUIScript.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
-            newLevelToGUIScript.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
-
-            //newLevelToGUIScript.SetLevelToLoad();
+            newLevelToGUIScript.IsPassed = ListOfAllLevelScriptInstances[i].IsPassed;
+            //if (i > 0)
+            //{
+            //    newLevelToGUIScript.IsActive = previousMapWasPassed;
+            //}
+            //else
+            //{
+            newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
+            //}
+            newLevelToGUIScript.InformationList = ListOfAllLevelScriptInstances[i].InformationList;
+            newLevelToGUIScript.IsBonusLevel = ListOfAllLevelScriptInstances[i].IsBonusLevel;
+            newLevelToGUIScript.StarValue = ListOfAllLevelScriptInstances[i].StarValue;
+            newLevelToGUIScript.WorldPageNumber = ListOfAllLevelScriptInstances[i].WorldPageNumber;
 
             newLevelToGUI.name = "LevelObject_" + i;
 
-            previousMapWasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
+            //previousMapWasPassed = ListOfAllLevelScriptInstances[i].IsPassed;
 
-            //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
-            newLevelToGUI.transform.SetParent(LevelsGrid.transform, false);
-
-            //Attaches the level to the grid
-            Toggle newLevelToggle = newLevelToGUI.GetComponent<Toggle>();
-            newLevelToggle.group = LevelsGrid.GetComponent<ToggleGroup>();
-
-            //Adds a method to the toggle in the gui
-            newLevelToggle.onValueChanged.AddListener(
-                delegate
-                {
-                    _guiLogic.OpenLevelDialog(newLevelToGUIScript);
-                }
-            );
+            //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST)
             
+                newLevelToGUI.transform.SetParent(LevelsGrid.transform, false);
 
-            //Sets lock icon on none unlocked levels
-            SetLockedIcons(newLevelToGUI, newLevelToGUIScript.IsActive);
-            
+                //Attaches the level to the grid
+                Toggle newLevelToggle = newLevelToGUI.GetComponent<Toggle>();
+                newLevelToggle.group = LevelsGrid.GetComponent<ToggleGroup>();
+
+                //Adds a method to the toggle in the gui
+                newLevelToggle.onValueChanged.AddListener(
+                    delegate
+                    {
+                        _guiLogic.OpenLevelDialog(newLevelToGUIScript);
+                    }
+                    );
+
+                //Sets lock icon on none unlocked levels
+                SetLockedIcons(newLevelToGUI, newLevelToGUIScript.IsActive);
+            }    
         }
     }
 
@@ -200,95 +182,6 @@ public class LevelManager : MonoBehaviour {
 
 
 
-    //used when loading     (OLD)
-    private void LoadAllLevelGameObjects()
-    {
-        //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
-        GameObject levelPanel = GameObject.FindGameObjectWithTag("LevelListPanel");
-
-        float distanceFromTopMinY = 0.78f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
-        float distanceFromTopMaxY = 0.96f;      //  Används för att sätta levels från toppen, sätts -0.24/ level rad
-
-        float totalHeightOfScrollList = 0f;
-
-        bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
-
-        for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
-        {
-            GameObject newLevelToGUI = Instantiate(levelGameObject);
-            Level newLevelToGUIScript = newLevelToGUI.GetComponent<Level>();
-
-
-            newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
-            newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
-            newLevelToGUIScript.HasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
-            if (i > 0)
-            {
-                newLevelToGUIScript.IsActive = previousMapWasPassed;
-            }
-            else
-            {
-                newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
-            }
-            newLevelToGUIScript.Star1 = ListOfAllLevelScriptInstances[i].Star1;
-            newLevelToGUIScript.Star2 = ListOfAllLevelScriptInstances[i].Star2;
-            newLevelToGUIScript.Star3 = ListOfAllLevelScriptInstances[i].Star3;
-            newLevelToGUIScript.MaxStepsFor1Star = ListOfAllLevelScriptInstances[i].MaxStepsFor1Star;
-            newLevelToGUIScript.MaxStepsFor2Star = ListOfAllLevelScriptInstances[i].MaxStepsFor2Star;
-            newLevelToGUIScript.MaxStepsFor3Star = ListOfAllLevelScriptInstances[i].MaxStepsFor3Star;
-            newLevelToGUIScript.NumberOfSteps = ListOfAllLevelScriptInstances[i].NumberOfSteps;
-            newLevelToGUIScript.NumberOfExits = ListOfAllLevelScriptInstances[i].NumberOfExits;
-            newLevelToGUIScript.NumberOfExitsCleared = ListOfAllLevelScriptInstances[i].NumberOfExitsCleared;
-            newLevelToGUIScript.CoordinatesOfCleardExits = ListOfAllLevelScriptInstances[i].CoordinatesOfCleardExits;
-            newLevelToGUIScript.ObjectiveList = ListOfAllLevelScriptInstances[i].ObjectiveList;
-
-           // newLevelToGUIScript.SetLevelToLoad();
-
-            newLevelToGUI.name = "LevelObject_" + i;
-
-            previousMapWasPassed = ListOfAllLevelScriptInstances[i].HasPassed;
-
-            //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST) TODO detta måste bytas då koden fungerar i sin helhet
-            newLevelToGUI.transform.SetParent(levelPanel.transform, false);
-
-            totalHeightOfScrollList += 85f;     //sätter varje knapp till 85f hög 
-
-            //SetLevelColor(newLevelToGUI, newLevelToGUIScript.IsActive);
-            //levelPanelRect.rect.Set(0,0,0,-1300f);
-
-
-            /*
-            //Positionering av level objektet i listan
-            if (i > 1)
-            {
-                if (i%2 == 0)
-                {
-                    distanceFromTopMinY = distanceFromTopMinY - 0.24f;
-                    distanceFromTopMaxY = distanceFromTopMaxY - 0.24f;
-                }
-            }
-
-            RectTransform newRectTransform = newLevelToGUI.GetComponent<RectTransform>();
-            if (i%2 == 0)
-            {
-                newRectTransform.anchorMin = new Vector2(0.05f, distanceFromTopMinY);
-                newRectTransform.anchorMax = new Vector2(0.425f, distanceFromTopMaxY);
-            }
-            else
-            {
-                newRectTransform.anchorMin = new Vector2(0.575f, distanceFromTopMinY);
-                newRectTransform.anchorMax = new Vector2(0.95f, distanceFromTopMaxY);
-            }
-            */
-        }
-
-        RectTransform levelPanelRect = levelPanel.GetComponent<RectTransform>();
-        levelPanelRect.sizeDelta = new Vector2(0f, totalHeightOfScrollList);                              //Set this to add some for each
-
-        levelPanelRect.offsetMin = new Vector2(levelPanelRect.offsetMin.x, -totalHeightOfScrollList);
-        levelPanelRect.offsetMax = new Vector2(levelPanelRect.offsetMax.x, 0f);
-        
-    }
 
 
     //private void SetLevelColor(GameObject LevelObject, bool isActive)
