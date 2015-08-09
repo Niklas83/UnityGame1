@@ -33,6 +33,8 @@ public class MedusaUnit : BaseUnit
     public int ParticlesToShootPerTile;
     private bool _deathBeamHasBeenInitialized;
 
+    public AudioClip BeamSound;
+
  //   private PlaygroundPresetLaserC ;
 
 	private List<MedusaRay> _rays = new List<MedusaRay>();
@@ -68,7 +70,13 @@ public class MedusaUnit : BaseUnit
 		if (hitObject != null && hitObject.GetComponent<AvatarUnit>() != null)
 		{
 		    InstantiateBeam(hitObject);
-            hitObject.SendMessage("KillAvatar", SendMessageOptions.DontRequireReceiver);		        
+            hitObject.SendMessage("KillAvatar", SendMessageOptions.DontRequireReceiver);
+
+		    //AudioSource beamAudioSource = 
+            if (BeamSound != null)
+		    {
+                transform.GetComponent<AudioSource>().PlayOneShot(BeamSound);
+		    }
 		}
 
 	    
