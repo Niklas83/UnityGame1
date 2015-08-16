@@ -36,7 +36,6 @@ public class LevelManager : MonoBehaviour {
             LoadFromJson();
             LoadAllLevelScriptInstances();
             NEWLoadAllLevelGameObjects();
-            //LoadAllLevelGameObjects();
         } 
     }
 
@@ -81,6 +80,7 @@ public class LevelManager : MonoBehaviour {
             levelJSONToAdd.InformationList = ListOfAllLevelScriptInstances[i].InformationList;
             levelJSONToAdd.StarValue = ListOfAllLevelScriptInstances[i].StarValue;
             levelJSONToAdd.WorldPageNumber = ListOfAllLevelScriptInstances[i].WorldPageNumber;
+            levelJSONToAdd.WorldName = ListOfAllLevelScriptInstances[i].WorldName;
 
             ListOfAllLevelJSON.Add(levelJSONToAdd);
         }
@@ -106,6 +106,7 @@ public class LevelManager : MonoBehaviour {
             levelScriptToAdd.IsBonusLevel = ListOfAllLevelJSON[i].IsBonusLevel;
             levelScriptToAdd.StarValue = ListOfAllLevelJSON[i].StarValue;
             levelScriptToAdd.WorldPageNumber = ListOfAllLevelJSON[i].WorldPageNumber;
+            levelScriptToAdd.WorldName = ListOfAllLevelJSON[i].WorldName;
 
 
             ListOfAllLevelScriptInstances.Add(levelScriptToAdd);    
@@ -151,6 +152,7 @@ public class LevelManager : MonoBehaviour {
             newLevelToGUIScript.IsBonusLevel = ListOfAllLevelScriptInstances[i].IsBonusLevel;
             newLevelToGUIScript.StarValue = ListOfAllLevelScriptInstances[i].StarValue;
             newLevelToGUIScript.WorldPageNumber = ListOfAllLevelScriptInstances[i].WorldPageNumber;
+            newLevelToGUIScript.WorldName = ListOfAllLevelScriptInstances[i].WorldName;
 
             newLevelToGUI.name = "LevelObject_" + i;
 
@@ -177,32 +179,6 @@ public class LevelManager : MonoBehaviour {
             }    
         }
     }
-
-
-
-
-
-
-
-    //private void SetLevelColor(GameObject LevelObject, bool isActive)
-    //{
-    //   Image[] buttonImage = LevelObject.GetComponentsInChildren<Image>();
-
-    //   foreach (var imag in buttonImage)
-    //   {
-    //       if (imag.name == "LevelButton")
-    //       {
-    //           if (!isActive)
-    //           {
-    //               imag.color = new Color(255f, 0f, 0f, 255f);
-    //           }
-    //           else
-    //           {
-    //               imag.color = new Color(0f, 255f, 0f, 255f);
-    //           }
-    //       }
-    //   }  
-    //}
 
     private void SetLockedIcons(GameObject LevelObject, bool isActive)
     {
@@ -279,46 +255,34 @@ public class LevelManager : MonoBehaviour {
 
 
 
+    //              *****       GUI USING THE BELOW CODE        ****
 
-    /*
-    public void AddLevelToList(Level levelToAdd)
+
+    private int _currentWorldPage;
+    private string _currentWorldName;
+    private int _maxWorldPage;
+    private int _minWorldPage = 1;
+
+    public void LoadNextWorldPage()
     {
-        bool levelHasAlreadyBeenAdded = false;
-
-        if (ListOfAllLevels == null)
-        {
-            ListOfAllLevels = new List<Level>();
-        }
-
-        for (int i = 0; i < ListOfAllLevels.Count; i++)
-        {
-            if (ListOfAllLevels[i].Name.Equals(levelToAdd.Name))            //TODO Ska vara "AcctualLevel" istället för namn
-            {
-                levelHasAlreadyBeenAdded = true;
-            }
-        }
-
-        if (!levelHasAlreadyBeenAdded)
-        {
-            ListOfAllLevels.Add(levelToAdd);
-        }
-
-
-  //      Save();     //Sparar i json den tillagdafilen
+        
     }
 
 
-    public void RemoveLevelFromList(Level LevelToRemove)
+    public void LoadPreviousWorldPage()
     {
-        for (int i = 0; i < ListOfAllLevels.Count; i++)
-        {
-            if (ListOfAllLevels[i].Name.Equals(LevelToRemove.Name))         //TODO Ska vara "AcctualLevel" istället för namn
-            {
-                ListOfAllLevels.Remove(LevelToRemove);
-            }
-        }
+
     }
 
-    */
+
+    private void CheckIfNextWorldButton()
+    {
+        
+    }
+
+    private void CheckIfPreviousWorldButton()
+    {
+
+    }
     
 }

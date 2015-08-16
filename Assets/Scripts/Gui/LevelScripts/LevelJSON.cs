@@ -18,6 +18,8 @@ public class LevelJSON  {
 
     public int StarValue;                   //How many stars is the current level worth (1-3)
 
+    public string WorldName;
+
     //public bool Star1;
     //public bool Star2;
     //public bool Star3;

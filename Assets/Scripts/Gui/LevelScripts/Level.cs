@@ -19,6 +19,7 @@ public class Level : MonoBehaviour {
 
     public int StarValue;                   //How many stars is the current level worth (1-3)
 
+    public string WorldName;
 
     //public int LevelID;             //Samma som antalet som finns i levellistan då kartan addas, funkar bara om ingen karta blir bortplockad, får lägga till detta om vi implementerar en DB, typ sqlite
 
