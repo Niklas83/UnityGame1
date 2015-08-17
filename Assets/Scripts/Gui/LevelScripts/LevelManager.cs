@@ -12,8 +12,13 @@ using UnityEngine.UI;
 public class LevelManager : MonoBehaviour {
 
     public List<GameObject> ListOfAllLevels;
-    private List<Level> ListOfAllLevelScriptInstances;
     public List<LevelJSON> ListOfAllLevelJSON;
+
+
+    private Dictionary<int,List<Level>> _worldLists;  
+    private List<Level> ListOfAllLevelScriptInstances;
+   
+    private int _currentWorldPage;      //USED BY THE GUI
 
     private bool JsonCopyHasValues;
 
@@ -35,7 +40,7 @@ public class LevelManager : MonoBehaviour {
         {
             LoadFromJson();
             LoadAllLevelScriptInstances();
-            NEWLoadAllLevelGameObjects();
+            NEWLoadAllLevelGameObjects(1);  //Loads first world page
         } 
     }
 
@@ -92,7 +97,7 @@ public class LevelManager : MonoBehaviour {
     {
         ListOfAllLevelScriptInstances = new List<Level>();
         
-        
+        _worldLists = new Dictionary<int, List<Level>>();
 
         for (int i = 0; i < ListOfAllLevelJSON.Count; i++)
         {
@@ -108,13 +113,28 @@ public class LevelManager : MonoBehaviour {
             levelScriptToAdd.WorldPageNumber = ListOfAllLevelJSON[i].WorldPageNumber;
             levelScriptToAdd.WorldName = ListOfAllLevelJSON[i].WorldName;
 
+            if (!_worldLists.ContainsKey(ListOfAllLevelJSON[i].WorldPageNumber))
+            {
+                List<Level> levelList = new List<Level>();
+                levelList.Add(levelScriptToAdd);
+                _worldLists.Add(ListOfAllLevelJSON[i].WorldPageNumber, levelList);
 
-            ListOfAllLevelScriptInstances.Add(levelScriptToAdd);    
+                ListOfAllLevelScriptInstances.Add(levelScriptToAdd);  
+            }
+
+            else
+            {
+                List<Level> levelList;
+                _worldLists.TryGetValue(ListOfAllLevelJSON[i].WorldPageNumber, out levelList);
+                levelList.Add(levelScriptToAdd);
+
+                ListOfAllLevelScriptInstances.Add(levelScriptToAdd);  
+            }
         }
     }
 
 
-    private void NEWLoadAllLevelGameObjects()
+    private void NEWLoadAllLevelGameObjects(int LevelPageNum)
     {
         //This iteration is needed to access the levelgrid cuz the main parent object is inactive
         GameObject parent = GameObject.Find("Background");
@@ -122,41 +142,72 @@ public class LevelManager : MonoBehaviour {
         GameObject WindowsLevels = MiscHelperMethods.FindObject(LevelPage,"WindowLevels");
         GameObject Content = MiscHelperMethods.FindObject(WindowsLevels,"Content");
         GameObject ScrollView = MiscHelperMethods.FindObject(Content,"ScrollView");
+
+        GameObject WorldName = MiscHelperMethods.FindObject(Content, "WorldName");
+        GameObject ButtonPrev = MiscHelperMethods.FindObject(Content, "Button_Prev");
+        GameObject ButtonNext = MiscHelperMethods.FindObject(Content, "Button_Next");
+
         GameObject LevelsGrid = MiscHelperMethods.FindObject(ScrollView,"LevelsGrid");
 
         //To add event listener
         GUILogic _guiLogic = transform.GetComponent<GUILogic>();
-       
 
-        bool previousMapWasPassed = false;      //If the map handled before the current had been passed (in the loop) then set the next as 
-        for (int i = 0; i < ListOfAllLevelScriptInstances.Count; i++)
+
+        //CLEARS THE GAME OBJECTS OF THE LIST of previous page
+        foreach (Transform Child in LevelsGrid.transform)
         {
-            if (ListOfAllLevelScriptInstances[i].WorldPageNumber == 1)      //Laddar alla värld 1 till gridden på start up
-            {
+            Destroy(Child.gameObject);
+        }
+
+        //Loads the level to load from the dictionary
+        List<Level> levelsToLoad;
+        _worldLists.TryGetValue(LevelPageNum, out levelsToLoad);
+
+        //Sets the current loaded page
+        _currentWorldPage = LevelPageNum;
+
+        //Sets the "world name"
+        WorldName.GetComponent<Text>().text = levelsToLoad[0].WorldName;
+
+        //check if "previous button" shall be visible
+        if (!_worldLists.ContainsKey(LevelPageNum - 1))
+        {
+            ButtonPrev.SetActive(false);
+        }
+        else
+        {
+            ButtonPrev.SetActive(true);
+        }
+
+        //check if "next button" shall be visible
+        if (!_worldLists.ContainsKey(LevelPageNum + 1))
+        {
+            ButtonNext.SetActive(false);
+        }
+        else
+        {
+            ButtonNext.SetActive(true);
+        }
+
+
+        for (int i = 0; i < levelsToLoad.Count; i++)
+        {
+
             GameObject newLevelToGUI = Instantiate(levelGameObject);
             Level newLevelToGUIScript = newLevelToGUI.GetComponent<Level>();
 
 
-            newLevelToGUIScript.SceneNr = ListOfAllLevelScriptInstances[i].SceneNr;
-            newLevelToGUIScript.Name = ListOfAllLevelScriptInstances[i].Name;
-            newLevelToGUIScript.IsPassed = ListOfAllLevelScriptInstances[i].IsPassed;
-            //if (i > 0)
-            //{
-            //    newLevelToGUIScript.IsActive = previousMapWasPassed;
-            //}
-            //else
-            //{
-            newLevelToGUIScript.IsActive = ListOfAllLevelScriptInstances[i].IsActive;
-            //}
-            newLevelToGUIScript.InformationList = ListOfAllLevelScriptInstances[i].InformationList;
-            newLevelToGUIScript.IsBonusLevel = ListOfAllLevelScriptInstances[i].IsBonusLevel;
-            newLevelToGUIScript.StarValue = ListOfAllLevelScriptInstances[i].StarValue;
-            newLevelToGUIScript.WorldPageNumber = ListOfAllLevelScriptInstances[i].WorldPageNumber;
-            newLevelToGUIScript.WorldName = ListOfAllLevelScriptInstances[i].WorldName;
+            newLevelToGUIScript.SceneNr = levelsToLoad[i].SceneNr;
+            newLevelToGUIScript.Name = levelsToLoad[i].Name;
+            newLevelToGUIScript.IsPassed = levelsToLoad[i].IsPassed;
+            newLevelToGUIScript.IsActive = levelsToLoad[i].IsActive;
+            newLevelToGUIScript.InformationList = levelsToLoad[i].InformationList;
+            newLevelToGUIScript.IsBonusLevel = levelsToLoad[i].IsBonusLevel;
+            newLevelToGUIScript.StarValue = levelsToLoad[i].StarValue;
+            newLevelToGUIScript.WorldPageNumber = levelsToLoad[i].WorldPageNumber;
+            newLevelToGUIScript.WorldName = levelsToLoad[i].WorldName;
 
             newLevelToGUI.name = "LevelObject_" + i;
-
-            //previousMapWasPassed = ListOfAllLevelScriptInstances[i].IsPassed;
 
             //Sätter parent till panelen som håller listan (Just nu kör jag LevelSelectionBackgroundTEST)
             
@@ -176,7 +227,7 @@ public class LevelManager : MonoBehaviour {
 
                 //Sets lock icon on none unlocked levels
                 SetLockedIcons(newLevelToGUI, newLevelToGUIScript.IsActive);
-            }    
+                
         }
     }
 
@@ -258,31 +309,17 @@ public class LevelManager : MonoBehaviour {
     //              *****       GUI USING THE BELOW CODE        ****
 
 
-    private int _currentWorldPage;
-    private string _currentWorldName;
-    private int _maxWorldPage;
-    private int _minWorldPage = 1;
+    
 
     public void LoadNextWorldPage()
     {
-        
+        NEWLoadAllLevelGameObjects(_currentWorldPage + 1);
     }
 
 
     public void LoadPreviousWorldPage()
     {
-
-    }
-
-
-    private void CheckIfNextWorldButton()
-    {
-        
-    }
-
-    private void CheckIfPreviousWorldButton()
-    {
-
+        NEWLoadAllLevelGameObjects(_currentWorldPage - 1);
     }
     
 }
