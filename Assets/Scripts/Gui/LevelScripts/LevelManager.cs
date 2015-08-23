@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -139,6 +140,10 @@ public class LevelManager : MonoBehaviour {
         //This iteration is needed to access the levelgrid cuz the main parent object is inactive
         GameObject parent = GameObject.Find("Background");
         GameObject LevelPage = MiscHelperMethods.FindObject(parent,"LevelsPage");
+
+        GameObject RegularStarCounter = MiscHelperMethods.FindObject(LevelPage, "RegularStarCounter");
+        GameObject BonusStarCounter = MiscHelperMethods.FindObject(LevelPage, "BonusStarCounter");
+
         GameObject WindowsLevels = MiscHelperMethods.FindObject(LevelPage,"WindowLevels");
         GameObject Content = MiscHelperMethods.FindObject(WindowsLevels,"Content");
         GameObject ScrollView = MiscHelperMethods.FindObject(Content,"ScrollView");
@@ -168,6 +173,12 @@ public class LevelManager : MonoBehaviour {
 
         //Sets the "world name"
         WorldName.GetComponent<Text>().text = levelsToLoad[0].WorldName;
+
+        //Sets numbers of regular stars taken
+        RegularStarCounter.GetComponent<Text>().text = ListOfAllLevelScriptInstances.Where(x => x.IsPassed).Sum(x => x.StarValue).ToString();
+
+        //Sets numbers of bonus stars taken
+        BonusStarCounter.GetComponent<Text>().text = ListOfAllLevelScriptInstances.Where(x => x.IsPassed && x.IsBonusLevel).Sum(x => x.StarValue).ToString();
 
         //check if "previous button" shall be visible
         if (!_worldLists.ContainsKey(LevelPageNum - 1))
